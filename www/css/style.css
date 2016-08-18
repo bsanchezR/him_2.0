@@ -1,0 +1,392 @@
+/* Empty. Add your own CSS if you like */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px; height: 0; overflow: hidden;
+}
+
+.video-container iframe, .video-container object, .video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    /*padding-top: 50px;
+    padding-bottom: 50px;*/
+}
+
+.color{
+  height: 50px;
+  width: 50px;
+  background-color: yellow;
+  border-radius: 25px;
+  float: left;
+  margin-right: 20px;
+}
+.rojo{
+  background-color: #DA0203;
+}
+
+.amarillo{
+  color: #FBD504;
+}
+
+.bar .buttons span
+{
+    display: none;
+}
+
+.uno
+{
+  background: url('../img/uno.png') no-repeat center center fixed;
+  /*background-size: cover;
+  background-position: center center;*/
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.dos
+{
+  background-image: url('../img/dos.png');
+  background-size: cover;
+  background-position: center center;
+}
+
+.tres
+{
+  background-image: url('../img/tres.png');
+  background-size: cover;
+  background-position: center center;
+}
+
+.cuatro
+{
+
+  background-image: url('../img/cuatro.png');
+  background-size: cover;
+  background-position: center center;
+}
+
+.inicio
+{
+
+  background-image: url('../img/back.png');
+  background-size: cover;
+  background-position: center center;
+}
+
+.login
+{
+  background-image: url('../img/back_blue.png') !important;
+  background-size: cover;
+  background-position: center center;
+}
+
+.card_mod
+{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-image: url('../img/back_low.png') !important;
+  background-size: cover;
+  background-position: center center;
+}
+
+.tabs-top > .tabs
+{
+  top:initial;
+}
+
+.tabs-striped .tabs
+{
+  background-color: #192a3b;
+}
+
+.scroll
+{
+  height: 100%;
+}
+
+.padding
+{
+  margin-top: 5px;
+  padding: 0;
+}
+
+.bar.bar-stable
+{
+  background-color: transparent !important;
+  border: none !important;
+  background-image: none !important;
+  margin-top: 15px;
+}
+
+.input-label
+{
+  font-style: italic;
+}
+
+input::-webkit-input-placeholder {
+   color: black;
+   font-style: italic;
+}
+
+input:-moz-placeholder { /* Firefox 18- */
+   color: black;
+   font-style: italic;
+}
+
+input::-moz-placeholder {  /* Firefox 19+ */
+   color: black;
+   font-style: italic;
+}
+
+input:-ms-input-placeholder {
+   color: black;
+   font-style: italic;
+}
+
+input[type="search"]
+{
+    border: none;
+    border-bottom-style: solid;
+    border-top-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    border-width: 1px;
+}
+
+.bar.bar-stable .title
+{
+    color: #444;
+    font-style: italic;
+    font-size: 35px;
+}
+
+.bar.bar-light
+{
+  margin-top: 20px;
+  background-color: transparent;
+}
+
+.placeholder-icon {
+    color: black;
+}
+
+.item-complex .item-content
+{
+  background-color: transparent;
+}
+
+.tabs
+{
+  background-color: #192a3b;
+}
+
+.trans
+{
+  background-color: transparent;
+}
+
+ion-tabs.tabs-color-active-royal .tab-item
+{
+    color: white;
+}
+
+ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
+{
+  color: white;
+}
+
+.tabs .tab-item .icon.biblio
+{
+  margin-top: 5px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  background-image: url('../img/biblioteca.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.calendar
+{
+  margin-top: 5px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  background-image: url('../img/calendario.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.chat
+{
+  margin-top: 5px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  background-image: url('../img/chat.png');
+  background-size:contain;
+}
+
+.without
+{
+    border-width: 0;
+}
+
+
+.item
+{
+  color:black;
+  border-color:black;
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-bottom-style: solid;
+  border-left-style: hidden;
+  margin: -5px;
+}
+
+.item-input
+{
+  color:black;
+  /*border-color:transparent;*/
+}
+
+.bord
+{
+  color:black;
+  border-color:black;
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-bottom-style: solid;
+  border-left-style: hidden;
+}
+
+.input
+{
+    padding: 0;
+}
+
+.togg
+{
+  color:black;
+  height: 47px;
+}
+
+.text-white
+{
+  color:white;
+}
+
+.text-yellow
+{
+  color:yellow;
+}
+
+.item p
+{
+  color:white;
+  font-style: italic;
+}
+
+.fond_art
+{
+  background-color: #fd0061;
+}
+
+.logo_pos
+{
+  width: 18%;
+  height: auto;
+}
+
+.logo_pos_log
+{
+  width: 100%;
+  height: auto;
+}
+
+.padd
+{
+  margin-top: 15%;
+  margin-left: 7%;
+}
+
+.mod
+{
+  background-color: #65177f !important;
+  width: 130px;
+  height: 40px !important;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.ros-tit
+{
+  color:#fd0061;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.mod_log
+{
+  background-color: #fd0061 !important;
+  width: 130px;
+  height: 40px !important;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.tamano
+{
+  font-size: 55px;
+  line-height: 65px;
+}
+
+.tamano2
+{
+  font-size: 35px;
+}
+
+.ita
+{
+  font-style: italic;
+}
+
+.box
+{
+  height:100%;
+}
+
+.rayas{
+  color : black !important;
+  background: repeating-linear-gradient(45deg, #fff, #fff 5px, red 5px, red 10px) !important;
+}
+
+.box{
+height: 100vh;
+}
+
+.box h1{
+  color: black;
+}
+.blue{
+background-color: blue;
+}
+
+.yellow{
+  background-color: yellow;
+}
+
+.pink{
+  background-color: pink;
+}

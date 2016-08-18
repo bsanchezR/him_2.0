@@ -1,0 +1,47 @@
+<ion-view title="Registrar" id="page9" class=" ">
+    <ion-content padding="true" class="has-header">
+		<div class="row row-center">
+      <img src="img/logo.png" class="center">
+		</div>
+		<div class="row row-center">
+			<div class="col col-100">
+				<div class="list">
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Telefono</span>
+						<input type="number" ng-model="aut.telefono" placeholder="Telefono">
+					</label>
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Contraseña</span>
+						<input type="password" ng-model="aut.pass" placeholder="Contraseña">
+					</label>
+          <label class="item item-input item-floating-label">
+						<span class="input-label">Nombre</span>
+						<input type="text" ng-model="aut.nombre" placeholder="Nombre">
+					</label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Apellido Paterno</span>
+            <input type="text" ng-model="aut.apeP" placeholder="Apellido Paterno">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Apellido Materno</span>
+            <input type="text" ng-model="aut.apeM" placeholder="Apellido Materno">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Edad</span>
+            <input type="number" ng-model="aut.edad" placeholder="Edad">
+          </label>
+          <label class="item item-input item-select">
+            <div class="input-label">
+              Sexo
+            </div>
+            <select ng-model="aut.sexo">
+              <option value="m">Hombre</option>
+              <option value="f" selected>Mujer</option>
+            </select>
+          </label>
+					<a ng-click="guardar()" id="login-button5" class="button button-positive  button-block button-outline ">Resgistrar</a>
+				</div>
+			</div>
+		</div>
+    </ion-content>
+</ion-view>

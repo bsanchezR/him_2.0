@@ -1,0 +1,53 @@
+<ion-view title="Calendario" id="page19" class="login">
+    <ion-nav-buttons side="right">
+         <!-- <button class="button button-clear icon ion-chevron-right" ng-click="irCalendario()">
+             Calendario
+         </button> -->
+         <a class="icon-right ion-chevron-right button button-clear" ng-click="irCalendario()">Calendario</a>
+    </ion-nav-buttons>
+    <ion-content padding="true" class="has-header">
+        <div class="row padding">
+          <div class="col col-50">
+            <img src="img/calendar.png" class="center logo_pos_log">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-50 col-offset-10">
+            <span class="ros-tit">Configura t&uacute; periodo</span>
+          </div>
+        </div>
+        <div class="col col-80 col-offset-10">
+        <form id="configuraciN-form11" class="list trans">
+            <label class="item item-input trans">
+                <span class="input-label inp">Primer día de tu última menstruación</span>
+            </label>
+            <label class="item item-input trans bord">
+                <input ng-model="configuracionDatos.inicio" type="date">
+            </label>
+
+             <label class="item item-input trans bord" id="configuraciN-input19">
+                <input type="number" min="3" max="35" step="1" placeholder="Días entre menstruaciones" ng-model="configuracionDatos.duraP">
+                <span class="input-label">Días</span>
+            </label>
+            <label class="item item-input trans bord" id="configuraciN-input20">
+                <input type="number" min="3" max="15" step="1" placeholder="Duración del sangrado" ng-model="configuracionDatos.duraS">
+                <span class="input-label">Días</span>
+            </label>
+            <!-- <label class="item item-input " id="configuraciN-input17">
+                <span class="input-label">Peso</span>
+                <input type="number" min="30" max="200" step="1" placeholder="Peso" ng-model="configuracionDatos.peso">
+                <span class="input-label">kg</span>
+            </label>
+            <label class="item item-input " id="configuraciN-input18">
+                <span class="input-label">Altura</span>
+                <input type="number" min="1.0" max="2.5" step="0.1" placeholder="Altura" ng-model="configuracionDatos.altura">
+                <span class="input-label">m</span>
+            </label> -->
+            <ion-toggle toggle-class="toggle-royal" id="configuraciN-toggle3" class="trans item-input togg" ng-model="configuracionDatos.anti">Anticonceptivo</ion-toggle>
+        </form>
+        </div>
+        <div class="col col-90 col-offset-33">
+        <button id="configuraciN-button11" style="font-weight:600;" class=" button button-royal mod_log" ng-click="guardaConfiguracion()">Guardar</button>
+      </div>
+    </ion-content>
+</ion-view>

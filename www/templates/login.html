@@ -1,0 +1,30 @@
+<ion-view title="Acceso" id="page7" class="login">
+    <ion-content padding="true" class="has-header">
+		<div class="row">
+      <div class="col col-50">
+        <img src="img/acceso.png" class="center logo_pos_log">
+      </div>
+		</div>
+		<div class="row row-center">
+			<div class="col col-80 col-offset-10">
+				<div class="list">
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Tel&eacute;fono</span>
+						<input type="number" ng-model="aut.telefono" placeholder="Tel&eacute;fono">
+					</label>
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Contraseña</span>
+						<input type="password" ng-model="aut.pass" placeholder="Contraseña">
+					</label>
+          <br>
+          <br>
+          <div class="col col-90 col-offset-20">
+            <a ng-click="validar()" id="login-button3" class="button button-positive mod_log">Ingresar</a>
+            <br>
+            <a ng-click="registrar()" id="login-button4" class="button button-positive mod_log">Registrate</a>
+          </div>
+				</div>
+			</div>
+		</div>
+    </ion-content>
+</ion-view>

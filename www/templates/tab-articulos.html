@@ -1,0 +1,25 @@
+<ion-view view-title="Mi biblioteca" class="login">
+  <ion-content class="trans">
+    <ion-refresher
+        pulling-text="Actualizando..."
+        on-refresh="CargarNuevosPost()">
+    </ion-refresher>
+
+      <div class="bar item-input-inset bar-light trans">
+          <label class="item-input-wrapper trans">
+            <i class="icon ion-search placeholder-icon"></i>
+              <input type="search" ng-model="busqueda" placeholder="Buscar" />
+          </label>
+      </div>
+   <ion-list class="trans">
+      <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap trans" ng-repeat="articulo in articulos | filter:  busqueda" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
+
+<!--         -->
+<img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
+        <h2>{{articulo.title}}</h2>
+        <p class="trans" ng-bind-html="articulo.description | limitTo : 100"></p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
