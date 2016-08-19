@@ -18,6 +18,10 @@
         },
         "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.ionicframework.him2886392"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "898342355996",
+            "PACKAGE_NAME": "com.ionicframework.him2886392"
         }
     },
     "dependent_plugins": {

@@ -599,6 +599,35 @@ app.controller('inicioCtrl', function($scope, Auten ,$http, $state, $ionicPopup,
       $state.go('login');
   }
 
+
+  console.log("Device Ready")
+  var push = PushNotification.init({
+    "android": {
+      "senderID": "898342355996",
+      "icon": 'iconName',  // Small icon file name without extension
+      "iconColor": '#248BD0'
+    },
+    "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+
+  push.on('registration', function(data) {
+  console.log(data.registrationId);
+  $("#gcm_id").html(data.registrationId);
+  });
+
+  push.on('notification', function(data) {
+  console.log(data.message);
+  alert(data.title+" Message: " +data.message);
+  // data.title,
+  // data.count,
+  // data.sound,
+  // data.image,
+  // data.additionalData
+  });
+
+  push.on('error', function(e) {
+  console.log(e.message);
+  });
+
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
