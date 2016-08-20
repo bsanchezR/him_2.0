@@ -105,7 +105,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -119,6 +119,12 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$state
   $scope.shareAnywhere = function() {
        $cordovaSocialSharing.share("Este es un mensaje", "Esto es mi asunto", "www/img/logo.png", "birdev.mx");
    }
+
+  $scope.guardarArticulo = function(id){
+      //ArticulosGuardados.
+      console.log(id);
+      ArticulosGuardados.post(Articulos.get(id));
+  }
 
 });
 
@@ -599,34 +605,35 @@ app.controller('inicioCtrl', function($scope, Auten ,$http, $state, $ionicPopup,
       $state.go('login');
   }
 
+//activar en productivo
+  // console.log("Device Ready")
+  // var push = PushNotification.init({
+  //   "android": {
+  //     "senderID": "898342355996",
+  //     "icon": 'iconName',  // Small icon file name without extension
+  //     "iconColor": '#248BD0'
+  //   },
+  //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+  //
+  // push.on('registration', function(data) {
+  // console.log(data.registrationId);
+  // $("#gcm_id").html(data.registrationId);
+  // });
+  //
+  // push.on('notification', function(data) {
+  // console.log(data.message);
+  // alert(data.title+" Message: " +data.message);
 
-  console.log("Device Ready")
-  var push = PushNotification.init({
-    "android": {
-      "senderID": "898342355996",
-      "icon": 'iconName',  // Small icon file name without extension
-      "iconColor": '#248BD0'
-    },
-    "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-
-  push.on('registration', function(data) {
-  console.log(data.registrationId);
-  $("#gcm_id").html(data.registrationId);
-  });
-
-  push.on('notification', function(data) {
-  console.log(data.message);
-  alert(data.title+" Message: " +data.message);
   // data.title,
   // data.count,
   // data.sound,
   // data.image,
   // data.additionalData
-  });
-
-  push.on('error', function(e) {
-  console.log(e.message);
-  });
+  // });
+  //
+  // push.on('error', function(e) {
+  // console.log(e.message);
+  // });
 
   });
 
@@ -652,4 +659,42 @@ app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$
     $scope.activeIndex = data.slider.activeIndex;
     $scope.previousIndex = data.slider.previousIndex;
   });
+});
+
+
+app.controller('articulosGuardados', function($scope,ArticulosGuardados, Auten ,$http, $state, $ionicPopup,$state) {
+  $scope.articulos = ArticulosGuardados.all();
+
+  if (typeof Auten.validar().telefono != 'undefined')
+  {
+    console.log(Auten.validar());
+  }
+  else{
+     $state.go('login');
+  }
+
+});
+
+
+app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+  if (typeof Auten.validar().telefono != 'undefined')
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
+  $scope.articulo = ArticulosGuardados.get($stateParams.id);
+
+  $scope.shareAnywhere = function() {
+       $cordovaSocialSharing.share("Este es un mensaje", "Esto es mi asunto", "www/img/logo.png", "birdev.mx");
+   }
+
+  $scope.guardarArticulo = function(id){
+      //ArticulosGuardados.
+  //     console.log(id);
+  //     ArticulosGuardados.post(Articulos.get(id));
+  }
+
 });

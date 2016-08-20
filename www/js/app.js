@@ -68,6 +68,27 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('tab.articulos-guardados', {
+        url: '/guardados',
+        views: {
+          'tab-articulos': {
+            templateUrl: 'templates/articulos-guardados.html',
+            controller: 'articulosGuardados'
+          }
+        }
+      })
+      .state('tab.articulo-completo-guardado', {
+          url: '/guardados/:id',
+          views: {
+            'tab-articulos': {
+              templateUrl: 'templates/articulo-completo-guardado.html',
+              controller: 'articuloCompletoGuardado'
+            }
+          }
+        })
+
+
+
 
   .state('tab.chats', {
       url: '/chats',
