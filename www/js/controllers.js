@@ -105,7 +105,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing, $cordovaFileTransfer) {
   if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -123,8 +123,111 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuard
   $scope.guardarArticulo = function(id){
       //ArticulosGuardados.
       console.log(id);
-      ArticulosGuardados.post(Articulos.get(id));
+      var articulo = Articulos.get(id)
+      ArticulosGuardados.post(articulo);
+
+      //vamos hacer pruebas de file con cordova
+      var url = "http://birdev.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
+      console.log(url);
+      testFileDownload(url);
   }
+
+
+  function testFileDownload(url)
+  {
+
+
+//     cordova.plugins.diagnostic.runtimePermission.WRITE_EXTERNAL_STORAGE
+//     cordova.plugins.diagnostic.runtimePermission.READ_EXTERNAL_STORAGE
+//
+//
+//
+//
+//
+// cordova.plugins.diagnostic.requestRuntimePermission(function(status){
+//     switch(status){
+//         case cordova.plugins.diagnostic.runtimePermissionStatus.GRANTED:
+//             console.log("Permission granted to use the camera");
+//             break;
+//         case cordova.plugins.diagnostic.runtimePermissionStatus.NOT_REQUESTED:
+//             console.log("Permission to use the camera has not been requested yet");
+//             break;
+//         case cordova.plugins.diagnostic.runtimePermissionStatus.DENIED:
+//             console.log("Permission denied to use the camera - ask again?");
+//             break;
+//         case cordova.plugins.diagnostic.runtimePermissionStatus.DENIED_ALWAYS:
+//             console.log("Permission permanently denied to use the camera - guess we won't be using it then!");
+//             break;
+//     }
+// }, function(error){
+//     console.error("The following error occurred: "+error);
+// }, cordova.plugins.diagnostic.runtimePermission.CAMERA);
+
+   //utilidad para saber que plataforma estamos trabajando
+   // var deviceInformation = ionic.Platform.device();
+   // var isWebView = ionic.Platform.isWebView();
+   // var isIPad = ionic.Platform.isIPad();
+   // var isIOS = ionic.Platform.isIOS();
+   // var isAndroid = ionic.Platform.isAndroid();
+   // var isWindowsPhone = ionic.Platform.isWindowsPhone();
+   // var currentPlatform = ionic.Platform.platform();
+   // var currentPlatformVersion = ionic.Platform.version();
+   //
+   //
+   //   console.log(deviceInformation);
+   //   console.log(isAndroid);
+   //   console.log(isWebView);
+   //   console.log(isIOS);
+   //   console.log(isIPad);
+
+
+         //Function code goes here
+         //File for download
+         //var url = "http://www.gajotres.net/wp-content/uploads/2015/04/logo_radni.png";
+
+         //File name only
+         var filename = url.split("/").pop();
+
+
+         // Save location
+         var targetPath = cordova.file.externalRootDirectory+"/him/"+filename;
+
+         $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+             console.log('Success');
+         }, function (error) {
+             console.log(error);
+         }, function (progress) {
+             // PROGRESS HANDLING GOES HERE
+             console.log(progress);
+         });
+
+         console.log(targetPath);
+
+    // var url = "http://ngcordova.com/img/ngcordova-logo.png",
+    //     filename = url.split("/").pop;
+    //     targetPath = cordova.file.externalRootDirectory + filename;
+    //     options = {},
+    //     trustHosts = true;
+    //
+    // $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+    //   .then(
+    //     function(result) {
+    //       alert('Download success');
+    //       refreshMedia.refresh(targetPath);
+    //     },
+    //     function(err) {
+    //       alert('Error: ' + JSON.stringify(err));
+    //     },
+    //     function(progress) {
+    //       // progressing download...
+    //     }
+    //   );
+
+
+
+     }
+
+
 
 });
 
