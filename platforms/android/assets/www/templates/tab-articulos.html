@@ -1,0 +1,34 @@
+<ion-view view-title="Mi biblioteca" class="login">
+  <ion-content class="trans marg">
+    <ion-refresher
+        pulling-text="Actualizando..."
+        on-refresh="CargarNuevosPost()">
+    </ion-refresher>
+      <div class="bar item-input-inset bar-light trans">
+          <label class="item-input-wrapper trans">
+            <i class="icon ion-search placeholder-icon"></i>
+              <input class="out_bord" type="search" ng-model="busqueda" placeholder="Buscar" />
+          </label>
+      </div>
+      <div class="col col-50 float-off">
+        <ion-list class="trans">
+           <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap trans" ng-repeat="articulo in articulos | filter:  busqueda" ng-class="{'div-off' : 0 == $index%2, 'div-on' : 0 != $index%2 }" ng-if="$index%2 != 0" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
+             <img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
+             <h2>{{articulo.title}}</h2>
+             <p class="trans" ng-bind-html="articulo.description | limitTo : 100"></p>
+             <i class="icon ion-chevron-right icon-accessory"></i>
+           </ion-item>
+         </ion-list>
+      </div>
+      <div class="col col-50 float-on">
+        <ion-list class="trans">
+           <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap trans" ng-repeat="articulo in articulos | filter:  busqueda" ng-class="{'div-off' : 0 == $index%2, 'div-on' : 0 != $index%2}" ng-if="$index%2 == 0" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
+             <img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
+             <h2>{{articulo.title}}</h2>
+             <p class="trans" ng-bind-html="articulo.description | limitTo : 100"></p>
+             <i class="icon ion-chevron-right icon-accessory"></i>
+           </ion-item>
+         </ion-list>
+      </div>
+  </ion-content>
+</ion-view>
