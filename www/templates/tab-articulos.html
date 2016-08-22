@@ -1,5 +1,9 @@
 <ion-view view-title="Mi biblioteca" class="login">
+  <ion-nav-buttons side="right">
+		<button class="button button-clear icon ion-gear-a" ng-click="configuracion()">uno</button>
+	</ion-nav-buttons>
   <ion-content class="trans marg">
+
     <ion-refresher
         pulling-text="Actualizando..."
         on-refresh="CargarNuevosPost()">
