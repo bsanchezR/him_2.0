@@ -1,35 +1,22 @@
 var app = angular.module('starter.controllers', [])
 
-app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
+app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
+    $ionicNavBarDelegate.showBackButton(true);
     $scope.articulos = Articulos.all();
-
-    if (typeof Auten.validar().telefono != 'undefined')
-    {
-      console.log(Auten.validar());
-    }
-    else{
-       $state.go('login');
-    }
-
+    console.log($scope.articulos);
     $scope.CargarNuevosPost =  function()
     {
         var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
-
         $http.get(urlNuevosArticulos)
         .success(function(posts){
             var nuevosArticulos = [];
-
-
-
             angular.forEach(posts.data,function(post){
                     nuevosArticulos.push(post);
             });
-
             //guardamos todo los nuevo en local
+            //console.log($scope.articulos);
             $scope.articulos = nuevosArticulos;
             Articulos.post($scope.articulos);
-
-
 //            angular.forEach(posts.data,function(post){
 //                if(Articulos.get(post.id) == null ){
 //                    console.log('entro');
@@ -613,7 +600,22 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
     }
 });
 
-app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$state){
+app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPopup,$state)
+{
+    //console.log("log", Auten.validar());
+    if(Auten.validar().sexo == 'f')
+    {
+        $scope.rels=false;
+    }
+    else
+    {
+        $scope.rels=true;
+      //  console.log("articulo",$scope.rels);
+    }
+});
+
+app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
+    $ionicNavBarDelegate.showBackButton(true);
     //console.log(Auten.valida());
     if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -663,6 +665,7 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
       $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass })
            .then(function successCallback(response)
            {
+             console.log(response.data);
             if(response.data.mensaje == -1)
             {
               accesoError();
@@ -673,7 +676,16 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
             }
             else
             {
+                $scope.aut.sexo= response.data.data.sexo;
                 Auten.crearSesion($scope.aut);
+                if($scope.aut.sexo == 'f')
+                {
+                    $scope.variable=false;
+                }
+                else
+                {
+                    $scope.variable=true;
+                }
                 $state.go('tab.articulos');
             }
         },function errorCallback(response) {
@@ -697,9 +709,9 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
 
 });
 
-app.controller('inicioCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
+app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state) {
   document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
-
+  $ionicNavBarDelegate.showBackButton(false);
   $scope.comienza =  function(){
       $state.go('slide');
   }
@@ -744,13 +756,19 @@ app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$
   document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
   $scope.options = {
   loop: false,
-  effect: 'fade',
+  //effect: 'cube',
   speed: 500,
+  }
+
+  $scope.irlogin = function ()
+  {
+    $state.go('login');
   }
 
   $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
     // data.slider is the instance of Swiper
     $scope.slider = data.slider;
+    console.log(data.slider);
   });
 
   $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
@@ -761,7 +779,13 @@ app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$
     // note: the indexes are 0-based
     $scope.activeIndex = data.slider.activeIndex;
     $scope.previousIndex = data.slider.previousIndex;
+    // if(data.slider.isEnd)
+    // {
+    //
+    // }
+    console.log(data.slider.isEnd);
   });
+
 });
 
 

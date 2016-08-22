@@ -1,7 +1,7 @@
 (function(){
 var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed'])
 
-app.run(function($ionicPlatform) {
+app.run(function($ionicPlatform,Auten) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,8 +17,9 @@ app.run(function($ionicPlatform) {
   });
 })
 
-app.config(function($stateProvider, $urlRouterProvider) {
-
+app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
+  $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.backButton.previousTitleText(false);
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -47,7 +48,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    controller: 'tabController'
   })
   // Each tab has its own nav history stack:
  .state('tab.articulos', {
