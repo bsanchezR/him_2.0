@@ -121,7 +121,14 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
   function testFileDownload(url)
   {
 
-
+    cordova.plugins.diagnostic.requestCameraAuthorization(function(status){
+        console.log("Successfully requested camera authorization: authorization was " + status);
+        //alert("Checado");
+        checkState();
+    }, function(error){
+        console.error(error);
+        //alert("no checado");
+    });
 //     cordova.plugins.diagnostic.runtimePermission.WRITE_EXTERNAL_STORAGE
 //     cordova.plugins.diagnostic.runtimePermission.READ_EXTERNAL_STORAGE
 //
