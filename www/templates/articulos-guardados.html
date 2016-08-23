@@ -9,7 +9,7 @@
    <ion-list class="trans">
       <ion-item class="item-remove-animate item-avatar item-icon-right item-text-wrap trans" ng-repeat="articulo in articulos | filter:  busqueda" type="item-text-wrap" href="#/tab/guardados/{{articulo.id}}">
 
-      <img ng-src="http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" >
+      <img ng-src="file:///storage/emulated/0//him/{{articulo.images[0].ruta.split('/').pop()}}" >
 
         <h2>{{articulo.title}}</h2>
         <p class="trans" ng-bind-html="articulo.description | limitTo : 100"></p>

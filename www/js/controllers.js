@@ -128,8 +128,8 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
 
 
         // Save location
-        var targetPath = cordova.file.externalRootDirectory+"/him/"+filename;
-
+        var targetPath = cordova.file.externalRootDirectory+"him/"+filename;
+        console.log(targetPath);
         $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
             console.log('Success');
         }, function (error) {
@@ -741,17 +741,13 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
     else{
        $state.go('login');
     }
-
   $scope.articulo = ArticulosGuardados.get($stateParams.id);
+
+
+  $scope.imgSrc =  "file:///storage/emulated/0//him/" + $scope.articulo.images[0].ruta.split('/').pop();
+  // $scope.imgSrc =  cordova.file.dataDirectory +"him/"+ $scope.articulo.images[0].ruta.split('/').pop();
 
   $scope.shareAnywhere = function() {
        $cordovaSocialSharing.share("Este es un mensaje", "Esto es mi asunto", "www/img/logo.png", "birdev.mx");
    }
-
-  $scope.guardarArticulo = function(id){
-      //ArticulosGuardados.
-  //     console.log(id);
-  //     ArticulosGuardados.post(Articulos.get(id));
-  }
-
 });
