@@ -92,7 +92,7 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing, $cordovaFileTransfer) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing, $cordovaFileTransfer) {
   if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -109,14 +109,22 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuard
 
   $scope.guardarArticulo = function(id){
       //ArticulosGuardados.
-      console.log(id);
-      var articulo = Articulos.get(id)
-      ArticulosGuardados.post(articulo);
+      console.log("valida articulo" + ArticulosGuardados.get(id));
+      var articulo;
+      if(!ArticulosGuardados.get(id)){
+        articulo = Articulos.get(id)
+        ArticulosGuardados.post(articulo);
+      }else{
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Oh no!',
+           template: 'El articulo que intentas guardar ya esta guardado'
+         });
+      }
 
       //vamos hacer pruebas de file con cordova
       var url = "http://birdev.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
-      console.log(url);
-      testFileDownload(url);
+      //console.log(url);
+      //testFileDownload(url);
   }
 
 
