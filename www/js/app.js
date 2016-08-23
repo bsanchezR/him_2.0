@@ -29,18 +29,21 @@ app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
   // setup an abstract state for the tabs directive
   .state('login', {
     url: '/login',
+    cache: false,
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
 
   .state('inicio', {
     url: '/inicio',
+    cache: false,
     templateUrl: 'templates/inicio.html',
     controller: 'inicioCtrl'
   })
 
   .state('register', {
     url: '/register',
+    cache: false,
     templateUrl: 'templates/register.html',
     controller: 'loginCtrl'
   })
@@ -146,6 +149,7 @@ app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
 
   .state('slide', {
       url: '/slide',
+      cache: false,
       templateUrl: 'templates/slide.html',
       controller: 'slideCtrl'
     });
