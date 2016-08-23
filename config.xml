@@ -10,6 +10,9 @@
   <content src="index.html"/>
   <access origin="*" subdomains="true"/>
   <allow-navigation href="*" />
+  <allow-intent href="*"/>
+
+
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
@@ -21,7 +24,7 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
-  
+
   <feature name="File">
 <param name="android-package" value="org.apache.cordova.file.FileUtils" />
 </feature>
