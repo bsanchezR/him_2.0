@@ -57,6 +57,12 @@
   padding: 0 !important;
 }
 
+.item-content.activated
+{
+  background-color: transparent !important;
+  border-color: transparent;
+}
+
 .uno
 {
   background: url('../img/uno.png') no-repeat center center fixed;
@@ -158,6 +164,16 @@
   border:0 !important;
 }
 
+.paddi-s
+{
+  padding: 0;
+}
+
+.card
+{
+  margin: 0;
+}
+
 .marg
 {
   margin-top:60px;
@@ -221,7 +237,7 @@ input[type="search"]
 
 .bar.bar-light
 {
-  margin-top: 20px;
+  margin-top: 10px;
   background-color: transparent;
 }
 
@@ -238,7 +254,7 @@ ion-tabs.tabs-striped.tabs-color-active-royal .tab-item.tab-item-active, ion-tab
 {
     border-bottom: 0;
     border-top: 0;
-    margin-top: 5px;
+    margin-top: 1px;
 }
 
 .tabs

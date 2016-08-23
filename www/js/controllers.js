@@ -1,7 +1,7 @@
 var app = angular.module('starter.controllers', [])
 
 app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
-    $ionicNavBarDelegate.showBackButton(true);
+    document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
     $scope.articulos = Articulos.all();
     console.log($scope.articulos);
     cargarPost();
@@ -286,7 +286,7 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
 
 });
 
-app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,$ionicHistory) {
+app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact) {
     if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -546,6 +546,7 @@ app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPop
 });
 
 app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
+  document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
     $ionicNavBarDelegate.showBackButton(true);
     //console.log(Auten.valida());
     if (typeof Auten.validar().telefono != 'undefined')
@@ -640,7 +641,8 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
 });
 
-app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state) {
+app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state, $ionicHistory) {
+
   document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
   $ionicNavBarDelegate.showBackButton(false);
   $scope.comienza =  function(){
