@@ -4,6 +4,8 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
     $ionicNavBarDelegate.showBackButton(true);
     $scope.articulos = Articulos.all();
     console.log($scope.articulos);
+    cargarPost();
+
     $scope.CargarNuevosPost =  function()
     {
         var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
@@ -17,36 +19,24 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
             //console.log($scope.articulos);
             $scope.articulos = nuevosArticulos;
             Articulos.post($scope.articulos);
-//            angular.forEach(posts.data,function(post){
-//                if(Articulos.get(post.id) == null ){
-//                    console.log('entro');
-//                    nuevosArticulos.push(post);
-//                }
-//            });
-//
-//            //guardamos todo los nuevo en local
-//            $scope.articulos = nuevosArticulos.concat($scope.articulos);
-//            Articulos.post($scope.articulos);
-
-            //validamos los articulos que deben ser eliminados
-//            var existe = null;
-//            angular.forEach(Articulos.all() ,function(articulo){
-//
-//                for (var i = 0; i < posts.data.length; i++) {
-//                    if (posts.data[i].id === parseInt(articulo.id)) {
-//                        existe = posts.data[i];
-//                    }
-//                }
-//
-//                if(existe == null){
-//                    Articulos.remove(articulo.id);
-//                }
-//            });
-//
             $scope.$broadcast('scroll.refreshComplete');
         });
     };
 
+    function cargarPost()
+    {
+      var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+      $http.get(urlNuevosArticulos)
+      .success(function(posts){
+        var nuevosArticulos = [];
+        angular.forEach(posts.data,function(post){
+                 nuevosArticulos.push(post);
+         });
+         //guardamos todo los nuevo en local
+         $scope.articulos = nuevosArticulos;
+         Articulos.post($scope.articulos);
+     });
+    }
 
     //vamos hacer pruebas de file con cordova
  // function testFileDownload(url) {
@@ -89,10 +79,10 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
  //        });
  //    }
 
-
+ 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing, $cordovaFileTransfer) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing, $cordovaFileTransfer) {
   if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -109,14 +99,22 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten,ArticulosGuard
 
   $scope.guardarArticulo = function(id){
       //ArticulosGuardados.
-      console.log(id);
-      var articulo = Articulos.get(id)
-      ArticulosGuardados.post(articulo);
+      console.log("valida articulo" + ArticulosGuardados.get(id));
+      var articulo;
+      if(!ArticulosGuardados.get(id)){
+        articulo = Articulos.get(id)
+        ArticulosGuardados.post(articulo);
+      }else{
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Oh no!',
+           template: 'El articulo que intentas guardar ya esta guardado'
+         });
+      }
 
       //vamos hacer pruebas de file con cordova
       var url = "http://birdev.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
-      console.log(url);
-      testFileDownload(url);
+      //console.log(url);
+      //testFileDownload(url);
   }
 
 
