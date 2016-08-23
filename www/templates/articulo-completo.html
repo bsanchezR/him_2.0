@@ -8,7 +8,11 @@
             <div class="item item-body fond_art">
                 <p ng-bind-html="articulo.description"></p>
             </div>
-            <button class="button" ng-click="shareAnywhere()">compartir  cualquier cosa</button>
+            <button class="button icon-left ion-android-share-alt" ng-click="shareAnywhere()">Compartir</button>
+            <button class="button icon-left ion-ios-cloud-download-outline" ng-click="guardarArticulo({{articulo.id}})">Guardar</button>
+
+<!-- //no ta para mi yo del futuro si no jala bien podemos poner share como en web -->
+
         </div>
         <!-- desplegado del video -->
            <ion-item ng-if="articulo.video.indexOf('http') === 0" >
