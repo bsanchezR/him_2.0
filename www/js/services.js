@@ -131,6 +131,10 @@ app.factory('Auten', function(){
         crearSesion : function(res){
             aut = res;
             persist();
+        },
+        cerrarSesion : function(){
+            aut = '[]';
+            persist();
         }
     };
 
