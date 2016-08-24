@@ -129,7 +129,7 @@ app.factory('Auten', function(){
               return aut;
           },
         crearSesion : function(res){
-            aut = res;
+            aut = "";
             persist();
         }
     };

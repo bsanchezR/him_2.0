@@ -158,6 +158,21 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     else{
        $state.go('login');
     }
+
+
+    var fechaActual = new Date();
+    var hora = fechaActual.getHours();
+
+
+    if(hora >= 18 || hora < 9)
+    {
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Oh no!',
+           template: 'El horario de atención es de 9 a 18 horas puedes mandarnos tu pregunta pero esta sera respuesta apartir de las 9 horas. Gracias'
+         });
+    }
+
+
     //constantes y cosas que se tienen que inicializar para el modulo
     $scope.nota =  {id: '', mensaje:''};
     $scope.respuesta = {id:'' , mensaje: ''};
@@ -755,4 +770,12 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
         var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl );
    }
+});
+
+
+app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+  $scope.cerrar =  function(){
+     Auten.crearSesion();
+     $state.go('login');
+  }
 });
