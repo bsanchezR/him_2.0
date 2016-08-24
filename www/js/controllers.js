@@ -624,8 +624,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             }
             else
             {
-                $scope.aut.sexo = response.data.data.sexo;
-                Auten.crearSesion($scope.aut);
+                $scope.aut.sexo= response.data.data.sexo;
                 if($scope.aut.sexo == 'f')
                 {
                     $scope.variable=false;
@@ -634,6 +633,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
                 {
                     $scope.variable=true;
                 }
+                Auten.crearSesion($scope.aut);
                 $state.go('tab.articulos');
             }
         },function errorCallback(response) {
