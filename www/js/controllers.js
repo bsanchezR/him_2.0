@@ -643,7 +643,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   $scope.validar =  function(){
     var url  = 'http://www.birdev.mx/message_app/public/user';
-
+    console.log(gcmid);
       $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, gcm_id : gcmid })
            .then(function successCallback(response)
            {
@@ -783,3 +783,67 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $sta
      $state.go('login');
   }
 });
+
+
+//
+// <?php
+// $to="ebbjjHzXzvo:APA91bHavOf29c5vFh5gSgn7E_qOg_9PXfLKX-Gz36rrgPkLeNh-uH7h6_1HA4S-LnzvnVeu17UfYdwno-byNXsCI3sQvGFBidtncflSSqvmA-MKU7E3OPZfIhlZHctpCkljihcIdbrV";
+// $title="Hola yo 2";
+// $message="Este es un mensaje para yo";
+//
+// $to2 = "crrAOfDofEk:APA91bHNWcRQNu_VOY9VBXK3D1velsew-mCeFlWMYzKEoigZctkvOLAMrhA4Z4d5zsvIGpWsRCrOS8NkleKpiKljirkprIH1zLrzLSLSEYUbh-j4WwdBWrM47mct28D0GxEi5SGE0zVz";
+// $title2="Hola maria";
+// $message2="si jala esa maria la del barrio";
+//
+// $to3 = "e8pLfJ5QfkI:APA91bHbybrs582yq6MWU60KD-5rTzL6a7U1MzWAZ7v-qGE65dVmK-YKv-pAd-Eqm8xj2YGV4J-fFFaEffizW2Qb78kf8DaOr0OI39DFto51VKtqmrxb9sD8y3uulm0BRbQ33f1xF2H1";
+// $title3="a huevo puto duy";
+// $message3="Este es un mensaje para duy";
+//
+//
+//
+// sendPush($to,$title,$message);
+// sendPush($to2,$title2,$message2);
+// sendPush($to3,$title3,$message3);
+//
+// function sendPush($to,$title,$message)
+// {
+// // API access key from Google API's Console
+// // replace API
+// define( 'API_ACCESS_KEY', 'AIzaSyCXWLGR0Pg1jGk52C7kVRjPOnkwRCCcMs4');
+// $registrationIds = array($to);
+// $msg = array
+// (
+// 'message' => $message,
+// 'title' => $title,
+// 'vibrate' => 1,
+// 'sound' => 1
+// // you can also add images, additionalData
+// );
+// $fields = array
+// (
+// 'registration_ids' => $registrationIds,
+// 'data' => $msg
+// );
+// $headers = array
+// (
+// 'Authorization: key=' . API_ACCESS_KEY,
+// 'Content-Type: application/json'
+// );
+// $ch = curl_init();
+// curl_setopt( $ch,CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
+// curl_setopt( $ch,CURLOPT_POST, true );
+// curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+// curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+// curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+// curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+// $result = curl_exec($ch );
+// curl_close( $ch );
+// echo $result;
+// }
+// ?>
+//
+// <?php
+//
+// //phpinfo()
+//
+//  ?>
