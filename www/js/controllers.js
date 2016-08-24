@@ -624,7 +624,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             }
             else
             {
-                $scope.aut.sexo= response.data.data.sexo;
+                $scope.aut.sexo = response.data.data.sexo;
                 Auten.crearSesion($scope.aut);
                 if($scope.aut.sexo == 'f')
                 {
@@ -775,7 +775,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   $scope.cerrar =  function(){
-     Auten.crearSesion();
+     Auten.cerrarSesion();
      $state.go('login');
   }
 });
