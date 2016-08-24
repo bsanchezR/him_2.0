@@ -185,6 +185,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     console.log("local : " + $scope.respuesta.id);
 
     $scope.actualiza = function(){
+
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
       console.log($scope.respuesta);
        $http.get(linkGet).then(function successCallback(response) {
@@ -775,7 +776,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   $scope.cerrar =  function(){
-     Auten.cerrarSesion();
+     Auten.crearSesion();
      $state.go('login');
   }
 });
