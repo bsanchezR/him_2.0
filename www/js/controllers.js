@@ -564,6 +564,8 @@ app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPop
 app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
 
   //activar en productivo
+
+    var gcmid;
     console.log("Device Ready")
     var push = PushNotification.init({
       "android": {
@@ -572,7 +574,6 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
         "iconColor": '#248BD0'
       },
       "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    var gcmid;
     push.on('registration', function(data) {
     console.log(data.registrationId);
     gcmid = data.registrationId;
@@ -643,7 +644,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   $scope.validar =  function(){
     var url  = 'http://www.birdev.mx/message_app/public/user';
 
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass })
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, gcm_id : gcmid })
            .then(function successCallback(response)
            {
              console.log(response.data);
