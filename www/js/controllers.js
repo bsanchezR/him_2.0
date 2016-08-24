@@ -562,6 +562,39 @@ app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPop
 });
 
 app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
+
+  //activar en productivo
+    console.log("Device Ready")
+    var push = PushNotification.init({
+      "android": {
+        "senderID": "898342355996",
+        "icon": 'iconName',  // Small icon file name without extension
+        "iconColor": '#248BD0'
+      },
+      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+    var gcmid;
+    push.on('registration', function(data) {
+    console.log(data.registrationId);
+    gcmid = data.registrationId;
+    $("#gcm_id").html(data.registrationId);
+    });
+
+    push.on('notification', function(data) {
+      console.log(data.message);
+      alert(data.title+" Message: " +data.message);
+
+      data.title,
+      data.count,
+      data.sound,
+      data.image,
+      data.additionalData
+    });
+
+    push.on('error', function(e) {
+    console.log(e.message);
+    });
+
+
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
     $ionicNavBarDelegate.showBackButton(true);
     //console.log(Auten.valida());
@@ -585,37 +618,6 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
          exit();
       }
       var url  = 'http://www.birdev.mx/message_app/public/user';
-      //activar en productivo
-        console.log("Device Ready")
-        var push = PushNotification.init({
-          "android": {
-            "senderID": "898342355996",
-            "icon": 'iconName',  // Small icon file name without extension
-            "iconColor": '#248BD0'
-          },
-          "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-        var gcmid;
-        push.on('registration', function(data) {
-        console.log(data.registrationId);
-        gcmid = data.registrationId;
-        $("#gcm_id").html(data.registrationId);
-        });
-
-        push.on('notification', function(data) {
-          console.log(data.message);
-          alert(data.title+" Message: " +data.message);
-
-          data.title,
-          data.count,
-          data.sound,
-          data.image,
-          data.additionalData
-        });
-
-        push.on('error', function(e) {
-        console.log(e.message);
-        });
-
       $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
            .then(function successCallback(response)
            {
