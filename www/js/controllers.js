@@ -163,6 +163,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     $scope.respuesta = {id:'' , mensaje: ''};
     var link = 'http://www.birdev.mx/message_app/public/messages';
     var linkRespuesta = 'http://www.birdev.mx/message_app/public/response';
+    var linkHist = 'http://www.birdev.mx/message_app/public/historial';
 
     $scope.respuesta.id = Preguntas.list();
 
