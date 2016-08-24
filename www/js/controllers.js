@@ -768,3 +768,11 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl );
    }
 });
+
+
+app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+  $scope.cerrar =  function(){
+     Auten.crearSesion();
+     $state.go('login');
+  }
+});
