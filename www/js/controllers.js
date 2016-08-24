@@ -594,9 +594,10 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             "iconColor": '#248BD0'
           },
           "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-
+        var gcmid;
         push.on('registration', function(data) {
         console.log(data.registrationId);
+        gcmid = data.registrationId;
         $("#gcm_id").html(data.registrationId);
         });
 
@@ -610,11 +611,12 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
           data.image,
           data.additionalData
         });
+
         push.on('error', function(e) {
         console.log(e.message);
         });
-        
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : data.registrationId})
+
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
