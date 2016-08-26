@@ -185,6 +185,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     console.log("local : " + $scope.respuesta.id);
 
     $scope.actualiza = function(){
+
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
       console.log($scope.respuesta);
        $http.get(linkGet).then(function successCallback(response) {
@@ -624,8 +625,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             }
             else
             {
-                $scope.aut.sexo = response.data.data.sexo;
-                Auten.crearSesion($scope.aut);
+                $scope.aut.sexo= response.data.data.sexo;
                 if($scope.aut.sexo == 'f')
                 {
                     $scope.variable=false;
@@ -634,6 +634,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
                 {
                     $scope.variable=true;
                 }
+                Auten.crearSesion($scope.aut);
                 $state.go('tab.articulos');
             }
         },function errorCallback(response) {
@@ -775,7 +776,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   $scope.cerrar =  function(){
-     Auten.cerrarSesion();
+     Auten.crearSesion();
      $state.go('login');
   }
 });
