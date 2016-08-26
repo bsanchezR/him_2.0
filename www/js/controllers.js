@@ -198,6 +198,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     console.log("local : " + $scope.respuesta.id);
 
     $scope.actualiza = function(){
+
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
       console.log($scope.respuesta);
        $http.get(linkGet).then(function successCallback(response) {
@@ -550,10 +551,10 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
         for (var i = inicio; i < fin; i = i + 86400000) {
 
           if(eventos.summary == "Period"){
-            var temp = { date: new Date(i),color: 'red',textColor: '#fff'};
+            var temp = { date: new Date(i),color: '#DA0203',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }else if(eventos.summary == "Fertile"){
-            var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
+            var temp = {date: new Date(i),color: '#ff9900',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }else if(eventos.summary == "Ovulation"){
             var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
@@ -727,7 +728,40 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-
+//
+// <<<<<<< HEAD
+// =======
+// //activar en productivo
+//   console.log("Device Ready")
+//   var push = PushNotification.init({
+//     "android": {
+//       "senderID": "898342355996",
+//       "icon": 'iconName',  // Small icon file name without extension
+//       "iconColor": '#248BD0'
+//     },º
+//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+//
+//   push.on('registration', function(data) {
+//   console.log(data.registrationId);
+//   $("#gcm_id").html(data.registrationId);
+//   });
+//
+//   push.on('notification', function(data) {
+//   console.log(data.message);
+//   alert(data.title+" Message: " +data.message);
+//
+//   data.title,
+//   data.count,
+//   data.sound,
+//   data.image,
+//   data.additionalData
+//   });
+//
+//   push.on('error', function(e) {
+//   console.log(e.message);
+//   });
+//
+// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -804,7 +838,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   $scope.cerrar =  function(){
-     Auten.cerrarSesion();
+     Auten.crearSesion();
      $state.go('login');
   }
 });
