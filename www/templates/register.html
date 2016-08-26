@@ -1,45 +1,47 @@
-<ion-view title="Registrar" id="page9" class=" ">
-    <ion-content padding="true" class="has-header">
+<ion-view title="Registro" id="page9" class="login">
+    <ion-content class="trans marg">
+      <div class="row">
+        <div class="col col-50">
+          <img src="img/registro.png" class="center logo_pos_log">
+        </div>
+  		</div>
 		<div class="row row-center">
-      <img src="img/logo.png" class="center">
-		</div>
-		<div class="row row-center">
-			<div class="col col-100">
-				<div class="list">
-					<label class="item item-input item-floating-label">
-						<span class="input-label">Tel&eacute;fono</span>
-						<input type="number" ng-model="aut.telefono" placeholder="Telefono">
-					</label>
-					<label class="item item-input item-floating-label">
+			<div class="col col-80 col-offset-10">
+          <label class="item item-input item-floating-label" style="margin:-6px;">
+            <span class="input-label">Tel&eacute;fono</span>
+            <input type="text" ng-model="aut.telefono" placeholder="Tel&eacute;fono">
+          </label>
+					<label class="item item-input item-floating-label" style="margin:-6px;">
 						<span class="input-label">Contraseña</span>
 						<input type="password" ng-model="aut.pass" placeholder="Contraseña">
 					</label>
-          <label class="item item-input item-floating-label">
+          <label class="item item-input item-floating-label" style="margin:-6px;">
 						<span class="input-label">Nombre</span>
 						<input type="text" ng-model="aut.nombre" placeholder="Nombre">
 					</label>
-          <label class="item item-input item-floating-label">
+          <label class="item item-input item-floating-label" style="margin:-6px;">
             <span class="input-label">Apellido Paterno</span>
             <input type="text" ng-model="aut.apeP" placeholder="Apellido Paterno">
           </label>
-          <label class="item item-input item-floating-label">
+          <label class="item item-input item-floating-label" style="margin:-6px;">
             <span class="input-label">Apellido Materno</span>
             <input type="text" ng-model="aut.apeM" placeholder="Apellido Materno">
           </label>
-          <label class="item item-input item-floating-label">
+          <label class="item item-input item-floating-label" style="margin:-6px;">
             <span class="input-label">Edad</span>
             <input type="number" ng-model="aut.edad" placeholder="Edad">
           </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
+          <label class="item item-input item-select trans" style="    border-bottom-style: hidden; margin-top:5px;">
+            <div class="input-label trans">
               Sexo
             </div>
-            <select ng-model="aut.sexo">
+            <select class="trans" ng-model="aut.sexo">
               <option value="m">Hombre</option>
               <option value="f" selected>Mujer</option>
             </select>
           </label>
-					<a ng-click="guardar()" id="login-button5" class="button button-positive  button-block button-outline ">Resgistrar</a>
+          <div class="col col-90 col-offset-20">
+              <button ng-click="guardar()" id="login-button5" class="button button-positive mod_log">Resgistrar</button>
 				</div>
 			</div>
 		</div>
