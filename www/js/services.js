@@ -52,8 +52,8 @@ app.factory('Chats', function() {
 });
 
 app.factory('Preguntas', function(){
-    var respuestaId = angular.fromJson(window.localStorage['respuestaId'] || '[]'); 
-    
+    var respuestaId = angular.fromJson(window.localStorage['respuestaId'] || '[]');
+
     function persist(){
         window.localStorage['respuestaId'] = angular.toJson(respuestaId);
         console.log(window.localStorage['respuestaId']);
@@ -75,9 +75,9 @@ app.factory('Preguntas', function(){
 
 
 app.factory('Articulos', function() {
-  
-    var articulos = angular.fromJson(window.localStorage['articulos'] || '[]'); 
-    
+
+    var articulos = angular.fromJson(window.localStorage['articulos'] || '[]');
+
     function persist(){
         window.localStorage['articulos'] = angular.toJson(articulos);
     }
@@ -97,7 +97,7 @@ app.factory('Articulos', function() {
         post: function(art){
             console.log(art);
             console.log('servicios');
-            articulos = art; 
+            articulos = art;
             persist();
         },
         remove: function(id){
@@ -113,13 +113,13 @@ app.factory('Articulos', function() {
     };
 });
 
-    
-    
-    
+
+
+
 app.factory('Auten', function(){
-   
-    var aut = angular.fromJson(window.localStorage['aut'] || '[]'); 
-    
+
+    var aut = angular.fromJson(window.localStorage['aut'] || '[]');
+
     function persist(){
         window.localStorage['aut'] = angular.toJson(aut);
     }
@@ -131,6 +131,10 @@ app.factory('Auten', function(){
         crearSesion : function(res){
             aut = res;
             persist();
+        },
+        cerrarSesion : function(){
+            aut = '[]';
+            persist();
         }
     };
 
@@ -138,9 +142,9 @@ app.factory('Auten', function(){
 
 
 app.factory('ConfiguracionFact', function(){
-   
-    var con = angular.fromJson(window.localStorage['con'] || '[]'); 
-    
+
+    var con = angular.fromJson(window.localStorage['con'] || '[]');
+
     function persist(){
         window.localStorage['con'] = angular.toJson(con);
     }
@@ -159,9 +163,9 @@ app.factory('ConfiguracionFact', function(){
 
 
 app.factory('DiasFact', function(){
-   
-    var dias = angular.fromJson(window.localStorage['dias'] || '[]'); 
-    
+
+    var dias = angular.fromJson(window.localStorage['dias'] || '[]');
+
     function persist(){
         window.localStorage['dias'] = angular.toJson(dias);
     }
@@ -180,15 +184,58 @@ app.factory('DiasFact', function(){
             return null;
         },
         post : function(dia){
-            dias.push(dia); 
+            dias.push(dia);
             persist();
         }
     };
 
 } );
 
+
+app.factory('ArticulosGuardados', function(){
+
+    var articulosGuardados = angular.fromJson(window.localStorage['articulosGuardados'] || '[]');
+
+    function persist(){
+        window.localStorage['articulosGuardados'] = angular.toJson(articulosGuardados);
+    }
+
+    return {
+        all : function(){
+            return articulosGuardados;
+        },
+        get: function(id){
+            console.log(id);
+            for (var i = 0; i < articulosGuardados.length; i++) {
+                if (articulosGuardados[i].id === parseInt(id)) {
+                    return articulosGuardados[i];
+                }
+            }
+            return null;
+        },
+        post : function(articulosGuardado){
+            articulosGuardados.push(articulosGuardado);
+            persist();
+        },
+        remove: function(id){
+            for(var i = 0 ; i<articulos.length; i++)
+            {
+                if(articulos[i].id === id){
+                    articulos.splice(i,1)
+                    persist();
+                    return;
+                }
+            }
+        }
+    };
+} );
+
+
+
+
+
     }());//fin de todo
-    
+
 
 
 
@@ -211,7 +258,7 @@ app.factory('DiasFact', function(){
 //    titulo: 'Metodos anticonceptivos',
 //      extracto : 'Como una "media de goma" para tu órgano sexual. Usa uno que tenga espermicida. Siempre usa un condon de latex, porque los condones de piel de borrego no te protegen contra el VIH o los ETS, y los condones de plastico se rompen con más facilidad que los de latex. Si crees que puedes ser alérgico al látex lée "Solucionando problemas."',
 //      contenido: '<h3>Condón/goma:</h3>Como una "media de goma" para tu órgano sexual. Usa uno que tenga espermicida. Siempre usa un condon de latex, porque los condones de piel de borrego no te protegen contra el VIH o los ETS, y los condones de plastico se rompen con más facilidad que los de latex. Si crees que puedes ser alérgico al látex lée "Solucionando problemas." Si usas un lubricante durante el acto sexual, evitarás que el condón se rompa. También reduce la irritación y el malestar vaginal.<h3>Condón de Mujer:</h3>Una bolsita de plastico que se acomoda adentro de la vagina con un plastico circular flexible. Es menos efectivo que el condon de homre y es más caro. Pero si has tenido reacciones alergicas con el latex, puede ser una buena alternativa. Algunas mujeres lo prefieren, otras lo encuentran muy bultoso. No se debe de usar para el sexo anal, y no recomendamos que se use con juguetes de sexo.<h3>Espermicida:</h3>Es un tipo de crema, loción o supositorio que se pone en la vagina para matar el esperma. Usalo con otros métodos de control de la natalidad. Si desarrollas infecciones en la orina deja de usar el espermicida.<h4>En las clínicas de servicios de salud:</h4><h3>Diafragma:</h3>Parece un pequeño "frisbee" de goma y se coloca en la vagina. Debes usarlo con un espermicida.<h3>"Gorra" cervical:</h3>Tiene forma de dedal y es de goma. Se coloca en la vagina y se debe usar con un espermicida.<h3>La píldora:</h3>Es una pastillita que se debe tomar todos los días a la misma hora. Si no la tomas un día, debes usar otro método de control durante el resto del mes. La píldora provoca ciertas reacciones -consulta a tu médico.<h3>La píldora "morning after":</h3>Varias pastillas que se deben tomar tres días después de haber tenido relaciones sexuales sin ningún tipo de protección. Se debe usar sólo en casos de emergencia. Causa ciertas reacciones. Para más información llame a la línea de ayuda sobre anticonceptivos 1-888-NOT-2-LATE (1-888-668-2528).<h3>D.I.U. :</h3>El dispositivo intrauterino (en inglés, I.U.D.) es un pequeño objeto de plástico y en forma de T que tiene un cordón pegado en el extremo, y se coloca dento del útero. A partir de su aplicación, la paciente puede mantener relaciones sexuales sin riesgo de gestación. La colocación puede hacerse en el consultorio durante una visita a su médico. Una vez en su lugar, el DIU se mantiene dentro del útero hasta que su médico lo retira.<h3>Depo Provera:</h3>Una vacuna para prevenir un embarazo que dura 3 meses. Es posible tener riesgos de salud serios y efectos laterales que pueden durar varios meses. Ya tomándose la vacuna, la decisión será final. Una vez puesto lo tienes que mantener por lo menos tres mesese. NO LO RECOMENDAMOS.<h3>"Norplant:"</h3>Un método de protección contra el término largo (5 años). Es un implante debajo de la piel, usualmente en el brazo. Puede causar ciertos riesgos de salud serios y efectos laterals. Puede causar demasiado daño para adolescentes. NO LO RECOMENDAMOS.<h3>Disponible en todas partes, pero no ofrece seguridad:</h3><h4>Sacar antes de eyacular:</h4>Aunque algunos muchachos sienten cuando ya se van a venir no siempre se salen a tiempo. Además cuando el pene se para, empieza a gotear un poquito de semen, mucho tiempo antes de que el muchacho se venga. Este poquito de semen puede causar un embarazo y también puede transmitir el VIH y otras enfermedades transmitidas sexualmente. NO LO RECOMENDAMOS.<h4>Método de Ritmo:</h4>Este método usa el ciclo menstual para predecir qué días tienen mas posibilidad de que la mujer se embarazca, y después solamente tener relaciones sexuales el resto de los días. Este método no es eficaz y seguido resulta en embarazos accidentales. NO LO RECOMENDAMOS.',
-//      
+//
 //    imagen: 'img/2.jpg'
 //  }, {
 //    id: 2,
@@ -233,4 +280,3 @@ app.factory('DiasFact', function(){
 //    imagen: 'img/4.jpg'
 //  }];
 //
-

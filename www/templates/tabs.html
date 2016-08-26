@@ -12,18 +12,23 @@ navigation history that also transitions its views in and out.
   </ion-tab>
 
   <!-- Account Tab -->
-  <ion-tab icon-off="calendar" icon-on="calendar" href="#/tab/configuracion">
+  <ion-tab ng-if = "rels" icon-off="calendar" icon-on="calendar" href="#/tab/configuracion">
     <ion-nav-view name="tab-account"></ion-nav-view>
+  </ion-tab>
 
-
-
-    </ion-tab>
-
-
-
-    <!-- Chats Tab -->
+  <!-- Chats Tab -->
   <ion-tab icon-off="chat" icon-on="chat" href="#/tab/chats">
     <ion-nav-view name="tab-chats"></ion-nav-view>
+  </ion-tab>
+
+  <!-- mapa Tab -->
+  <ion-tab icon-off="ion-map" icon-on="ion-map" href="#/tab/map">
+    <ion-nav-view name="tab-chats"></ion-nav-view>
+  </ion-tab>
+
+  <!-- configuración Tab -->
+  <ion-tab icon-off="ion-android-contact" icon-on="ion-android-contact" href="#/tab/config">
+    <ion-nav-view name="tab-config"></ion-nav-view>
   </ion-tab>
 
 </ion-tabs>

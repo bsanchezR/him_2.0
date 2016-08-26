@@ -1,65 +1,42 @@
 var app = angular.module('starter.controllers', [])
 
-app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
+app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$state,$http,Articulos,Auten,$cordovaFileTransfer) {
+    document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
     $scope.articulos = Articulos.all();
-
-    if (typeof Auten.validar().telefono != 'undefined')
-    {
-      console.log(Auten.validar());
-    }
-    else{
-       $state.go('login');
-    }
+    console.log($scope.articulos);
+    cargarPost();
 
     $scope.CargarNuevosPost =  function()
     {
         var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
-
         $http.get(urlNuevosArticulos)
         .success(function(posts){
             var nuevosArticulos = [];
-
-
-
             angular.forEach(posts.data,function(post){
                     nuevosArticulos.push(post);
             });
-
             //guardamos todo los nuevo en local
+            //console.log($scope.articulos);
             $scope.articulos = nuevosArticulos;
             Articulos.post($scope.articulos);
-
-
-//            angular.forEach(posts.data,function(post){
-//                if(Articulos.get(post.id) == null ){
-//                    console.log('entro');
-//                    nuevosArticulos.push(post);
-//                }
-//            });
-//
-//            //guardamos todo los nuevo en local
-//            $scope.articulos = nuevosArticulos.concat($scope.articulos);
-//            Articulos.post($scope.articulos);
-
-            //validamos los articulos que deben ser eliminados
-//            var existe = null;
-//            angular.forEach(Articulos.all() ,function(articulo){
-//
-//                for (var i = 0; i < posts.data.length; i++) {
-//                    if (posts.data[i].id === parseInt(articulo.id)) {
-//                        existe = posts.data[i];
-//                    }
-//                }
-//
-//                if(existe == null){
-//                    Articulos.remove(articulo.id);
-//                }
-//            });
-//
             $scope.$broadcast('scroll.refreshComplete');
         });
     };
 
+    function cargarPost()
+    {
+      var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+      $http.get(urlNuevosArticulos)
+      .success(function(posts){
+        var nuevosArticulos = [];
+        angular.forEach(posts.data,function(post){
+                 nuevosArticulos.push(post);
+         });
+         //guardamos todo los nuevo en local
+         $scope.articulos = nuevosArticulos;
+         Articulos.post($scope.articulos);
+     });
+    }
 
     //vamos hacer pruebas de file con cordova
  // function testFileDownload(url) {
@@ -105,7 +82,7 @@ app.controller('DashCtrl', function($scope,$state,$http,Articulos,Auten,$cordova
 
 });
 
-app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing, $cordovaFileTransfer) {
   if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -117,8 +94,58 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,Auten, $state,$state
   $scope.articulo = Articulos.get($stateParams.articuloId);
 
   $scope.shareAnywhere = function() {
-       $cordovaSocialSharing.share("Este es un mensaje", "Esto es mi asunto", "www/img/logo.png", "birdev.mx");
+        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+       $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl);
    }
+
+  $scope.guardarArticulo = function(id){
+      //ArticulosGuardados.
+      console.log("valida articulo" + ArticulosGuardados.get(id));
+      var articulo;
+      if(!ArticulosGuardados.get(id)){
+        articulo = Articulos.get(id)
+        ArticulosGuardados.post(articulo);
+      }else{
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Oh no!',
+           template: 'El articulo que intentas guardar ya esta guardado'
+         });
+      }
+
+      //vamos hacer pruebas de file con cordova
+      var url = "http://birdev.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
+      testFileDownload(url);
+  }
+
+
+  function testFileDownload(url)
+  {
+
+    cordova.plugins.diagnostic.requestCameraAuthorization(function(status){
+        console.log("Successfully requested camera authorization: authorization was " + status);
+        //alert("Checado");
+        //checkState();
+        var filename = url.split("/").pop();
+
+
+        // Save location
+        var targetPath = cordova.file.externalRootDirectory+"him/"+filename;
+        console.log(targetPath);
+        $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+            console.log('Success');
+        }, function (error) {
+            console.log(error);
+        }, function (progress) {
+            // PROGRESS HANDLING GOES HERE
+            console.log(progress);
+        });
+
+    }, function(error){
+        console.error(error);
+        //alert("no checado");
+    });
+
+  }
 
 });
 
@@ -131,17 +158,34 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     else{
        $state.go('login');
     }
+
+
+    var fechaActual = new Date();
+    var hora = fechaActual.getHours();
+
+
+    if(hora >= 18 || hora < 9)
+    {
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Oh no!',
+           template: 'El horario de atención es de 9 a 18 horas puedes mandarnos tu pregunta pero esta sera respuesta apartir de las 9 horas. Gracias'
+         });
+    }
+
+
     //constantes y cosas que se tienen que inicializar para el modulo
     $scope.nota =  {id: '', mensaje:''};
     $scope.respuesta = {id:'' , mensaje: ''};
     var link = 'http://www.birdev.mx/message_app/public/messages';
     var linkRespuesta = 'http://www.birdev.mx/message_app/public/response';
+    var linkHist = 'http://www.birdev.mx/message_app/public/historial';
 
     $scope.respuesta.id = Preguntas.list();
 
     console.log("local : " + $scope.respuesta.id);
 
     $scope.actualiza = function(){
+
       linkGet = linkRespuesta +'/'+ $scope.respuesta.id;
       console.log($scope.respuesta);
        $http.get(linkGet).then(function successCallback(response) {
@@ -259,7 +303,7 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
 
 });
 
-app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,$ionicHistory) {
+app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact) {
     if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -504,7 +548,23 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
     }
 });
 
-app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$state){
+app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPopup,$state)
+{
+    //console.log("log", Auten.validar());
+    if(Auten.validar().sexo == 'f')
+    {
+        $scope.rels=false;
+    }
+    else
+    {
+        $scope.rels=true;
+      //  console.log("articulo",$scope.rels);
+    }
+});
+
+app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
+  document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
+    $ionicNavBarDelegate.showBackButton(true);
     //console.log(Auten.valida());
     if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -554,6 +614,7 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
       $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass })
            .then(function successCallback(response)
            {
+             console.log(response.data);
             if(response.data.mensaje == -1)
             {
               accesoError();
@@ -564,6 +625,15 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
             }
             else
             {
+                $scope.aut.sexo= response.data.data.sexo;
+                if($scope.aut.sexo == 'f')
+                {
+                    $scope.variable=false;
+                }
+                else
+                {
+                    $scope.variable=true;
+                }
                 Auten.crearSesion($scope.aut);
                 $state.go('tab.articulos');
             }
@@ -588,9 +658,10 @@ app.controller('loginCtrl' ,function($scope, Auten ,$http, $state, $ionicPopup,$
 
 });
 
-app.controller('inicioCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
-  document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
+app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state, $ionicHistory) {
 
+  document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
+  $ionicNavBarDelegate.showBackButton(false);
   $scope.comienza =  function(){
       $state.go('slide');
   }
@@ -599,19 +670,55 @@ app.controller('inicioCtrl', function($scope, Auten ,$http, $state, $ionicPopup,
       $state.go('login');
   }
 
+//activar en productivo
+  // console.log("Device Ready")
+  // var push = PushNotification.init({
+  //   "android": {
+  //     "senderID": "898342355996",
+  //     "icon": 'iconName',  // Small icon file name without extension
+  //     "iconColor": '#248BD0'
+  //   },
+  //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+  //
+  // push.on('registration', function(data) {
+  // console.log(data.registrationId);
+  // $("#gcm_id").html(data.registrationId);
+  // });
+  //
+  // push.on('notification', function(data) {
+  // console.log(data.message);
+  // alert(data.title+" Message: " +data.message);
+
+  // data.title,
+  // data.count,
+  // data.sound,
+  // data.image,
+  // data.additionalData
+  // });
+  //
+  // push.on('error', function(e) {
+  // console.log(e.message);
+  // });
+
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
   document.getElementsByTagName("ion-nav-bar")[0].style.display = "none";
   $scope.options = {
   loop: false,
-  effect: 'fade',
+  //effect: 'cube',
   speed: 500,
+  }
+
+  $scope.irlogin = function ()
+  {
+    $state.go('login');
   }
 
   $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
     // data.slider is the instance of Swiper
     $scope.slider = data.slider;
+    console.log(data.slider);
   });
 
   $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
@@ -622,5 +729,54 @@ app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$
     // note: the indexes are 0-based
     $scope.activeIndex = data.slider.activeIndex;
     $scope.previousIndex = data.slider.previousIndex;
+    // if(data.slider.isEnd)
+    // {
+    //
+    // }
+    console.log(data.slider.isEnd);
   });
+
+});
+
+
+app.controller('articulosGuardados', function($scope,ArticulosGuardados, Auten ,$http, $state, $ionicPopup,$state) {
+  $scope.articulos = ArticulosGuardados.all();
+
+  if (typeof Auten.validar().telefono != 'undefined')
+  {
+    console.log(Auten.validar());
+  }
+  else{
+     $state.go('login');
+  }
+
+});
+
+
+app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+  if (typeof Auten.validar().telefono != 'undefined')
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+  $scope.articulo = ArticulosGuardados.get($stateParams.id);
+
+
+  $scope.imgSrc =  "file:///storage/emulated/0//him/" + $scope.articulo.images[0].ruta.split('/').pop();
+  // $scope.imgSrc =  cordova.file.dataDirectory +"him/"+ $scope.articulo.images[0].ruta.split('/').pop();
+
+  $scope.shareAnywhere = function() {
+        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+       $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl );
+   }
+});
+
+
+app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+  $scope.cerrar =  function(){
+     Auten.crearSesion();
+     $state.go('login');
+  }
 });

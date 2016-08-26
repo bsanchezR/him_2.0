@@ -1,7 +1,7 @@
 (function(){
 var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed'])
 
-app.run(function($ionicPlatform) {
+app.run(function($ionicPlatform,Auten) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,8 +17,9 @@ app.run(function($ionicPlatform) {
   });
 })
 
-app.config(function($stateProvider, $urlRouterProvider) {
-
+app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
+  $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.backButton.previousTitleText(false);
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -28,18 +29,21 @@ app.config(function($stateProvider, $urlRouterProvider) {
   // setup an abstract state for the tabs directive
   .state('login', {
     url: '/login',
+    cache: false,
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
 
   .state('inicio', {
     url: '/inicio',
+    cache: false,
     templateUrl: 'templates/inicio.html',
     controller: 'inicioCtrl'
   })
 
   .state('register', {
     url: '/register',
+    cache: false,
     templateUrl: 'templates/register.html',
     controller: 'loginCtrl'
   })
@@ -47,7 +51,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    controller: 'tabController'
   })
   // Each tab has its own nav history stack:
  .state('tab.articulos', {
@@ -68,6 +73,27 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('tab.articulos-guardados', {
+        url: '/guardados',
+        views: {
+          'tab-articulos': {
+            templateUrl: 'templates/articulos-guardados.html',
+            controller: 'articulosGuardados'
+          }
+        }
+      })
+      .state('tab.articulo-completo-guardado', {
+          url: '/guardados/:id',
+          views: {
+            'tab-articulos': {
+              templateUrl: 'templates/articulo-completo-guardado.html',
+              controller: 'articuloCompletoGuardado'
+            }
+          }
+        })
+
+
+
 
   .state('tab.chats', {
       url: '/chats',
@@ -123,9 +149,21 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
   .state('slide', {
       url: '/slide',
+      cache: false,
       templateUrl: 'templates/slide.html',
       controller: 'slideCtrl'
-    });
+    })
+
+  .state('tab.config', {
+        url: '/config',
+        views: {
+          'tab-config': {
+            templateUrl: 'templates/tab-config.html',
+            controller: 'ConfigCtrl'
+          }
+        }
+      })
+      ;
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/inicio');
