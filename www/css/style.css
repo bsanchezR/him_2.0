@@ -30,7 +30,7 @@
 .color{
   height: 50px;
   width: 50px;
-  background-color: yellow;
+
   border-radius: 25px;
   float: left;
   margin-right: 20px;
@@ -41,8 +41,12 @@
 
 .amarillo{
   color: #FBD504;
+  background-color: #FBD504;
 }
-
+.naranja{
+color: #ff9900;
+background-color: #ff9900;
+}
 /*.bar .buttons span
 {
     display: none;

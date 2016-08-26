@@ -526,10 +526,10 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
         for (var i = inicio; i < fin; i = i + 86400000) {
 
           if(eventos.summary == "Period"){
-            var temp = { date: new Date(i),color: 'red',textColor: '#fff'};
+            var temp = { date: new Date(i),color: '#DA0203',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }else if(eventos.summary == "Fertile"){
-            var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
+            var temp = {date: new Date(i),color: '#ff9900',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }else if(eventos.summary == "Ovulation"){
             var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
@@ -671,34 +671,34 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   }
 
 //activar en productivo
-  // console.log("Device Ready")
-  // var push = PushNotification.init({
-  //   "android": {
-  //     "senderID": "898342355996",
-  //     "icon": 'iconName',  // Small icon file name without extension
-  //     "iconColor": '#248BD0'
-  //   },
-  //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-  //
-  // push.on('registration', function(data) {
-  // console.log(data.registrationId);
-  // $("#gcm_id").html(data.registrationId);
-  // });
-  //
-  // push.on('notification', function(data) {
-  // console.log(data.message);
-  // alert(data.title+" Message: " +data.message);
+  console.log("Device Ready")
+  var push = PushNotification.init({
+    "android": {
+      "senderID": "898342355996",
+      "icon": 'iconName',  // Small icon file name without extension
+      "iconColor": '#248BD0'
+    },
+    "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
 
-  // data.title,
-  // data.count,
-  // data.sound,
-  // data.image,
-  // data.additionalData
-  // });
-  //
-  // push.on('error', function(e) {
-  // console.log(e.message);
-  // });
+  push.on('registration', function(data) {
+  console.log(data.registrationId);
+  $("#gcm_id").html(data.registrationId);
+  });
+
+  push.on('notification', function(data) {
+  console.log(data.message);
+  alert(data.title+" Message: " +data.message);
+
+  data.title,
+  data.count,
+  data.sound,
+  data.image,
+  data.additionalData
+  });
+
+  push.on('error', function(e) {
+  console.log(e.message);
+  });
 
   });
 
