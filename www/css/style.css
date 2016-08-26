@@ -116,6 +116,7 @@
 {
   color:white;
   font-style: italic;
+  white-space: inherit !important;
 }
 
 .card_mod
@@ -166,12 +167,12 @@
 
 .paddi-s
 {
-  padding: 0;
+  padding: 0 !important;
 }
 
 .card
 {
-  margin: 0;
+  margin: 0 !important;
 }
 
 .marg
@@ -264,7 +265,7 @@ ion-tabs.tabs-striped.tabs-color-active-royal .tab-item.tab-item-active, ion-tab
 
 .trans
 {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
 ion-tabs.tabs-color-active-royal .tab-item
@@ -345,6 +346,37 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
     border-radius: 10px;
     overflow: hidden !important;
     margin-bottom: 10px !important;
+}
+
+.bord-rds
+{
+    border: 0px;
+    overflow: hidden !important;
+    margin-bottom: 0 !important;
+}
+
+.pregunta
+{
+  background-color: #e5e5e5;
+  margin-bottom: 12px !important;
+  border-radius: 0 10px 10px 10px !important;
+  padding: 3px !important;
+}
+
+.respuesta
+{
+  background-color: #1787fb;
+  margin-bottom: 12px !important;
+  border-radius: 10px 10px 0px 10px !important;
+  padding: 3px !important;
+  color: white;
+}
+
+.overf
+{
+    overflow: visible !important;
+    white-space: inherit !important;
+    margin-bottom: 3px;
 }
 
 .div-off
@@ -446,6 +478,11 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 .text-white
 {
   color:white;
+}
+
+.text-black
+{
+  color:black !important;
 }
 
 .text-yellow

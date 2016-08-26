@@ -1,12 +1,12 @@
 <ion-view view-title="Chat" class="login">
-    <ion-content>
+    <ion-content class="marg paddi-s">
 
        <ion-refresher class="marg"
     pulling-text="Pull to refresh..."
     on-refresh="actualiza()">
           </ion-refresher>
 
-      <div class="card marg trans">
+      <!-- <div class="card marg trans">
         <div class="item item-divider trans out_bord">
           Respuesta
         </div>
@@ -17,12 +17,21 @@
         <div class="list card trans">
             <div class="item-input trans">
                 <textarea class="trans" ng-model="nota.mensaje" placeholder="Mensaje">
-                </textarea>
+                </textarea>º
             </div>
+        </div> -->
+        <div class="row">
+          <div class="col col-80 col-offset-10">
+            <ion-item class="trans bord-rds" ng-repeat="mensaje in mensajes " ng-class="{'pregunta' : 0 == mensaje.respuesta, 'respuesta' : 1 == mensaje.respuesta }">
+              <div class="col col-80 col-offset-20 overf">
+                <p class="fuente overf" ng-class="{'text-black' : 0 == mensaje.respuesta}" ng-bind-html="mensaje.mensaje"></p>
+              </div>
+            </ion-item>
+          </div>
         </div>
-        <div class="row trans">
-          <div class="col col-50 col-offset-33">
-              <button class="button button-royal mod_log" ng-click="enviar()">Enviar Mensaje</button>
+        <div class="row trans item-content" style="height:100%; position: absolute; bottom: -100%;">
+          <div class="col col-100 item-content">
+              <button class="button button-royal mod_log" style="width:100%; border-radius:0;" ng-click="enviar()">Enviar</button>
           </div>
         </div>
     </ion-content>
