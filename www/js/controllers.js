@@ -105,14 +105,10 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
       if(!ArticulosGuardados.get(id)){
         articulo = Articulos.get(id)
         ArticulosGuardados.post(articulo);
-        var alertPopup = $ionicPopup.alert({
-           title: '¡Listo!',
-           template: 'El artículo a sido guardado !!'
-         });
       }else{
         var alertPopup = $ionicPopup.alert({
            title: '¡Oh no!',
-           template: 'El artículo que intentas guardar ya esta guardado'
+           template: 'El articulo que intentas guardar ya esta guardado'
          });
       }
 
@@ -211,11 +207,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.respuesta.id = '';
            Preguntas.actualiza( $scope.respuesta);
 
-           $http.get(urlHist)
-           .success(function(data){
-               $scope.mensajes=data.data;
-               console.log($scope.mensajes);
-           });
 
            $scope.$broadcast('scroll.refreshComplete');
 
@@ -252,13 +243,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             var temp = Preguntas.list();
             //console.log('lista : '+Preguntas.list());
             console.log(temp);
-
-            $http.get(urlHist)
-            .success(function(data){
-                $scope.mensajes=data.data;
-                console.log($scope.mensajes);
-            });
-
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
             });
@@ -591,35 +575,35 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   //activar en productivo
 
-    var gcmid;
-    console.log("Device Ready")
-    var push = PushNotification.init({
-      "android": {
-        "senderID": "898342355996",
-        "icon": 'iconName',  // Small icon file name without extension
-        "iconColor": '#248BD0'
-      },
-      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    push.on('registration', function(data) {
-    console.log(data.registrationId);
-    gcmid = data.registrationId;
-    $("#gcm_id").html(data.registrationId);
-    });
-
-    push.on('notification', function(data) {
-      console.log(data.message);
-      alert(data.title+" Message: " +data.message);
-
-      data.title,
-      data.count,
-      data.sound,
-      data.image,
-      data.additionalData
-    });
-
-    push.on('error', function(e) {
-    console.log(e.message);
-    });
+    // var gcmid;
+    // console.log("Device Ready")
+    // var push = PushNotification.init({
+    //   "android": {
+    //     "senderID": "898342355996",
+    //     "icon": 'iconName',  // Small icon file name without extension
+    //     "iconColor": '#248BD0'
+    //   },
+    //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+    // push.on('registration', function(data) {
+    // console.log(data.registrationId);
+    // gcmid = data.registrationId;
+    // $("#gcm_id").html(data.registrationId);
+    // });
+    //
+    // push.on('notification', function(data) {
+    //   console.log(data.message);
+    //   alert(data.title+" Message: " +data.message);
+    //
+    //   data.title,
+    //   data.count,
+    //   data.sound,
+    //   data.image,
+    //   data.additionalData
+    // });
+    //
+    // push.on('error', function(e) {
+    // console.log(e.message);
+    // });
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -645,7 +629,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
          exit();
       }
       var url  = 'http://www.birdev.mx/message_app/public/user';
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1/*, gcm_id : gcmid*/ })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -670,7 +654,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   $scope.validar =  function(){
     var url  = 'http://www.birdev.mx/message_app/public/user';
   //  console.log(gcmid);
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass , gcm_id : gcmid })
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass/* , gcm_id : gcmid */})
            .then(function successCallback(response)
            {
              console.log(response.data);
@@ -685,7 +669,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             else
             {
                 $scope.aut.sexo= response.data.data.sexo;
-                if($scope.aut.sexo == 'm')
+                if($scope.aut.sexo == 'f')
                 {
                     $scope.variable=false;
                 }

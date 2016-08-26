@@ -5,6 +5,7 @@
     pulling-text="Pull to refresh..."
     on-refresh="actualiza()">
           </ion-refresher>
+
       <!-- <div class="card marg trans">
         <div class="item item-divider trans out_bord">
           Respuesta
@@ -19,7 +20,7 @@
                 </textarea>º
             </div>
         </div> -->
-        <div class="row" id="mensajes_historial">
+        <div class="row">
           <div class="col col-80 col-offset-10">
             <div class="paddi-s" ng-repeat="mensaje in mensajes" ng-class="{'pregunta' : 0 == mensaje.respuesta, 'respuesta' : 1 == mensaje.respuesta }">
               <div class="col col-80 col-offset-20 paddi-s">
@@ -29,12 +30,17 @@
                 <img src="../img/servi.png" style="width:75%;"/>
               </div> -->
             </div>
+            <!-- <ion-item class="trans bord-rds" ng-repeat="mensaje in mensajes " ng-class="{'pregunta' : 0 == mensaje.respuesta, 'respuesta' : 1 == mensaje.respuesta }">
+              <div class="col col-80 col-offset-20">
+                <p class="fuente overf" ng-class="{'text-black' : 0 == mensaje.respuesta}" ng-bind-html="mensaje.mensaje"></p>
+              </div>
+            </ion-item> -->
           </div>
         </div>
     </ion-content>
-    <div class="row trans item-content" style="height:100%;     position: absolute;     bottom: -100vh;    margin-bottom: 100px;">
+    <div class="row trans item-content" style="height:100%; position: fixed; top: 86%;">
       <div class="col col-100">
-          <input type="text" ng-model="nota.mensaje" placeholder="Mensaje ..." style="width:80%; display:inline; padding:0; margin:0; height:50px !important; margin-left: -1%;">
+          <input type="text" ng-model="nombre" placeholder="Mensaje ..." style="width:80%; display:inline; padding:0; margin:0; height:50px !important; margin-left: -1%;">
           <button class="button button-royal mod_log" style=" width:23%; height:50px !important; border-radius:0; display:inline; padding:0; margin:0; margin-left: -1%;" ng-click="enviar()">Enviar</button>
       </div>
     </div>
