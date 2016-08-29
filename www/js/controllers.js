@@ -107,7 +107,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
         ArticulosGuardados.post(articulo);
         var alertPopup = $ionicPopup.alert({
            title: '¡Listo!',
-           template: 'El artículo a sido guardado !!'
+           template: 'El artículo ha sido guardado !!'
          });
       }else{
         var alertPopup = $ionicPopup.alert({
@@ -710,8 +710,8 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   function mensajeError(mensaje){
     var alertPopup = $ionicPopup.alert({
-       title: 'Oh no!!',
-       template: mensaje+' :('
+       title: 'Espera !!',
+       template: mensaje
      });
   }
 
@@ -838,7 +838,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   $scope.cerrar =  function(){
-     Auten.crearSesion();
+     Auten.cerrarSesion();
      $state.go('login');
   }
 });
