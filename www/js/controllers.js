@@ -576,7 +576,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPopup,$state)
 {
     //console.log("log", Auten.validar());
-    if(Auten.validar().sexo == 'f')
+    if(Auten.validar().sexo == 'm')
     {
         $scope.rels=false;
     }
@@ -685,14 +685,16 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             else
             {
                 $scope.aut.sexo= response.data.data.sexo;
-                if($scope.aut.sexo == 'm')
-                {
-                    $scope.variable=false;
-                }
-                else
-                {
-                    $scope.variable=true;
-                }
+                // if($scope.aut.sexo == 'm')
+                // {
+                //     $scope.variable=false;
+                //     $scope.rels=false;
+                // }
+                // if($scope.aut.sexo == 'f')
+                // {
+                //     $scope.rels=true;
+                //     $scope.variable=true;
+                // }
                 Auten.crearSesion($scope.aut);
                 $state.go('tab.articulos');
             }
