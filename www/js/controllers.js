@@ -178,11 +178,11 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     console.log(Auten.validar());
     $http.get(urlHist+Auten.validar().telefono)
     .success(function(data){
-        $scope.mensajes = data.data;
-        console.log(Auten.validar().telefono);
-        console.log($scope.mensajes);
-
+        Preguntas.actualiza(data.data);
+        $scope.mensajes = Preguntas.list();
     });
+
+    $scope.mensajes = Preguntas.list();
 
 
     //constantes y cosas que se tienen que inicializar para el modulo
@@ -206,16 +206,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
                   $scope.response.push(response.data);
                 });
 
-            //tenemos que elimiara el id o ponerlo vacio
-           $scope.respuesta.id = '';
-           Preguntas.actualiza( $scope.respuesta);
-
            $http.get(urlHist+Auten.validar().telefono)
            .success(function(data){
-               $scope.mensajes = data.data;
-               console.log(Auten.validar());
-               console.log($scope.mensajes);
+               Preguntas.actualiza(data.data);
+               $scope.mensajes = Preguntas.list();
            });
+
+
 
            $scope.$broadcast('scroll.refreshComplete');
 
@@ -246,20 +243,14 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             $scope.nota.id = '';
             $scope.nota.mensaje = '';
 
-            console.log("primer consol : " + $scope.respuesta.id);
-
-            Preguntas.actualiza($scope.respuesta);
-            var temp = Preguntas.list();
-            //console.log('lista : '+Preguntas.list());
-            console.log(temp);
 
             $http.get(urlHist+Auten.validar().telefono)
             .success(function(data){
-
-                $scope.mensajes = data.data;
-                console.log($scope.mensajes);
-                console.log(Auten.validar());
+              Preguntas.actualiza(data.data);
+              $scope.mensajes = Preguntas.list();
             });
+
+
 
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");

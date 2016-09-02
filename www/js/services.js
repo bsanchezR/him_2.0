@@ -56,7 +56,7 @@ app.factory('Preguntas', function(){
 
     function persist(){
         window.localStorage['respuestaId'] = angular.toJson(respuestaId);
-        console.log(window.localStorage['respuestaId']);
+        
     }
 
     return {
@@ -64,7 +64,7 @@ app.factory('Preguntas', function(){
               return respuestaId;
           },
         actualiza : function(res){
-            respuestaId = res.id;
+            respuestaId = res;
             persist();
         },
         delete : function(){
