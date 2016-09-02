@@ -15,8 +15,8 @@
           </label>
       </div>
       <div class="col col-50 float-on">
-        <ion-list class="trans">
-           <ion-item class="item-icon-right item-text-wrap trans bord-rd" ng-repeat="articulo in articulos | filter:  busqueda" ng-class="{'div-off' : 0 == $index%3, 'div-on' : 0 != $index%3 }" ng-if="$index%2 != 0" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
+        <ion-list class="trans-less">
+           <ion-item class="item-icon-right item-text-wrap trans-less bord-rd" ng-repeat="articulo in articulos | filter:  busqueda" ng-class="{'div-off' : 3 == $index%4, 'div-on' : 1 == $index%4 }" ng-if="$index%2 != 0" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
              <img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" style="height:200px; width:100%">
              <div class="contenido">
                <h2 class="fuente_tit">{{articulo.title}}</h2>
@@ -28,8 +28,8 @@
          </ion-list>
       </div>
       <div class="col col-50 float-off">
-        <ion-list class="trans">
-           <ion-item class="item-icon-right item-text-wrap trans bord-rd" ng-repeat="articulo in articulos | filter:  busqueda" ng-class="{'divs-off' : 0 == $index%4, 'divs-on' : 0 != $index%4}" ng-if="$index%2 == 0" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
+        <ion-list class="trans-less">
+           <ion-item class="item-icon-right item-text-wrap trans-less bord-rd" ng-repeat="articulo in articulos | filter:  busqueda" ng-class="{'divs-off' : 0 == $index%4, 'divs-on' : 0 != $index%4}" ng-if="$index%2 == 0" type="item-text-wrap" href="#/tab/articulos/{{articulo.id}}">
               <img ng-src=" http://birdev.mx/message_app/public/images/{{articulo.images[0].ruta.split('/').pop()}}" style="height:200px; width:100%">
              <div class=" contenido">
                <h2 class="fuente_tit">{{articulo.title}}</h2>

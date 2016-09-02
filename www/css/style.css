@@ -30,7 +30,7 @@
 .color{
   height: 50px;
   width: 50px;
-  background-color: yellow;
+
   border-radius: 25px;
   float: left;
   margin-right: 20px;
@@ -41,8 +41,12 @@
 
 .amarillo{
   color: #FBD504;
+  background-color: #FBD504;
 }
-
+.naranja{
+color: #ff9900;
+background-color: #ff9900;
+}
 /*.bar .buttons span
 {
     display: none;
@@ -116,6 +120,7 @@
 {
   color:white;
   font-style: italic;
+  white-space: inherit !important;
 }
 
 .card_mod
@@ -146,7 +151,7 @@
 
 .overflow-scroll .scroll
 {
-  height: 50%;
+  height: 100%;
 }
 
 .has-header
@@ -166,12 +171,12 @@
 
 .paddi-s
 {
-  padding: 0;
+  padding: 0 !important;
 }
 
 .card
 {
-  margin: 0;
+  margin: 0 !important;
 }
 
 .marg
@@ -264,6 +269,11 @@ ion-tabs.tabs-striped.tabs-color-active-royal .tab-item.tab-item-active, ion-tab
 
 .trans
 {
+  background-color: transparent !important;
+}
+
+.trans-less
+{
   background-color: transparent;
 }
 
@@ -345,6 +355,37 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
     border-radius: 10px;
     overflow: hidden !important;
     margin-bottom: 10px !important;
+}
+
+.bord-rds
+{
+    border: 0px;
+    overflow: hidden !important;
+    margin-bottom: 0 !important;
+}
+
+.pregunta
+{
+  background-color: #e5e5e5;
+  margin-bottom: 12px !important;
+  border-radius: 0 10px 10px 10px !important;
+  padding: 3px !important;
+}
+
+.respuesta
+{
+  background-color: #1787fb;
+  margin-bottom: 12px !important;
+  border-radius: 10px 10px 0px 10px !important;
+  padding: 3px !important;
+  color: white;
+}
+
+.overf
+{
+    overflow: visible !important;
+    white-space: inherit !important;
+    margin-bottom: 3px;
 }
 
 .div-off
@@ -446,6 +487,11 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 .text-white
 {
   color:white;
+}
+
+.text-black
+{
+  color:black !important;
 }
 
 .text-yellow

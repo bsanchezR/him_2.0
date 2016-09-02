@@ -105,10 +105,14 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
       if(!ArticulosGuardados.get(id)){
         articulo = Articulos.get(id)
         ArticulosGuardados.post(articulo);
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Listo!',
+           template: 'El artículo ha sido guardado !!'
+         });
       }else{
         var alertPopup = $ionicPopup.alert({
            title: '¡Oh no!',
-           template: 'El articulo que intentas guardar ya esta guardado'
+           template: 'El artículo que intentas guardar ya esta guardado'
          });
       }
 
@@ -173,6 +177,15 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     }
 
 
+
+    var urlHist = 'http://www.birdev.mx/message_app/public/historial/'+Auten.validar().telefono;
+    $http.get(urlHist)
+    .success(function(data){
+        $scope.mensajes=data.data;
+        console.log($scope.mensajes);
+    });
+
+
     //constantes y cosas que se tienen que inicializar para el modulo
     $scope.nota =  {id: '', mensaje:''};
     $scope.respuesta = {id:'' , mensaje: ''};
@@ -198,6 +211,11 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.respuesta.id = '';
            Preguntas.actualiza( $scope.respuesta);
 
+           $http.get(urlHist)
+           .success(function(data){
+               $scope.mensajes=data.data;
+               console.log($scope.mensajes);
+           });
 
            $scope.$broadcast('scroll.refreshComplete');
 
@@ -234,6 +252,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             var temp = Preguntas.list();
             //console.log('lista : '+Preguntas.list());
             console.log(temp);
+
+            $http.get(urlHist)
+            .success(function(data){
+                $scope.mensajes=data.data;
+                console.log($scope.mensajes);
+            });
+
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
             });
@@ -526,10 +551,10 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
         for (var i = inicio; i < fin; i = i + 86400000) {
 
           if(eventos.summary == "Period"){
-            var temp = { date: new Date(i),color: 'red',textColor: '#fff'};
+            var temp = { date: new Date(i),color: '#DA0203',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }else if(eventos.summary == "Fertile"){
-            var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
+            var temp = {date: new Date(i),color: '#ff9900',textColor: '#fff'};
             fechaParaPintar.push(temp);
           }else if(eventos.summary == "Ovulation"){
             var temp = {date: new Date(i),color: '#DA0203',textColor: '#fff'};
@@ -551,7 +576,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPopup,$state)
 {
     //console.log("log", Auten.validar());
-    if(Auten.validar().sexo == 'f')
+    if(Auten.validar().sexo == 'm')
     {
         $scope.rels=false;
     }
@@ -563,6 +588,40 @@ app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPop
 });
 
 app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
+
+  //activar en productivo
+
+    var gcmid;
+    console.log("Device Ready")
+    var push = PushNotification.init({
+      "android": {
+        "senderID": "898342355996",
+        "icon": 'iconName',  // Small icon file name without extension
+        "iconColor": '#248BD0'
+      },
+      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+    push.on('registration', function(data) {
+    console.log(data.registrationId);
+    gcmid = data.registrationId;
+    $("#gcm_id").html(data.registrationId);
+    });
+
+    push.on('notification', function(data) {
+      console.log(data.message);
+      alert(data.title+" Message: " +data.message);
+
+      data.title,
+      data.count,
+      data.sound,
+      data.image,
+      data.additionalData
+    });
+
+    push.on('error', function(e) {
+    console.log(e.message);
+    });
+
+
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
     $ionicNavBarDelegate.showBackButton(true);
     //console.log(Auten.valida());
@@ -586,7 +645,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
          exit();
       }
       var url  = 'http://www.birdev.mx/message_app/public/user';
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1})
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -610,8 +669,8 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   $scope.validar =  function(){
     var url  = 'http://www.birdev.mx/message_app/public/user';
-
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass })
+  //  console.log(gcmid);
+      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass , gcm_id : gcmid })
            .then(function successCallback(response)
            {
              console.log(response.data);
@@ -626,14 +685,16 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             else
             {
                 $scope.aut.sexo= response.data.data.sexo;
-                if($scope.aut.sexo == 'f')
-                {
-                    $scope.variable=false;
-                }
-                else
-                {
-                    $scope.variable=true;
-                }
+                // if($scope.aut.sexo == 'm')
+                // {
+                //     $scope.variable=false;
+                //     $scope.rels=false;
+                // }
+                // if($scope.aut.sexo == 'f')
+                // {
+                //     $scope.rels=true;
+                //     $scope.variable=true;
+                // }
                 Auten.crearSesion($scope.aut);
                 $state.go('tab.articulos');
             }
@@ -651,8 +712,8 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   function mensajeError(mensaje){
     var alertPopup = $ionicPopup.alert({
-       title: 'Oh no!!',
-       template: mensaje+' :('
+       title: 'Espera !!',
+       template: mensaje
      });
   }
 
@@ -669,37 +730,40 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-
-//activar en productivo
-  // console.log("Device Ready")
-  // var push = PushNotification.init({
-  //   "android": {
-  //     "senderID": "898342355996",
-  //     "icon": 'iconName',  // Small icon file name without extension
-  //     "iconColor": '#248BD0'
-  //   },
-  //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-  //
-  // push.on('registration', function(data) {
-  // console.log(data.registrationId);
-  // $("#gcm_id").html(data.registrationId);
-  // });
-  //
-  // push.on('notification', function(data) {
-  // console.log(data.message);
-  // alert(data.title+" Message: " +data.message);
-
-  // data.title,
-  // data.count,
-  // data.sound,
-  // data.image,
-  // data.additionalData
-  // });
-  //
-  // push.on('error', function(e) {
-  // console.log(e.message);
-  // });
-
+//
+// <<<<<<< HEAD
+// =======
+// //activar en productivo
+//   console.log("Device Ready")
+//   var push = PushNotification.init({
+//     "android": {
+//       "senderID": "898342355996",
+//       "icon": 'iconName',  // Small icon file name without extension
+//       "iconColor": '#248BD0'
+//     },º
+//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+//
+//   push.on('registration', function(data) {
+//   console.log(data.registrationId);
+//   $("#gcm_id").html(data.registrationId);
+//   });
+//
+//   push.on('notification', function(data) {
+//   console.log(data.message);
+//   alert(data.title+" Message: " +data.message);
+//
+//   data.title,
+//   data.count,
+//   data.sound,
+//   data.image,
+//   data.additionalData
+//   });
+//
+//   push.on('error', function(e) {
+//   console.log(e.message);
+//   });
+//
+// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -776,7 +840,71 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
   $scope.cerrar =  function(){
-     Auten.crearSesion();
+     Auten.cerrarSesion();
      $state.go('login');
   }
 });
+
+
+//
+// <?php
+// $to="ebbjjHzXzvo:APA91bHavOf29c5vFh5gSgn7E_qOg_9PXfLKX-Gz36rrgPkLeNh-uH7h6_1HA4S-LnzvnVeu17UfYdwno-byNXsCI3sQvGFBidtncflSSqvmA-MKU7E3OPZfIhlZHctpCkljihcIdbrV";
+// $title="Hola yo 2";
+// $message="Este es un mensaje para yo";
+//
+// $to2 = "crrAOfDofEk:APA91bHNWcRQNu_VOY9VBXK3D1velsew-mCeFlWMYzKEoigZctkvOLAMrhA4Z4d5zsvIGpWsRCrOS8NkleKpiKljirkprIH1zLrzLSLSEYUbh-j4WwdBWrM47mct28D0GxEi5SGE0zVz";
+// $title2="Hola maria";
+// $message2="si jala esa maria la del barrio";
+//
+// $to3 = "e8pLfJ5QfkI:APA91bHbybrs582yq6MWU60KD-5rTzL6a7U1MzWAZ7v-qGE65dVmK-YKv-pAd-Eqm8xj2YGV4J-fFFaEffizW2Qb78kf8DaOr0OI39DFto51VKtqmrxb9sD8y3uulm0BRbQ33f1xF2H1";
+// $title3="a huevo puto duy";
+// $message3="Este es un mensaje para duy";
+//
+//
+//
+// sendPush($to,$title,$message);
+// sendPush($to2,$title2,$message2);
+// sendPush($to3,$title3,$message3);
+//
+// function sendPush($to,$title,$message)
+// {
+// // API access key from Google API's Console
+// // replace API
+// define( 'API_ACCESS_KEY', 'AIzaSyCXWLGR0Pg1jGk52C7kVRjPOnkwRCCcMs4');
+// $registrationIds = array($to);
+// $msg = array
+// (
+// 'message' => $message,
+// 'title' => $title,
+// 'vibrate' => 1,
+// 'sound' => 1
+// // you can also add images, additionalData
+// );
+// $fields = array
+// (
+// 'registration_ids' => $registrationIds,
+// 'data' => $msg
+// );
+// $headers = array
+// (
+// 'Authorization: key=' . API_ACCESS_KEY,
+// 'Content-Type: application/json'
+// );
+// $ch = curl_init();
+// curl_setopt( $ch,CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
+// curl_setopt( $ch,CURLOPT_POST, true );
+// curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+// curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+// curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+// curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+// $result = curl_exec($ch );
+// curl_close( $ch );
+// echo $result;
+// }
+// ?>
+//
+// <?php
+//
+// //phpinfo()
+//
+//  ?>
