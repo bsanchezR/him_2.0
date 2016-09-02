@@ -163,10 +163,8 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
        $state.go('login');
     }
 
-
     var fechaActual = new Date();
     var hora = fechaActual.getHours();
-
 
     if(hora >= 18 || hora < 9)
     {
@@ -176,13 +174,14 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
          });
     }
 
-
-
-    var urlHist = 'http://www.birdev.mx/message_app/public/historial/'+Auten.validar().telefono;
-    $http.get(urlHist)
+    var urlHist = 'http://www.birdev.mx/message_app/public/historial/';
+    console.log(Auten.validar());
+    $http.get(urlHist+Auten.validar().telefono)
     .success(function(data){
-        $scope.mensajes=data.data;
+        $scope.mensajes = data.data;
+        console.log(Auten.validar().telefono);
         console.log($scope.mensajes);
+
     });
 
 
@@ -211,9 +210,10 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.respuesta.id = '';
            Preguntas.actualiza( $scope.respuesta);
 
-           $http.get(urlHist)
+           $http.get(urlHist+Auten.validar().telefono)
            .success(function(data){
-               $scope.mensajes=data.data;
+               $scope.mensajes = data.data;
+               console.log(Auten.validar());
                console.log($scope.mensajes);
            });
 
@@ -253,10 +253,12 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             //console.log('lista : '+Preguntas.list());
             console.log(temp);
 
-            $http.get(urlHist)
+            $http.get(urlHist+Auten.validar().telefono)
             .success(function(data){
-                $scope.mensajes=data.data;
+
+                $scope.mensajes = data.data;
                 console.log($scope.mensajes);
+                console.log(Auten.validar());
             });
 
             $ionicLoading.hide().then(function(){
@@ -838,10 +840,14 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 });
 
 
-app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
+app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory) {
   $scope.cerrar =  function(){
      Auten.cerrarSesion();
-     $state.go('login');
+     Preguntas.delete();
+     $ionicHistory.clearCache().then(function()
+     {
+       $state.go('login');
+     });
   }
 });
 
