@@ -66,6 +66,10 @@ app.factory('Preguntas', function(){
         actualiza : function(res){
             respuestaId = res.id;
             persist();
+        },
+        delete : function(){
+            respuestaId = '[]';
+            persist();
         }
     };
 
