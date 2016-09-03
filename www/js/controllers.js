@@ -632,13 +632,17 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   $scope.guardar =  function(){
       console.log($scope.aut);
-      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.nombre == 'undefined')
+      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
-         exit();
+         return;
       }
+
+      var edad =  calEdad($scope.aut.fecha);
+
       var url  = 'http://www.birdev.mx/message_app/public/user';
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+      // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -708,6 +712,38 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
        title: 'Espera !!',
        template: mensaje
      });
+  }
+
+  function calEdad(fecha){
+    console.log(fecha);
+
+
+
+var dia = fecha.getDate();
+var mes = fecha.getMonth();
+var ano = fecha.getYear();
+
+fecha_hoy = new Date();
+ahora_ano = fecha_hoy.getYear();
+ahora_mes = fecha_hoy.getMonth();
+ahora_dia = fecha_hoy.getDate();
+
+edad = (ahora_ano + 1900) - ano;
+
+	if ( ahora_mes < (mes - 1)){
+	  edad--;
+	}
+	if (((mes - 1) == ahora_mes) && (ahora_dia < dia)){
+	  edad--;
+	}
+	if (edad > 1900){
+		edad -= 1900;
+	}
+
+	alert("¡Tienes " + edad + " años!");
+
+return edad;
+
   }
 
 });

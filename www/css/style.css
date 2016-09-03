@@ -591,3 +591,8 @@ background-color: blue;
 .pink{
   background-color: pink;
 }
+
+.warning {
+  border-color: yellow;
+  color: red;
+}
