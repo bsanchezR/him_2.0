@@ -46,7 +46,25 @@
              <span class="warning" ng-show="!formulario.$pristine && formulario.fecha.$error.required">Fecha es requerido.</span>
            </label>
 
-          <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;" required>
+           <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;">
+             <div class="input-label trans">
+               Plantel
+             </div>
+             <select class="trans" ng-model="aut.plantel">
+               <option value="Cuernavaca" selected>Cuernavaca</option>
+               <option value="Jiutepec" >Jiutepec</option>
+               <option value="Coacalco">Coacalco</option>
+               <option value="Coacalco">Coacalco</option>
+               <option value="Cuautla">Cuautla</option>
+               <option value="Amacuzac">Amacuzac</option>
+               <option value="Tlaltizapan">Tlaltizapan</option>
+               <option value="Atlatlahucan">Atlatlahucan</option>
+               <option value="Tehuixtla">Tehuixtla</option>
+               <option value="Tepalcingo">Tepalcingo</option>
+             </select>
+           </label>
+
+          <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;">
             <div class="input-label trans">
               Sexo
             </div>
