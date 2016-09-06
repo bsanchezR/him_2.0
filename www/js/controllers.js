@@ -584,35 +584,35 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   //activar en productivo
 
-    var gcmid;
-    console.log("Device Ready")
-    var push = PushNotification.init({
-      "android": {
-        "senderID": "898342355996",
-        "icon": 'iconName',  // Small icon file name without extension
-        "iconColor": '#248BD0'
-      },
-      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    push.on('registration', function(data) {
-    console.log(data.registrationId);
-    gcmid = data.registrationId;
-    $("#gcm_id").html(data.registrationId);
-    });
-
-    push.on('notification', function(data) {
-      console.log(data.message);
-      alert(data.title+" Message: " +data.message);
-
-      data.title,
-      data.count,
-      data.sound,
-      data.image,
-      data.additionalData
-    });
-
-    push.on('error', function(e) {
-    console.log(e.message);
-    });
+    var gcmid="";
+    // console.log("Device Ready")
+    // var push = PushNotification.init({
+    //   "android": {
+    //     "senderID": "898342355996",
+    //     "icon": 'iconName',  // Small icon file name without extension
+    //     "iconColor": '#248BD0'
+    //   },
+    //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+    // push.on('registration', function(data) {
+    // console.log(data.registrationId);
+    // gcmid = data.registrationId;
+    // $("#gcm_id").html(data.registrationId);
+    // });
+    //
+    // push.on('notification', function(data) {
+    //   console.log(data.message);
+    //   alert(data.title+" Message: " +data.message);
+    //
+    //   data.title,
+    //   data.count,
+    //   data.sound,
+    //   data.image,
+    //   data.additionalData
+    // });
+    //
+    // push.on('error', function(e) {
+    // console.log(e.message);
+    //
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -878,6 +878,21 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
   }
 });
 
+
+
+app.controller('MapaCtrl', function($scope) {
+
+  var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+  		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+  			maxZoom: 18,
+  			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+  				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+  				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+  			id: 'mapbox.streets'
+  		}).addTo(mymap);
+
+
+});
 
 //
 // <?php

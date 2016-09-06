@@ -154,15 +154,24 @@ app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
       controller: 'slideCtrl'
     })
 
-  .state('tab.config', {
-        url: '/config',
-        views: {
-          'tab-config': {
-            templateUrl: 'templates/tab-config.html',
-            controller: 'ConfigCtrl'
+    .state('tab.config', {
+          url: '/config',
+          views: {
+            'tab-config': {
+              templateUrl: 'templates/tab-config.html',
+              controller: 'ConfigCtrl'
+            }
           }
-        }
-      })
+        })
+    .state('tab.mapa', {
+              url: '/mapa',
+              views: {
+                'tab-mapa': {
+                  templateUrl: 'templates/tab-mapa.html',
+                  controller: 'MapaCtrl'
+                }
+              }
+            })
       ;
 
   // if none of the above states are matched, use this as the fallback
