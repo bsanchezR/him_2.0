@@ -1,9 +1,22 @@
 <ion-view title="PreB Mapa" id="page9" class="login">
     <ion-content class="trans marg">
 
+         <div id="map" data-tap-disabled="true"></div>
 
-         <div id="mapid" style="width: 100vw; height: 100vh"></div>
-
+         <div class="contenedor">
+         <button class="botonF1" ng-click="animacion()">
+           <span>+</span>
+         </button>
+         <button class="btn botonF2" ng-click="preb()">
+           <span  class="icon-left ion-ios-location"></span><p>PreB Store</p>
+         </button>
+         <button class="btn botonF3" ng-click="locate()">
+           <span  class="icon-left ion-ios-football"></span><p>Gimnasios</p>
+         </button>
+         <button class="btn botonF4" ng-click="alerta()">
+           <span class="icon-left ion-ios-heart"></span><p>Puntos R</p>
+         </button>
+          </div>
 
     </ion-content>
 </ion-view>

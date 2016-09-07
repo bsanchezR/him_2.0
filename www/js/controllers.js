@@ -880,79 +880,150 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl', function($scope) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup) {
 
-  var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-  		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-  			maxZoom: 18,
-  			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-  				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-  				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-  			id: 'mapbox.streets'
-  		}).addTo(mymap);
+     var control = true;
+     var latLng = new google.maps.LatLng(19.046777, -98.208727);
 
 
-});
+      var mapOptions = {
+        center: latLng,
+        disableDefaultUI: true,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
 
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      //Wait until the map is loaded
+      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+
+        var marker = new google.maps.Marker({
+            map: $scope.map,
+            animation: google.maps.Animation.DROP,
+            position: latLng
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: "Here I am!"
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infoWindow.open($scope.map, marker);
+        });
+
+      });
+
+      $ionicModal.fromTemplateUrl('templates/addLocation.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+          $scope.modal = modal;
+        });
+
+
+        $scope.preb =  function(){
+           $scope.modal.show();
+        }
+
+        $scope.saveLocation = function() {
+           //LocationsService.savedLocations.push($scope.newLocation);
+           $scope.modal.hide();
+          //$scope.goTo(LocationsService.savedLocations.length - 1);
+         };
+
+
+//    var map = L.map('map',{
+//      zoomControl : false,
+//    scrollZoom :  false }).setView([19.046777, -98.208727], 13);
 //
-// <?php
-// $to="ebbjjHzXzvo:APA91bHavOf29c5vFh5gSgn7E_qOg_9PXfLKX-Gz36rrgPkLeNh-uH7h6_1HA4S-LnzvnVeu17UfYdwno-byNXsCI3sQvGFBidtncflSSqvmA-MKU7E3OPZfIhlZHctpCkljihcIdbrV";
-// $title="Hola yo 2";
-// $message="Este es un mensaje para yo";
-//
-// $to2 = "crrAOfDofEk:APA91bHNWcRQNu_VOY9VBXK3D1velsew-mCeFlWMYzKEoigZctkvOLAMrhA4Z4d5zsvIGpWsRCrOS8NkleKpiKljirkprIH1zLrzLSLSEYUbh-j4WwdBWrM47mct28D0GxEi5SGE0zVz";
-// $title2="Hola maria";
-// $message2="si jala esa maria la del barrio";
-//
-// $to3 = "e8pLfJ5QfkI:APA91bHbybrs582yq6MWU60KD-5rTzL6a7U1MzWAZ7v-qGE65dVmK-YKv-pAd-Eqm8xj2YGV4J-fFFaEffizW2Qb78kf8DaOr0OI39DFto51VKtqmrxb9sD8y3uulm0BRbQ33f1xF2H1";
-// $title3="a huevo puto duy";
-// $message3="Este es un mensaje para duy";
 //
 //
 //
-// sendPush($to,$title,$message);
-// sendPush($to2,$title2,$message2);
-// sendPush($to3,$title3,$message3);
+//      var map = L.map('map');
+// 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+// 			maxZoom: 18,
+// 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+// 				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+// 				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+// 			id: 'mapbox.streets'
+// 		}).addTo(map);
 //
-// function sendPush($to,$title,$message)
-// {
-// // API access key from Google API's Console
-// // replace API
-// define( 'API_ACCESS_KEY', 'AIzaSyCXWLGR0Pg1jGk52C7kVRjPOnkwRCCcMs4');
-// $registrationIds = array($to);
-// $msg = array
-// (
-// 'message' => $message,
-// 'title' => $title,
-// 'vibrate' => 1,
-// 'sound' => 1
-// // you can also add images, additionalData
-// );
-// $fields = array
-// (
-// 'registration_ids' => $registrationIds,
-// 'data' => $msg
-// );
-// $headers = array
-// (
-// 'Authorization: key=' . API_ACCESS_KEY,
-// 'Content-Type: application/json'
-// );
-// $ch = curl_init();
-// curl_setopt( $ch,CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
-// curl_setopt( $ch,CURLOPT_POST, true );
-// curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-// curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-// curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-// curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-// $result = curl_exec($ch );
-// curl_close( $ch );
-// echo $result;
-// }
-// ?>
+//     var options = {timeout: 10000, enableHighAccuracy: true};
 //
-// <?php
+//       $cordovaGeolocation.getCurrentPosition(options).then(function(position){
 //
-// //phpinfo()
+//         console.log(position.coords.latitude);
+//         console.log(position.coords.longitude);
 //
-//  ?>
+//
+//         // var marker = L.marker([position.coords.latitude , position.coords.longitude]).addTo(map);
+//         // marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
+//
+//         //var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+//
+//         // var mapOptions = {
+//         //   center: latLng,
+//         //   zoom: 15,
+//         //   mapTypeId: google.maps.MapTypeId.ROADMAP
+//         // };
+//         //
+//         // $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+//
+//       }, function(error){
+//         console.log("Could not get location");
+//       });
+//
+//
+//
+// //fuciones declaradas para el boton desplegable
+
+
+
+      $scope.locate = function(){
+
+        $cordovaGeolocation
+          .getCurrentPosition()
+          .then(function (position) {
+            $scope.map.center.lat  = position.coords.latitude;
+            $scope.map.center.lng = position.coords.longitude;
+            $scope.map.center.zoom = 15;
+
+            $scope.map.markers.now = {
+              lat:position.coords.latitude,
+              lng:position.coords.longitude,
+              message: "You Are Here",
+              focus: true,
+              draggable: false
+            };
+
+          }, function(err) {
+            // error
+            console.log("Location error!");
+            console.log(err);
+          });
+
+      };
+
+
+
+
+
+      $scope.alerta =  function(){
+        alert("entro");
+      }
+
+      $scope.animacion =  function(){
+        if(control){
+          $('.btn').addClass('animacionVer');
+          control = false;
+        }
+        else {
+          $('.btn').removeClass('animacionVer');
+          control = true;
+        }
+
+
+      }
+
+    });
