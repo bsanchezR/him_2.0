@@ -880,10 +880,26 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact) {
 
      var control = true;
+     $scope.lat  =  19.046777;
+     $scope.lng  = -98.208727;
      var latLng = new google.maps.LatLng(19.046777, -98.208727);
+
+     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : ''  };
+     $scope.nuevaP.lat =  $scope.lat;
+     $scope.nuevaP.lng =  $scope.lng;
+     $scope.paradas =  ParadasFact.all();
+
+
+
+     console.log($scope.paradas);
+     $scope.paradas =  ParadasFact.all();
+     var marker;
+     var infowindow = new google.maps.InfoWindow();
+     var info ;
+
 
 
       var mapOptions = {
@@ -898,11 +914,26 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
       //Wait until the map is loaded
       google.maps.event.addListenerOnce($scope.map, 'idle', function(){
 
-        var marker = new google.maps.Marker({
-            map: $scope.map,
-            animation: google.maps.Animation.DROP,
-            position: latLng
-        });
+        // var marker = new google.maps.Marker({
+        //     map: $scope.map,
+        //     animation: google.maps.Animation.DROP,
+        //     position: latLng
+        // });
+
+
+
+      //   //nuevo marcador creado con lo que ya tenesmo
+      //  latLng = new google.maps.LatLng($scope.paradas[1].lat, $scope.paradas[1].lng);
+      //   var marker2 = new google.maps.Marker({
+      //       map: $scope.map,
+      //       animation: google.maps.Animation.DROP,
+      //       position: latLng
+      //   });
+
+        for (var i = 0; i < $scope.paradas.length; i++) {
+          info = crearInfo($scope.paradas[i]);
+          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info);
+        }
 
         var infoWindow = new google.maps.InfoWindow({
             content: "Here I am!"
@@ -914,6 +945,39 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       });
 
+      function crearInfo(parada){
+
+        var contentString =
+        '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
+          '<div id="bodyContent">'+
+          '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)+'</p>'+
+          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/guardados/'+parada.id_parada+'">Ver ficha completa</a>'
+          '</div>'+
+        '</div>';
+
+        return contentString;
+        }
+
+      function agregarMarca(marker,lat,lng,infoWindow,info){
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng),
+          map: $scope.map,
+          animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(marker, 'click', (function() {
+          return function() {
+            infowindow.setContent(info);
+            infowindow.open($scope.map, marker);
+          }
+        })(marker));
+      }
+
+
+      //instancia de la ventana modal para  presentar el formulario de nueva parada
       $ionicModal.fromTemplateUrl('templates/addLocation.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -924,12 +988,21 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
         $scope.preb =  function(){
            $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
         }
 
-        $scope.saveLocation = function() {
+        $scope.guardarParada = function() {
            //LocationsService.savedLocations.push($scope.newLocation);
-           $scope.modal.hide();
+          $scope.modal.hide();
           //$scope.goTo(LocationsService.savedLocations.length - 1);
+        //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
+        //se deja al final
+          $scope.nuevaP.id_usuario =  1;
+          $scope.nuevaP.tipo =  1;
+          $scope.nuevaP.color =  '#fff';
+          $scope.nuevaP.puntuacion = '';
+          ParadasFact.post($scope.nuevaP);
          };
 
 
