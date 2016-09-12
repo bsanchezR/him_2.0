@@ -1,0 +1,37 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-calm">
+
+    <h1 class="title">{{parada.nombre}}</h1>
+
+    <div class="buttons">
+      <button class="button button-clear" ng-click="modal.hide()">Cancel</button>
+    </div>
+
+  </ion-header-bar>
+
+  <ion-content class="padding">
+    <h3>Descripción</h3>
+    <p>{{parada.descripcion}}</p>
+    <h3>Puntuacion</h3>
+    <p>{{((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)}}</p>
+    <h3>Metodos que puedes encontrar </h3>
+    <div class="list">
+
+
+      <p>{{parada.isChecked1 }}</p>
+      <p>{{parada.isChecked3 }}</p>
+      <p>{{parada.isChecked2 }}</p>
+      <p>{{parada.isChecked4 }}</p>
+
+
+
+
+      <p>{{(typeof(parada.isChecked1) != 'undefined')?'' :'Condón Masculino' }}</p>
+      <p>{{(typeof(parada.isChecked2) != 'undefined')? '':'Condón Femenino'   }}</p>
+      <p>{{(typeof(parada.isChecked3) != 'undefined')? '':'DIU'  }}</p>
+      <p>{{(typeof(parada.isChecked4) != 'undefined')?'' :'Parche'   }}</p>
+    </div>
+
+  </ion-content>
+
+</ion-modal-view>

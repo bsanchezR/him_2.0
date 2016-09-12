@@ -172,6 +172,15 @@ app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
                 }
               }
             })
+    .state('tab.mapa-ficha', {
+            url: '/mapa/:id_parada',
+            views: {
+              'tab-mapa': {
+                templateUrl: 'templates/ficha.html',
+                controller: 'fichaCtrl'
+              }
+            }
+          })
       ;
 
   // if none of the above states are matched, use this as the fallback

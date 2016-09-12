@@ -954,7 +954,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
           '<div id="bodyContent">'+
           '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)+'</p>'+
-          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/guardados/'+parada.id_parada+'">Ver ficha completa</a>'
+          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
           '</div>'+
         '</div>';
 
@@ -1099,4 +1099,11 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       }
 
+    });
+
+
+    app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+      $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+      console.log(  $scope.parada );
     });
