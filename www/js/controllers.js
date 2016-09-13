@@ -896,8 +896,8 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
      console.log($scope.paradas);
      $scope.paradas =  ParadasFact.all();
-     var marker;
-     var infowindow = new google.maps.InfoWindow();
+     var marker,usuario;
+     var infoWindow = new google.maps.InfoWindow();
      var info ;
 
 
@@ -913,35 +913,11 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       //Wait until the map is loaded
       google.maps.event.addListenerOnce($scope.map, 'idle', function(){
-
-        // var marker = new google.maps.Marker({
-        //     map: $scope.map,
-        //     animation: google.maps.Animation.DROP,
-        //     position: latLng
-        // });
-
-
-
-      //   //nuevo marcador creado con lo que ya tenesmo
-      //  latLng = new google.maps.LatLng($scope.paradas[1].lat, $scope.paradas[1].lng);
-      //   var marker2 = new google.maps.Marker({
-      //       map: $scope.map,
-      //       animation: google.maps.Animation.DROP,
-      //       position: latLng
-      //   });
-
+        //recorremos todos los puntos que tenesmos
         for (var i = 0; i < $scope.paradas.length; i++) {
           info = crearInfo($scope.paradas[i]);
           agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info);
         }
-
-        var infoWindow = new google.maps.InfoWindow({
-            content: "Here I am!"
-        });
-
-        google.maps.event.addListener(marker, 'click', function () {
-            infoWindow.open($scope.map, marker);
-        });
 
       });
 
@@ -970,8 +946,8 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
         google.maps.event.addListener(marker, 'click', (function() {
           return function() {
-            infowindow.setContent(info);
-            infowindow.open($scope.map, marker);
+            infoWindow.setContent(info);
+            infoWindow.open($scope.map, marker);
           }
         })(marker));
       }
@@ -1053,37 +1029,51 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
 
+      /**
+      * Center map on user's current position
+      */
       $scope.locate = function(){
 
-        $cordovaGeolocation
-          .getCurrentPosition()
-          .then(function (position) {
-            $scope.map.center.lat  = position.coords.latitude;
-            $scope.map.center.lng = position.coords.longitude;
-            $scope.map.center.zoom = 15;
+       $cordovaGeolocation
+         .getCurrentPosition()
+         .then(function (position) {
+           $scope.map.center.lat  = position.coords.latitude;
+           $scope.map.center.lng = position.coords.longitude;
+           $scope.map.center.zoom = 15;
 
-            $scope.map.markers.now = {
-              lat:position.coords.latitude,
-              lng:position.coords.longitude,
-              message: "You Are Here",
-              focus: true,
-              draggable: false
-            };
 
-          }, function(err) {
-            // error
-            console.log("Location error!");
-            console.log(err);
-          });
+
+           usuario = new google.maps.Marker({
+             position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+             map: $scope.map,
+             animation: google.maps.Animation.DROP,
+             focus: true,
+             draggable: false
+           });
+
+
+          //  $scope.map.markers.now = {
+          //    lat:position.coords.latitude,
+          //    lng:position.coords.longitude,
+          //    message: "You Are Here",
+          //    focus: true,
+          //    draggable: false
+          //  };
+
+         }, function(err) {
+           // error
+           console.log("Location error!");
+           console.log(err);
+         });
 
       };
 
 
 
-
-
-      $scope.alerta =  function(){
-        alert("entro");
+      $scope.alerta = function(){
+        alert('sas');
+        //funcion para quitar el marcador y poder repintarlo en un tiempo
+        usuario.setMap(null);
       }
 
       $scope.animacion =  function(){
@@ -1098,6 +1088,40 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
       }
+
+
+
+      var markerPrincipal = null;
+
+function autoUpdate() {
+  navigator.geolocation.getCurrentPosition(function(position) {
+    var newPoint = new google.maps.LatLng(position.coords.latitude,
+                                          position.coords.longitude);
+
+    if (markerPrincipal) {
+      // Marker already created - Move it
+      markerPrincipal.setPosition(newPoint);
+    }
+    else {
+      // Marker does not exist - Create it
+      markerPrincipal = new google.maps.Marker({
+        position: newPoint,
+        map: $scope.map
+      });
+    }
+
+    // Center the map on the new position
+    $scope.map.setCenter(newPoint);
+  });
+  console.log('llamada');
+  // Call the autoUpdate() function every 5 seconds
+  setTimeout(autoUpdate, 5000);
+}
+
+autoUpdate();
+
+
+
 
     });
 
