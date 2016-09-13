@@ -56,7 +56,7 @@ app.factory('Preguntas', function(){
 
     function persist(){
         window.localStorage['respuestaId'] = angular.toJson(respuestaId);
-        console.log(window.localStorage['respuestaId']);
+
     }
 
     return {
@@ -64,7 +64,7 @@ app.factory('Preguntas', function(){
               return respuestaId;
           },
         actualiza : function(res){
-            respuestaId = res.id;
+            respuestaId = res;
             persist();
         },
         delete : function(){
@@ -232,6 +232,40 @@ app.factory('ArticulosGuardados', function(){
             }
         }
     };
+} );
+
+
+app.factory('ParadasFact', function(){
+
+    var paradas = angular.fromJson(window.localStorage['paradas'] || '[]');
+
+    function persist(){
+        window.localStorage['paradas'] = angular.toJson(paradas);
+    }
+
+    return {
+        all : function(){
+            return paradas;
+        },
+        get: function(id_parada){
+
+
+            console.log(id_parada);
+            for (var i = 0; i < paradas.length; i++) {
+                if (paradas[i].id_parada === id_parada) {
+                    return paradas[i];
+                }
+            }
+            return null;
+
+
+        },
+        post : function(parada){
+            paradas.push(parada);
+            persist();
+        }
+    };
+
 } );
 
 

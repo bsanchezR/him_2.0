@@ -178,11 +178,11 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     console.log(Auten.validar());
     $http.get(urlHist+Auten.validar().telefono)
     .success(function(data){
-        $scope.mensajes = data.data;
-        console.log(Auten.validar().telefono);
-        console.log($scope.mensajes);
-
+        Preguntas.actualiza(data.data);
+        $scope.mensajes = Preguntas.list();
     });
+
+    $scope.mensajes = Preguntas.list();
 
 
     //constantes y cosas que se tienen que inicializar para el modulo
@@ -206,16 +206,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
                   $scope.response.push(response.data);
                 });
 
-            //tenemos que elimiara el id o ponerlo vacio
-           $scope.respuesta.id = '';
-           Preguntas.actualiza( $scope.respuesta);
-
            $http.get(urlHist+Auten.validar().telefono)
            .success(function(data){
-               $scope.mensajes = data.data;
-               console.log(Auten.validar());
-               console.log($scope.mensajes);
+               Preguntas.actualiza(data.data);
+               $scope.mensajes = Preguntas.list();
            });
+
+
 
            $scope.$broadcast('scroll.refreshComplete');
 
@@ -246,20 +243,14 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             $scope.nota.id = '';
             $scope.nota.mensaje = '';
 
-            console.log("primer consol : " + $scope.respuesta.id);
-
-            Preguntas.actualiza($scope.respuesta);
-            var temp = Preguntas.list();
-            //console.log('lista : '+Preguntas.list());
-            console.log(temp);
 
             $http.get(urlHist+Auten.validar().telefono)
             .success(function(data){
-
-                $scope.mensajes = data.data;
-                console.log($scope.mensajes);
-                console.log(Auten.validar());
+              Preguntas.actualiza(data.data);
+              $scope.mensajes = Preguntas.list();
             });
+
+
 
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
@@ -593,35 +584,35 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   //activar en productivo
 
-    var gcmid;
-    console.log("Device Ready")
-    var push = PushNotification.init({
-      "android": {
-        "senderID": "898342355996",
-        "icon": 'iconName',  // Small icon file name without extension
-        "iconColor": '#248BD0'
-      },
-      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    push.on('registration', function(data) {
-    console.log(data.registrationId);
-    gcmid = data.registrationId;
-    $("#gcm_id").html(data.registrationId);
-    });
-
-    push.on('notification', function(data) {
-      console.log(data.message);
-      alert(data.title+" Message: " +data.message);
-
-      data.title,
-      data.count,
-      data.sound,
-      data.image,
-      data.additionalData
-    });
-
-    push.on('error', function(e) {
-    console.log(e.message);
-    });
+    var gcmid="";
+    // console.log("Device Ready")
+    // var push = PushNotification.init({
+    //   "android": {
+    //     "senderID": "898342355996",
+    //     "icon": 'iconName',  // Small icon file name without extension
+    //     "iconColor": '#248BD0'
+    //   },
+    //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+    // push.on('registration', function(data) {
+    // console.log(data.registrationId);
+    // gcmid = data.registrationId;
+    // $("#gcm_id").html(data.registrationId);
+    // });
+    //
+    // push.on('notification', function(data) {
+    //   console.log(data.message);
+    //   alert(data.title+" Message: " +data.message);
+    //
+    //   data.title,
+    //   data.count,
+    //   data.sound,
+    //   data.image,
+    //   data.additionalData
+    // });
+    //
+    // push.on('error', function(e) {
+    // console.log(e.message);
+    //
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -641,13 +632,17 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   $scope.guardar =  function(){
       console.log($scope.aut);
-      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.nombre == 'undefined')
+      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
-         exit();
+         return;
       }
+
+      var edad =  calEdad($scope.aut.fecha);
+
       var url  = 'http://www.birdev.mx/message_app/public/user';
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+      // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -717,6 +712,38 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
        title: 'Espera !!',
        template: mensaje
      });
+  }
+
+  function calEdad(fecha){
+    console.log(fecha);
+
+
+
+var dia = fecha.getDate();
+var mes = fecha.getMonth();
+var ano = fecha.getYear();
+
+fecha_hoy = new Date();
+ahora_ano = fecha_hoy.getYear();
+ahora_mes = fecha_hoy.getMonth();
+ahora_dia = fecha_hoy.getDate();
+
+edad = (ahora_ano + 1900) - ano;
+
+	if ( ahora_mes < (mes - 1)){
+	  edad--;
+	}
+	if (((mes - 1) == ahora_mes) && (ahora_dia < dia)){
+	  edad--;
+	}
+	if (edad > 1900){
+		edad -= 1900;
+	}
+
+	alert("¡Tienes " + edad + " años!");
+
+return edad;
+
   }
 
 });
@@ -852,65 +879,255 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 });
 
 
+
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact) {
+
+     var control = true;
+     $scope.lat  =  19.046777;
+     $scope.lng  = -98.208727;
+     var latLng = new google.maps.LatLng(19.046777, -98.208727);
+
+     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : ''  };
+     $scope.nuevaP.lat =  $scope.lat;
+     $scope.nuevaP.lng =  $scope.lng;
+     $scope.paradas =  ParadasFact.all();
+
+
+
+     console.log($scope.paradas);
+     $scope.paradas =  ParadasFact.all();
+     var marker,usuario;
+     var infoWindow = new google.maps.InfoWindow();
+     var info ;
+
+
+
+      var mapOptions = {
+        center: latLng,
+        disableDefaultUI: true,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      //Wait until the map is loaded
+      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+        //recorremos todos los puntos que tenesmos
+        for (var i = 0; i < $scope.paradas.length; i++) {
+          info = crearInfo($scope.paradas[i]);
+          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info);
+        }
+
+      });
+
+      function crearInfo(parada){
+
+        var contentString =
+        '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
+          '<div id="bodyContent">'+
+          '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)+'</p>'+
+          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+          '</div>'+
+        '</div>';
+
+        return contentString;
+        }
+
+      function agregarMarca(marker,lat,lng,infoWindow,info){
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng),
+          map: $scope.map,
+          animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(marker, 'click', (function() {
+          return function() {
+            infoWindow.setContent(info);
+            infoWindow.open($scope.map, marker);
+          }
+        })(marker));
+      }
+
+
+      //instancia de la ventana modal para  presentar el formulario de nueva parada
+      $ionicModal.fromTemplateUrl('templates/addLocation.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+          $scope.modal = modal;
+        });
+
+
+        $scope.preb =  function(){
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.guardarParada = function() {
+           //LocationsService.savedLocations.push($scope.newLocation);
+          $scope.modal.hide();
+          //$scope.goTo(LocationsService.savedLocations.length - 1);
+        //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
+        //se deja al final
+          $scope.nuevaP.id_usuario =  1;
+          $scope.nuevaP.tipo =  1;
+          $scope.nuevaP.color =  '#fff';
+          $scope.nuevaP.puntuacion = '';
+          ParadasFact.post($scope.nuevaP);
+         };
+
+
+//    var map = L.map('map',{
+//      zoomControl : false,
+//    scrollZoom :  false }).setView([19.046777, -98.208727], 13);
 //
-// <?php
-// $to="ebbjjHzXzvo:APA91bHavOf29c5vFh5gSgn7E_qOg_9PXfLKX-Gz36rrgPkLeNh-uH7h6_1HA4S-LnzvnVeu17UfYdwno-byNXsCI3sQvGFBidtncflSSqvmA-MKU7E3OPZfIhlZHctpCkljihcIdbrV";
-// $title="Hola yo 2";
-// $message="Este es un mensaje para yo";
-//
-// $to2 = "crrAOfDofEk:APA91bHNWcRQNu_VOY9VBXK3D1velsew-mCeFlWMYzKEoigZctkvOLAMrhA4Z4d5zsvIGpWsRCrOS8NkleKpiKljirkprIH1zLrzLSLSEYUbh-j4WwdBWrM47mct28D0GxEi5SGE0zVz";
-// $title2="Hola maria";
-// $message2="si jala esa maria la del barrio";
-//
-// $to3 = "e8pLfJ5QfkI:APA91bHbybrs582yq6MWU60KD-5rTzL6a7U1MzWAZ7v-qGE65dVmK-YKv-pAd-Eqm8xj2YGV4J-fFFaEffizW2Qb78kf8DaOr0OI39DFto51VKtqmrxb9sD8y3uulm0BRbQ33f1xF2H1";
-// $title3="a huevo puto duy";
-// $message3="Este es un mensaje para duy";
 //
 //
 //
-// sendPush($to,$title,$message);
-// sendPush($to2,$title2,$message2);
-// sendPush($to3,$title3,$message3);
+//      var map = L.map('map');
+// 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+// 			maxZoom: 18,
+// 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+// 				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+// 				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+// 			id: 'mapbox.streets'
+// 		}).addTo(map);
 //
-// function sendPush($to,$title,$message)
-// {
-// // API access key from Google API's Console
-// // replace API
-// define( 'API_ACCESS_KEY', 'AIzaSyCXWLGR0Pg1jGk52C7kVRjPOnkwRCCcMs4');
-// $registrationIds = array($to);
-// $msg = array
-// (
-// 'message' => $message,
-// 'title' => $title,
-// 'vibrate' => 1,
-// 'sound' => 1
-// // you can also add images, additionalData
-// );
-// $fields = array
-// (
-// 'registration_ids' => $registrationIds,
-// 'data' => $msg
-// );
-// $headers = array
-// (
-// 'Authorization: key=' . API_ACCESS_KEY,
-// 'Content-Type: application/json'
-// );
-// $ch = curl_init();
-// curl_setopt( $ch,CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
-// curl_setopt( $ch,CURLOPT_POST, true );
-// curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-// curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-// curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-// curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-// $result = curl_exec($ch );
-// curl_close( $ch );
-// echo $result;
-// }
-// ?>
+//     var options = {timeout: 10000, enableHighAccuracy: true};
 //
-// <?php
+//       $cordovaGeolocation.getCurrentPosition(options).then(function(position){
 //
-// //phpinfo()
+//         console.log(position.coords.latitude);
+//         console.log(position.coords.longitude);
 //
-//  ?>
+//
+//         // var marker = L.marker([position.coords.latitude , position.coords.longitude]).addTo(map);
+//         // marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
+//
+//         //var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+//
+//         // var mapOptions = {
+//         //   center: latLng,
+//         //   zoom: 15,
+//         //   mapTypeId: google.maps.MapTypeId.ROADMAP
+//         // };
+//         //
+//         // $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+//
+//       }, function(error){
+//         console.log("Could not get location");
+//       });
+//
+//
+//
+// //fuciones declaradas para el boton desplegable
+
+
+
+      /**
+      * Center map on user's current position
+      */
+      $scope.locate = function(){
+
+       $cordovaGeolocation
+         .getCurrentPosition()
+         .then(function (position) {
+           $scope.map.center.lat  = position.coords.latitude;
+           $scope.map.center.lng = position.coords.longitude;
+           $scope.map.center.zoom = 15;
+
+
+
+           usuario = new google.maps.Marker({
+             position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+             map: $scope.map,
+             animation: google.maps.Animation.DROP,
+             focus: true,
+             draggable: false
+           });
+
+
+          //  $scope.map.markers.now = {
+          //    lat:position.coords.latitude,
+          //    lng:position.coords.longitude,
+          //    message: "You Are Here",
+          //    focus: true,
+          //    draggable: false
+          //  };
+
+         }, function(err) {
+           // error
+           console.log("Location error!");
+           console.log(err);
+         });
+
+      };
+
+
+
+      $scope.alerta = function(){
+        alert('sas');
+        //funcion para quitar el marcador y poder repintarlo en un tiempo
+        usuario.setMap(null);
+      }
+
+      $scope.animacion =  function(){
+        if(control){
+          $('.btn').addClass('animacionVer');
+          control = false;
+        }
+        else {
+          $('.btn').removeClass('animacionVer');
+          control = true;
+        }
+
+
+      }
+
+
+
+      var markerPrincipal = null;
+
+function autoUpdate() {
+  navigator.geolocation.getCurrentPosition(function(position) {
+    var newPoint = new google.maps.LatLng(position.coords.latitude,
+                                          position.coords.longitude);
+
+    if (markerPrincipal) {
+      // Marker already created - Move it
+      markerPrincipal.setPosition(newPoint);
+    }
+    else {
+      // Marker does not exist - Create it
+      markerPrincipal = new google.maps.Marker({
+        position: newPoint,
+        map: $scope.map
+      });
+    }
+
+    // Center the map on the new position
+    $scope.map.setCenter(newPoint);
+  });
+  console.log('llamada');
+  // Call the autoUpdate() function every 5 seconds
+  setTimeout(autoUpdate, 5000);
+}
+
+autoUpdate();
+
+
+
+
+    });
+
+
+    app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+      $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+      console.log(  $scope.parada );
+    });

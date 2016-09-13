@@ -1,5 +1,5 @@
 (function(){
-var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed'])
+var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed','igTruncate'])
 
 app.run(function($ionicPlatform,Auten) {
   $ionicPlatform.ready(function() {
@@ -154,15 +154,33 @@ app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
       controller: 'slideCtrl'
     })
 
-  .state('tab.config', {
-        url: '/config',
-        views: {
-          'tab-config': {
-            templateUrl: 'templates/tab-config.html',
-            controller: 'ConfigCtrl'
+    .state('tab.config', {
+          url: '/config',
+          views: {
+            'tab-config': {
+              templateUrl: 'templates/tab-config.html',
+              controller: 'ConfigCtrl'
+            }
           }
-        }
-      })
+        })
+    .state('tab.mapa', {
+              url: '/mapa',
+              views: {
+                'tab-mapa': {
+                  templateUrl: 'templates/tab-mapa.html',
+                  controller: 'MapaCtrl'
+                }
+              }
+            })
+    .state('tab.mapa-ficha', {
+            url: '/mapa/:id_parada',
+            views: {
+              'tab-mapa': {
+                templateUrl: 'templates/ficha.html',
+                controller: 'fichaCtrl'
+              }
+            }
+          })
       ;
 
   // if none of the above states are matched, use this as the fallback
