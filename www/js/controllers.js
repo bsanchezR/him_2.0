@@ -880,14 +880,23 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact,Auten) {
+
+  if (typeof Auten.validar().telefono != 'undefined')
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
 
      var control = true;
      $scope.lat  =  19.046777;
      $scope.lng  = -98.208727;
      var latLng = new google.maps.LatLng(19.046777, -98.208727);
 
-     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : ''  };
+     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
      $scope.paradas =  ParadasFact.all();
@@ -963,10 +972,28 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
         $scope.preb =  function(){
+           $scope.tipo_parada = 1;
            $scope.modal.show();
            $('.btn').removeClass('animacionVer');
            control = true;
         }
+
+        $scope.gim =  function(){
+           $scope.tipo_parada = 2;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.punto =  function(){
+           $scope.tipo_parada = 3;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+
+
 
         $scope.guardarParada = function() {
            //LocationsService.savedLocations.push($scope.newLocation);
@@ -974,11 +1001,19 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           //$scope.goTo(LocationsService.savedLocations.length - 1);
         //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
         //se deja al final
-          $scope.nuevaP.id_usuario =  1;
-          $scope.nuevaP.tipo =  1;
+          $scope.nuevaP.id_parada   =  '' + new Date().getTime();
+          $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
+          $scope.nuevaP.tipo = $scope.tipo_parada;
           $scope.nuevaP.color =  '#fff';
           $scope.nuevaP.puntuacion = '';
           ParadasFact.post($scope.nuevaP);
+
+          info = crearInfo($scope.nuevaP);
+          agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info);
+          //limpiamos la variable de la nueva pokeparada
+           $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+           $scope.nuevaP.lat =  $scope.lat;
+           $scope.nuevaP.lng =  $scope.lng;
          };
 
 
@@ -1125,9 +1160,26 @@ autoUpdate();
 
     });
 
-
     app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
+      $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
 
       console.log(  $scope.parada );
+
+      // set the rate and max variables
+ $scope.rating = {};
+ $scope.rating.rate = 3;
+ $scope.rating.max = 5;
+
+
+      $scope.guardarComentario =  function(){
+        $scope.comentario.id_comentario =  '' + new Date().getTime();
+        $scope.comentario.id_usuario    =  Auten.validar().telefono;
+        ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
+        $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+
+        //limpiamos la variable del comentario para que otro pueda comentar
+        $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      }
     });

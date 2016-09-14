@@ -238,7 +238,7 @@ app.factory('ArticulosGuardados', function(){
 app.factory('ParadasFact', function(){
 
     var paradas = angular.fromJson(window.localStorage['paradas'] || '[]');
-
+    var comentarios  =  new Array();
     function persist(){
         window.localStorage['paradas'] = angular.toJson(paradas);
     }
@@ -248,22 +248,33 @@ app.factory('ParadasFact', function(){
             return paradas;
         },
         get: function(id_parada){
-
-
-            console.log(id_parada);
             for (var i = 0; i < paradas.length; i++) {
                 if (paradas[i].id_parada === id_parada) {
                     return paradas[i];
                 }
             }
             return null;
-
-
         },
         post : function(parada){
             paradas.push(parada);
             persist();
-        }
+        },
+        agregarCoemntario : function(id_parada, comentario){
+            for (var i = 0; i < paradas.length; i++) {
+                if (paradas[i].id_parada === id_parada) {
+                    if(paradas[i].comentarios ==   ''){
+                      comentarios.push(comentario);
+                      paradas[i].comentarios = comentarios;
+                    }
+                    else{
+                      paradas[i].comentarios.push(comentario);
+                    }
+                    console.log(paradas[i].comentarios);
+                      persist();
+                }
+            }
+
+          }
     };
 
 } );

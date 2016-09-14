@@ -16,22 +16,26 @@
     <p>{{((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)}}</p>
     <h3>Metodos que puedes encontrar </h3>
     <div class="list">
-
-
-      <p>{{parada.isChecked1 }}</p>
-      <p>{{parada.isChecked3 }}</p>
-      <p>{{parada.isChecked2 }}</p>
-      <p>{{parada.isChecked4 }}</p>
-
-
-
-
-      <p>{{(typeof(parada.isChecked1) != 'undefined')?'' :'Condón Masculino' }}</p>
-      <p>{{(typeof(parada.isChecked2) != 'undefined')? '':'Condón Femenino'   }}</p>
-      <p>{{(typeof(parada.isChecked3) != 'undefined')? '':'DIU'  }}</p>
-      <p>{{(typeof(parada.isChecked4) != 'undefined')?'' :'Parche'   }}</p>
+      <p ng-show="parada.isChecked1" disabled>Condón Masculino</p>
+      <p ng-show="parada.isChecked2" disabled>Condón Femenino</p>
+      <p ng-show="parada.isChecked3" disabled>DIU</p>
+      <p ng-show="parada.isChecked4" disabled>Parche</p>
+    </div>
+    <div class="" ng-repeat="comentario in parada.comentarios">
+      {{comentario.mensaje}}
     </div>
 
+    <rating ng-model="rating.rate" max="rating.max"></rating>
+    
+    <div class="list">
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Comentario</span>
+        <textarea type="text" placeholder="Comentarios" name="name" rows="8" cols="40" ng-model="comentario.mensaje"></textarea>
+      </label>
+      <button class="button button-positive" ng-click="guardarComentario()">
+        Comentar
+      </button>
+    </div>
   </ion-content>
 
 </ion-modal-view>
