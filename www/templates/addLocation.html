@@ -1,0 +1,59 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-calm">
+
+    <h1 class="title">Nueva parada</h1>
+
+    <div class="buttons">
+      <button class="button button-clear" ng-click="modal.hide()">Cancel</button>
+    </div>
+
+  </ion-header-bar>
+
+  <ion-content class="padding">
+
+    <form name="locationForm" ng-submit="guardarParada()">
+
+      <br>
+      <br>
+      <br>
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="Nombre" ng-model="nuevaP.nombre">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="Descripción" ng-model="nuevaP.descripcion">
+        </label>
+      </div>
+      <div class="list">
+        <ion-checkbox ng-model="nuevaP.isChecked1">Condón Masculino</ion-checkbox>
+        <ion-checkbox ng-model="nuevaP.isChecked2">Condón Femenino</ion-checkbox>
+        <ion-checkbox ng-model="nuevaP.isChecked3">DIU</ion-checkbox>
+        <ion-checkbox ng-model="nuevaP.isChecked4">Parche</ion-checkbox>
+      </div>
+      <div class="list">
+        <div class="item tabs tabs-secondary tabs-icon-left" style="background-color: #fff;">
+
+          <label class="item item-input">
+              LAT :
+            <input type="text" ng-model="nuevaP.lat">
+          </label>
+
+          <label class="item item-input">
+              LNG :
+            <input type="text"  ng-model="nuevaP.lng" >
+          </label>
+          </a>
+        </div>
+      </div>
+
+      <div class="padding">
+
+        <button class="button button-block button-balanced" ng-disabled="locationForm.$invalid">Guardar Parada</button>
+
+      </div>
+
+    </form>
+
+  </ion-content>
+
+</ion-modal-view>
