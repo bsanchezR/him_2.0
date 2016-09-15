@@ -645,7 +645,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
       var url  = 'http://www.birdev.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
-        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid, mobile:1 })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid, mobile:2 })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -879,7 +879,7 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
      $ionicHistory.clearCache().then(function()
      {
        var url  = 'http://www.birdev.mx/message_app/public/user';
-         $http.post(url, { mobile : 0, metodo: 'update' , id : ids })
+         $http.post(url, { mobile : 1, metodo: 'UPDATE' , id : ids })
               .then(function successCallback(response)
               {
                 $state.go('login');
