@@ -903,9 +903,9 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      $scope.nuevaP.lng =  $scope.lng;
      $scope.paradas =  ParadasFact.all();
      if(Auten.validar().sexo == 'm')
-      var image  = 'img/pines/mujer.png';
-     if(Auten.validar().sexo == 'h')
       var image  = 'img/pines/hombre.png';
+     if(Auten.validar().sexo == 'f')
+      var image  = 'img/pines/mujer.png';
 
 
 
