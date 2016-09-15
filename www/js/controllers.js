@@ -569,15 +569,18 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPopup,$state)
 {
     //console.log("log", Auten.validar());
-    if(Auten.validar().sexo == 'm')
-    {
-        $scope.rels=false;
-    }
-    else
-    {
-        $scope.rels=true;
-      //  console.log("articulo",$scope.rels);
-    }
+    // if(Auten.validar().sexo == 'm')
+    // {
+    //     $scope.rels=false;
+    // }
+    // else
+    // {
+    //     $scope.rels=true;
+    //   //  console.log("articulo",$scope.rels);
+    // }
+    console.log("Calendario");
+    $scope.rels=Auten.validar().show;
+    console.log($scope.rels);
 });
 
 app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
@@ -642,7 +645,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
       var url  = 'http://www.birdev.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
-        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid, mobile:2 })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -682,18 +685,18 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             else
             {
                 $scope.aut.sexo= response.data.data.sexo;
-                // if($scope.aut.sexo == 'm')
-                // {
-                //     $scope.variable=false;
-                //     $scope.rels=false;
-                // }
-                // if($scope.aut.sexo == 'f')
-                // {
-                //     $scope.rels=true;
-                //     $scope.variable=true;
-                // }
+                $scope.aut.id= response.data.data.id;
+                if($scope.aut.sexo == 'm')
+                {
+                    $scope.aut.show = false;
+                }
+                if($scope.aut.sexo == 'f')
+                {
+                    $scope.aut.show = true;
+                }
                 Auten.crearSesion($scope.aut);
-                $state.go('tab.articulos');
+                console.log(Auten.validar());
+                $state.go('tab',{},{reload:true});
             }
         },function errorCallback(response) {
             accesoError();
@@ -867,13 +870,23 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 });
 
 
-app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory) {
+app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory) {
   $scope.cerrar =  function(){
+    var ids=Auten.validar().id;
+    console.log(ids);
      Auten.cerrarSesion();
      Preguntas.delete();
      $ionicHistory.clearCache().then(function()
      {
-       $state.go('login');
+       var url  = 'http://www.birdev.mx/message_app/public/user';
+         $http.post(url, { mobile : 1, metodo: 'UPDATE' , id : ids })
+              .then(function successCallback(response)
+              {
+                $state.go('login');
+              },
+              function errorCallback(response) {
+                 console.log("error");
+              });
      });
   }
 });

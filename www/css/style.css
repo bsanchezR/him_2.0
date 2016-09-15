@@ -61,6 +61,12 @@ background-color: #ff9900;
   padding: 0 !important;
 }
 
+.item-radio .item-content
+{
+    padding: 16px 49px 16px 16px !important;
+    background-color: transparent;
+}
+
 .item-content.activated
 {
   background-color: transparent !important;
@@ -338,6 +344,11 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 {
   color:black;
   /*border-color:transparent;*/
+}
+
+.item-select select
+{
+    top: 30px;
 }
 
 .bord

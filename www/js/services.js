@@ -137,7 +137,7 @@ app.factory('Auten', function(){
             persist();
         },
         cerrarSesion : function(){
-            aut = '[]';
+            aut = '';
             persist();
         }
     };
