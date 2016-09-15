@@ -1,22 +1,24 @@
-<ion-view class="login" title="Calendario" id="page21" view-title="{{fecha}}">
-    <ion-content class="trans">
-        <ion-list>
-            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'">Inicio menstruación</ion-radio>
-            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'">Fin menstruación</ion-radio>
+<ion-view class="login" title="{{fecha}}" id="page21" view-title="{{fecha}}">
+    <ion-content class="trans marg">
+      <div class="row row-center">
+        <div class="col col-80 col-offset-10">
+        <div class="list">
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'I'" class="trans">Inicio menstruación</ion-radio>
+            <ion-radio ng-model="diaDatos.inicioFin" ng-value="'F'" class="trans">Fin menstruación</ion-radio>
 
-            <ion-toggle toggle-class="toggle-royal" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones">
+            <ion-toggle toggle-class="toggle-royal trans" ng-model="diaDatos.relaciones" ng-checked="diaDatos.relaciones" class="trans">
                     Relaciones sexuales
             </ion-toggle>
 
-             <ion-toggle toggle-class="toggle-royal" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones">
+             <ion-toggle toggle-class="toggle-royal trans" ng-model="diaDatos.usoMetodo" ng-checked="diaDatos.usoMetodo" ng-show="diaDatos.relaciones" class="trans">
                     Uso de método anticonceptivo
             </ion-toggle>
 
-            <ion-item class="item item-input item-select"  ng-show="diaDatos.usoMetodo">
-                <div class="input-label">
+            <ion-item class="item item-input item-select trans"  ng-show="diaDatos.usoMetodo">
+                <div class="input-label trans">
                   Métodos anticonceptivos
                 </div>
-                <select ng-model="diaDatos.queMetodo">
+                <select class="trans" ng-model="diaDatos.queMetodo">
                     <option >Pastilla del día siguiente</option>
                     <option >Pastilla anticonceptiva</option>
                     <option >Condón</option>
@@ -25,9 +27,12 @@
                     <option >Otro</option>
                 </select>
             </ion-item>
-        </ion-list>
-
-
-         <button id="configuraciN-button11" style="font-weight:600;" class=" button button-royal  button-block " ng-click="guardaDia()">Guardar</button>
+        </div>
+        </div>
+      </div>
+        <div class="col col-90 col-offset-33">
+          <a ng-click="guardaDia()" id="login-button4" class="button button-positive mod_log">Guardar</a>
+        </div>
+         <!-- <button id="configuraciN-button11" style="font-weight:600;" class=" button button-royal  button-block " ng-click="guardaDia()">Guardar</button> -->
     </ion-content>
 </ion-view>

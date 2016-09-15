@@ -50,7 +50,8 @@ app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
 
     .state('tab', {
     url: '/tab',
-    abstract: true,
+    //abstract: true,
+    cache: false,
     templateUrl: 'templates/tabs.html',
     controller: 'tabController'
   })
