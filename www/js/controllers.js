@@ -902,7 +902,10 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
      $scope.paradas =  ParadasFact.all();
-     var image  = 'img/flag.png';
+     if(Auten.validar().sexo == 'm')
+      var image  = 'img/pines/mujer.png';
+     if(Auten.validar().sexo == 'h')
+      var image  = 'img/pines/hombre.png';
 
 
 
