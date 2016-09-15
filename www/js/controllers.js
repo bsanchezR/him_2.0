@@ -893,17 +893,33 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact,Auten) {
+
+  if (typeof Auten.validar().telefono != 'undefined')
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
 
      var control = true;
-     $scope.lat  =  19.046777;
-     $scope.lng  = -98.208727;
+     $scope.lat  =  19.058926;
+     $scope.lng  = -98.253135;
+
+
      var latLng = new google.maps.LatLng(19.046777, -98.208727);
 
-     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : ''  };
+     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
      $scope.paradas =  ParadasFact.all();
+     if(Auten.validar().sexo == 'm')
+      var image  = 'img/pines/hombre.png';
+     if(Auten.validar().sexo == 'f')
+      var image  = 'img/pines/mujer.png';
+
 
 
 
@@ -918,7 +934,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
       var mapOptions = {
         center: latLng,
         disableDefaultUI: true,
-        zoom: 15,
+        zoom: 17,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
 
@@ -929,7 +945,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         //recorremos todos los puntos que tenesmos
         for (var i = 0; i < $scope.paradas.length; i++) {
           info = crearInfo($scope.paradas[i]);
-          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info);
+          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info,$scope.paradas[i].tipo);
         }
 
       });
@@ -950,10 +966,22 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         return contentString;
         }
 
-      function agregarMarca(marker,lat,lng,infoWindow,info){
+      function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
+        var icono = 'img/flag.png';
+        if(tipo == 1){
+            icono = 'img/pines/condon.png';
+        }
+        else if(tipo == 2){
+            icono = 'img/pines/cama.png';
+        }
+        else if(tipo == 3){
+          icono = 'img/pines/sex.png';
+        }
+
         marker = new google.maps.Marker({
           position: new google.maps.LatLng(lat, lng),
           map: $scope.map,
+          icon: icono,
           animation: google.maps.Animation.DROP
         });
 
@@ -976,6 +1004,21 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
         $scope.preb =  function(){
+           $scope.tipo_parada = 1;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.gim =  function(){
+           $scope.tipo_parada = 2;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.punto =  function(){
+           $scope.tipo_parada = 3;
            $scope.modal.show();
            $('.btn').removeClass('animacionVer');
            control = true;
@@ -987,60 +1030,20 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           //$scope.goTo(LocationsService.savedLocations.length - 1);
         //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
         //se deja al final
-          $scope.nuevaP.id_usuario =  1;
-          $scope.nuevaP.tipo =  1;
+          $scope.nuevaP.id_parada   =  '' + new Date().getTime();
+          $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
+          $scope.nuevaP.tipo = $scope.tipo_parada;
           $scope.nuevaP.color =  '#fff';
           $scope.nuevaP.puntuacion = '';
           ParadasFact.post($scope.nuevaP);
+
+          info = crearInfo($scope.nuevaP);
+          agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
+          //limpiamos la variable de la nueva pokeparada
+           $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+           $scope.nuevaP.lat =  $scope.lat;
+           $scope.nuevaP.lng =  $scope.lng;
          };
-
-
-//    var map = L.map('map',{
-//      zoomControl : false,
-//    scrollZoom :  false }).setView([19.046777, -98.208727], 13);
-//
-//
-//
-//
-//      var map = L.map('map');
-// 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-// 			maxZoom: 18,
-// 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-// 				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-// 				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-// 			id: 'mapbox.streets'
-// 		}).addTo(map);
-//
-//     var options = {timeout: 10000, enableHighAccuracy: true};
-//
-//       $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-//
-//         console.log(position.coords.latitude);
-//         console.log(position.coords.longitude);
-//
-//
-//         // var marker = L.marker([position.coords.latitude , position.coords.longitude]).addTo(map);
-//         // marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
-//
-//         //var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-//
-//         // var mapOptions = {
-//         //   center: latLng,
-//         //   zoom: 15,
-//         //   mapTypeId: google.maps.MapTypeId.ROADMAP
-//         // };
-//         //
-//         // $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-//
-//       }, function(error){
-//         console.log("Could not get location");
-//       });
-//
-//
-//
-// //fuciones declaradas para el boton desplegable
-
-
 
       /**
       * Center map on user's current position
@@ -1119,7 +1122,8 @@ function autoUpdate() {
       // Marker does not exist - Create it
       markerPrincipal = new google.maps.Marker({
         position: newPoint,
-        map: $scope.map
+        map: $scope.map,
+        icon: image
       });
     }
 
@@ -1133,14 +1137,35 @@ function autoUpdate() {
 
 autoUpdate();
 
-
-
-
     });
 
-
-    app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+//controller de  el despliege de la ficha
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
+      $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
 
       console.log(  $scope.parada );
+
+      // set the rate and max variables
+      $scope.rating = {};
+      $scope.rating.rate = 3;
+      $scope.rating.max = 5;
+      $scope.botonRate =  true;
+
+      $scope.guardarComentario =  function(){
+        $scope.comentario.id_comentario =  '' + new Date().getTime();
+        $scope.comentario.id_usuario    =  Auten.validar().telefono;
+        ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
+        $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+
+        //limpiamos la variable del comentario para que otro pueda comentar
+        $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      }
+
+      $scope.guardarPuntuacion = function(){
+        console.log($scope.rating.rate);
+        $scope.botonRate =  false;
+        //poner un modal que de gracias por la calificación
+      }
     });
