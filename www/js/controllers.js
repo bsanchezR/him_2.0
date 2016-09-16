@@ -230,11 +230,20 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
         //creamos el ide unico
         $scope.nota.id =  new Date().getTime().toString();
 
-        $ionicLoading.show({
-            template: 'Enviando...'
-          }).then(function(){
-             console.log("The loading indicator is now displayed");
+
+        if($scope.nota.mensaje ==  ''){
+          var alertPopup = $ionicPopup.alert({
+            title: 'Oh no!!',
+            template: 'Intenta escribiendo un mensaje  :)'
           });
+        }
+        else{
+          $ionicLoading.show({
+              template: 'Enviando...'
+            }).then(function(){
+               console.log("The loading indicator is now displayed");
+            });
+
 
         $http.post(link, {telefono : Auten.validar().telefono, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
@@ -249,9 +258,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
               Preguntas.actualiza(data.data);
               $scope.mensajes = Preguntas.list();
             });
-
-
-
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
             });
@@ -262,12 +268,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
           });
             var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Tú mensaje no puede ser enviado por el momento intenta mas tarde :('
            });
           alertPopup.then(function(res) {
              console.log('Thank you for not eating my delicious ice cream cone');
            });
         });
+      }
     };
 });
 
@@ -634,7 +641,6 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.guardar =  function(){
-      console.log($scope.aut);
       if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
@@ -762,40 +768,6 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-//
-// <<<<<<< HEAD
-// =======
-// //activar en productivo
-//   console.log("Device Ready")
-//   var push = PushNotification.init({
-//     "android": {
-//       "senderID": "898342355996",
-//       "icon": 'iconName',  // Small icon file name without extension
-//       "iconColor": '#248BD0'
-//     },º
-//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-//
-//   push.on('registration', function(data) {
-//   console.log(data.registrationId);
-//   $("#gcm_id").html(data.registrationId);
-//   });
-//
-//   push.on('notification', function(data) {
-//   console.log(data.message);
-//   alert(data.title+" Message: " +data.message);
-//
-//   data.title,
-//   data.count,
-//   data.sound,
-//   data.image,
-//   data.additionalData
-//   });
-//
-//   push.on('error', function(e) {
-//   console.log(e.message);
-//   });
-//
-// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -928,6 +900,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      var marker,usuario;
      var infoWindow = new google.maps.InfoWindow();
      var info ;
+     var  alertaActiva =  false;
 
 
 
@@ -957,13 +930,38 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           '<div id="siteNotice">'+
           '</div>'+
           '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
-          '<div id="bodyContent">'+
-          '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)+'</p>'+
-          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
-          '</div>'+
-        '</div>';
+          '<div id="bodyContent">';
+          if(parada.tipo != 3){
+            contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
+          }
+          contentString +=  '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+                            '</div>'+
+                          '</div>';
 
         return contentString;
+        }
+
+        function getTotal(parada)
+        {
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          //limpiara para despues
+          if(parada.puntuacion !=  ""){
+            for (var i = 0; i <   parada.puntuacion.length; i++) {
+              acumulador =  acumulador + parada.puntuacion[i].rate;
+              promedio++;
+            }
+            //sacamos el promedio simple
+            totalRate = acumulador /  promedio;
+            acumulador = 0;
+            promedio = 0;
+
+            return totalRate;
+          }else{
+            return '';
+          }
         }
 
       function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
@@ -1097,14 +1095,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       };
 
-
-
-      $scope.alerta = function(){
-        alert('sas');
-        //funcion para quitar el marcador y poder repintarlo en un tiempo
-        usuario.setMap(null);
-      }
-
       $scope.animacion =  function(){
         if(control){
           $('.btn').addClass('animacionVer');
@@ -1114,15 +1104,19 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $('.btn').removeClass('animacionVer');
           control = true;
         }
-
-
       }
 
 
 
       var markerPrincipal = null;
+      var cityCircle =  null;
+function cambioAlerta(){
+  alertaActiva =  false;
+}
+
 
 function autoUpdate() {
+
   navigator.geolocation.getCurrentPosition(function(position) {
     var newPoint = new google.maps.LatLng(position.coords.latitude,
                                           position.coords.longitude);
@@ -1130,6 +1124,29 @@ function autoUpdate() {
     if (markerPrincipal) {
       // Marker already created - Move it
       markerPrincipal.setPosition(newPoint);
+
+      for (var i = 0; i < $scope.paradas.length; i++) {
+        if($scope.paradas[i].tipo == 3 )
+        {
+          console.log('entra ?');
+          var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+          if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+          {
+            if(!alertaActiva)
+            {
+              alertaActiva = true;
+              var alertPopup = $ionicPopup.alert({
+                title: '¡Oh no!',
+                template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
+              });
+              alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone');
+                setTimeout(cambioAlerta, 10000);
+              });
+            }
+          }
+        }
+      }
     }
     else {
       // Marker does not exist - Create it
@@ -1138,14 +1155,30 @@ function autoUpdate() {
         map: $scope.map,
         icon: image
       });
+      //intentado circulo en el usuario
+      cityCircle = new google.maps.Circle({
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          // map: $scope.map,
+          center: newPoint,
+          radius: 200
+        });
     }
 
     // Center the map on the new position
     $scope.map.setCenter(newPoint);
   });
   console.log('llamada');
+
+  console.log(alertaActiva);
   // Call the autoUpdate() function every 5 seconds
-  setTimeout(autoUpdate, 5000);
+
+    setTimeout(autoUpdate, 5000);
+
+
 }
 
 autoUpdate();
@@ -1156,6 +1189,7 @@ autoUpdate();
 app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
 
       console.log(  $scope.parada );
 
@@ -1168,6 +1202,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
       $scope.guardarComentario =  function(){
         $scope.comentario.id_comentario =  '' + new Date().getTime();
         $scope.comentario.id_usuario    =  Auten.validar().telefono;
+
         ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
 
@@ -1190,6 +1225,46 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
       $scope.guardarPuntuacion = function(){
         console.log($scope.rating.rate);
         $scope.botonRate =  false;
-        //poner un modal que de gracias por la calificación
+
+
+
+        $scope.puntuacion.id_puntuacion =  '' + new Date().getTime();
+        $scope.puntuacion.id_usuario    =  Auten.validar().telefono;
+        $scope.puntuacion.rate    =    $scope.rating.rate;
+        ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
+        $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        //modal que de gracias por la calificación
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Gracias!',
+           template: 'Gracias por tu puntuación, esta es muy importante para poder dar un mejor servicio.'
+         });
+
+      }
+
+      $scope.getTotal =  function(){
+        var totalRate = 0;
+        var acumulador =  0;
+        var promedio = 0 ;
+        console.log('numero de entradas');
+
+        //limpiara para despues
+        if($scope.parada.puntuacion !=  ""){
+          //console.log($scope.parada);
+          for (var i = 0; i <   $scope.parada.puntuacion.length; i++) {
+              acumulador =  acumulador + $scope.parada.puntuacion[i].rate;
+              promedio++;
+          }
+
+          totalRate = acumulador /  promedio;
+          acumulador = 0;
+          promedio = 0;
+
+          return totalRate;
+        }else{
+          return '';
+        }
+
+
       }
     });

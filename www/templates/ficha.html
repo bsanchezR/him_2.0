@@ -1,38 +1,31 @@
 <ion-view class="login" title="{{parada.nombre}}">
-  <!-- <ion-header-bar class="bar-calm">
-
-    <h1 class="title">{{parada.nombre}}</h1>
-
-
-   <div class="buttons">
-      <button class="button button-clear" ng-click="modal.hide()">Cancel</button>
-    </div> -->
-
   </ion-header-bar>
 
   <ion-content class="trans marg">
     <h3>Descripción</h3>
     <p>{{parada.descripcion}}</p>
+    <div ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
+      <h3>Puntuacion</h3>
+      <p>{{(( parada.puntuacion == '') ? "Sin puntuar" :  getTotal() )}}</p>
 
-    <h3>Puntuacion</h3>
-    <p>{{((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)}}</p>
-
-    <h4>Califica esta parada</h4>
-    <rating ng-model="rating.rate" max="rating.max"></rating>
-    <button class="button button-positive" ng-click="guardarPuntuacion()" ng-show="botonRate"> 
-      Puntuar
-    </button>
-
-
+      <h4>Califica esta parada</h4>
+      <rating ng-model="rating.rate" max="rating.max" class="linea"></rating>
+      <br>
+      <br>
+      <button class="button button-positive" ng-click="guardarPuntuacion()" ng-show="botonRate" ng-readonly="1">
+        Puntuar
+      </button>
+    </div>
+    <div class="list" ng-show="{{( parada.tipo == 1 ) ? 'true' :  'false' }}">
     <h3>Metodos que puedes encontrar </h3>
-    <div class="list">
+
       <p ng-show="parada.isChecked1" disabled>Condón Masculino</p>
-      <p ng-show="parada.isChecked2" disabled>Condón Femenino</p>
+      <p ng-show="parada.isChecked2" disabled>Pastilla del ayer</p>
       <p ng-show="parada.isChecked3" disabled>DIU</p>
-      <p ng-show="parada.isChecked4" disabled>Parche</p>
+      <p ng-show="parada.isChecked4" disabled>Otros</p>
     </div>
 
-    <div class="list">
+    <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
       <div class="" ng-repeat="comentario in parada.comentarios">
         {{comentario.mensaje}}
       </div>
@@ -40,7 +33,7 @@
 
 
 
-    <div class="list">
+    <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
       <label class="item item-input item-floating-label">
         <span class="input-label">Comentario</span>
         <textarea type="text" placeholder="Comentarios" name="name" rows="8" cols="40" ng-model="comentario.mensaje"></textarea>
