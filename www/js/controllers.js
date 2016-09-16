@@ -899,10 +899,6 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten,$state) {
-
-
-
-
   if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
