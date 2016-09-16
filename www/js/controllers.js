@@ -645,7 +645,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
       var url  = 'http://www.birdev.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
-        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid, mobile:2 })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.usuario, fecha :  $scope.aut.fecha, sexo : $scope.aut.sexo , plantel : $scope.aut.plantel, nuevo : 1, gcm_id : gcmid, mobile:1 })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -893,7 +893,7 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact,Auten) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten) {
 
   if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -1036,6 +1036,18 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $scope.nuevaP.color =  '#fff';
           $scope.nuevaP.puntuacion = '';
           ParadasFact.post($scope.nuevaP);
+
+
+          var url  = 'http://www.birdev.mx/message_app/public/paradas';
+          $http.post(url, { titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+             .then(function successCallback(response)
+             {
+               console.log("parada guardada");
+             },
+             function errorCallback(response) {
+                console.log("error");
+             });
+
 
           info = crearInfo($scope.nuevaP);
           agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
