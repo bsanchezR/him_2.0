@@ -1172,7 +1172,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.parada = ParadasFact.get($stateParams.id_parada);
 
         var url  = 'http://www.birdev.mx/message_app/public/paradas';
-        $http.post(url, { id : $scope.nuevaP.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios })
+        $http.post(url, { id : $stateParams.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios })
            .then(function successCallback(response)
            {
              console.log("comentarios guardados");
