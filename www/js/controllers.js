@@ -1109,14 +1109,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       };
 
-
-
-      $scope.alerta = function(){
-        alert('sas');
-        //funcion para quitar el marcador y poder repintarlo en un tiempo
-        usuario.setMap(null);
-      }
-
       $scope.animacion =  function(){
         if(control){
           $('.btn').addClass('animacionVer');
@@ -1126,8 +1118,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $('.btn').removeClass('animacionVer');
           control = true;
         }
-
-
       }
 
 
@@ -1165,7 +1155,7 @@ autoUpdate();
     });
 
 //controller de  el despliege de la ficha
-app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
       $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
@@ -1193,7 +1183,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
       $scope.guardarPuntuacion = function(){
         console.log($scope.rating.rate);
         $scope.botonRate =  false;
-        //poner un modal que de gracias por la calificación
+
 
 
         $scope.puntuacion.id_puntuacion =  '' + new Date().getTime();
@@ -1201,6 +1191,13 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.puntuacion.rate    =    $scope.rating.rate;
         ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        //modal que de gracias por la calificación
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Gracias!',
+           template: 'Gracias por tu puntuación, esta es muy importante para poder dar un mejor servicio.'
+         });
+         
       }
 
       $scope.getTotal =  function(){
