@@ -230,11 +230,20 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
         //creamos el ide unico
         $scope.nota.id =  new Date().getTime().toString();
 
-        $ionicLoading.show({
-            template: 'Enviando...'
-          }).then(function(){
-             console.log("The loading indicator is now displayed");
+
+        if($scope.nota.mensaje ==  ''){
+          var alertPopup = $ionicPopup.alert({
+            title: 'Oh no!!',
+            template: 'Intenta escribiendo un mensaje  :)'
           });
+        }
+        else{
+          $ionicLoading.show({
+              template: 'Enviando...'
+            }).then(function(){
+               console.log("The loading indicator is now displayed");
+            });
+
 
         $http.post(link, {telefono : Auten.validar().telefono, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
@@ -249,9 +258,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
               Preguntas.actualiza(data.data);
               $scope.mensajes = Preguntas.list();
             });
-
-
-
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
             });
@@ -262,12 +268,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
           });
             var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Tú mensaje no puede ser enviado por el momento intenta mas tarde :('
            });
           alertPopup.then(function(res) {
              console.log('Thank you for not eating my delicious ice cream cone');
            });
         });
+      }
     };
 });
 
@@ -1197,7 +1204,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
            title: '¡Gracias!',
            template: 'Gracias por tu puntuación, esta es muy importante para poder dar un mejor servicio.'
          });
-         
+
       }
 
       $scope.getTotal =  function(){
