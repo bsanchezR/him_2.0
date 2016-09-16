@@ -768,40 +768,6 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-//
-// <<<<<<< HEAD
-// =======
-// //activar en productivo
-//   console.log("Device Ready")
-//   var push = PushNotification.init({
-//     "android": {
-//       "senderID": "898342355996",
-//       "icon": 'iconName',  // Small icon file name without extension
-//       "iconColor": '#248BD0'
-//     },º
-//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-//
-//   push.on('registration', function(data) {
-//   console.log(data.registrationId);
-//   $("#gcm_id").html(data.registrationId);
-//   });
-//
-//   push.on('notification', function(data) {
-//   console.log(data.message);
-//   alert(data.title+" Message: " +data.message);
-//
-//   data.title,
-//   data.count,
-//   data.sound,
-//   data.image,
-//   data.additionalData
-//   });
-//
-//   push.on('error', function(e) {
-//   console.log(e.message);
-//   });
-//
-// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -897,8 +863,11 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
   }
 });
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten,$state) {
-    if (typeof Auten.validar().telefono != 'undefined')
+
+
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten) {
+
+  if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -1216,10 +1185,8 @@ autoUpdate();
 
     });
 
-
 //controller de  el despliege de la ficha
-app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
-
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
       $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
