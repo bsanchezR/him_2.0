@@ -1130,15 +1130,44 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
       var markerPrincipal = null;
+      var cityCircle =  null;
 
 function autoUpdate() {
   navigator.geolocation.getCurrentPosition(function(position) {
     var newPoint = new google.maps.LatLng(position.coords.latitude,
                                           position.coords.longitude);
 
+
+
     if (markerPrincipal) {
       // Marker already created - Move it
       markerPrincipal.setPosition(newPoint);
+
+
+
+
+    for (var i = 0; i < $scope.paradas.length; i++) {
+      if($scope.paradas[i].tipo == 3 )
+      {
+        var puntoCompara = new google.maps.LatLng($scope.paradas[i].l,$scope.paradas[i].lng)
+        if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+        {
+          resultColor='blue';
+          console.log("Cuidado estas en el triangulo de las bermudas");
+        }
+        else
+        {
+          resultColor='green';
+        }
+      }
+    }
+
+
+
+
+
+
+
     }
     else {
       // Marker does not exist - Create it
@@ -1147,6 +1176,22 @@ function autoUpdate() {
         map: $scope.map,
         icon: image
       });
+
+
+      //intentado circulo en el usuario
+      cityCircle = new google.maps.Circle({
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          // map: $scope.map,
+          center: newPoint,
+          radius: 200
+        });
+
+
+
     }
 
     // Center the map on the new position
