@@ -935,6 +935,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      var marker,usuario;
      var infoWindow = new google.maps.InfoWindow();
      var info ;
+     var  alertaActiva =  false;
 
 
 
@@ -1133,41 +1134,35 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
       var cityCircle =  null;
 
 function autoUpdate() {
+
   navigator.geolocation.getCurrentPosition(function(position) {
     var newPoint = new google.maps.LatLng(position.coords.latitude,
                                           position.coords.longitude);
-
-
 
     if (markerPrincipal) {
       // Marker already created - Move it
       markerPrincipal.setPosition(newPoint);
 
-
-
-
-    for (var i = 0; i < $scope.paradas.length; i++) {
-      if($scope.paradas[i].tipo == 3 )
-      {
-        var puntoCompara = new google.maps.LatLng($scope.paradas[i].l,$scope.paradas[i].lng)
-        if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+      for (var i = 0; i < $scope.paradas.length; i++) {
+        if($scope.paradas[i].tipo == 3 )
         {
-          resultColor='blue';
-          console.log("Cuidado estas en el triangulo de las bermudas");
-        }
-        else
-        {
-          resultColor='green';
+          console.log('entra ?');
+          var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+          if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+          {
+            alertaActiva = true;
+            var alertPopup = $ionicPopup.alert({
+               title: '¡Oh no!',
+               template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
+             });
+             alertPopup.then(function(res) {
+               console.log('Thank you for not eating my delicious ice cream cone');
+               alertaActiva =  false;
+               setTimeout(autoUpdate, 5000);
+             });
+          }
         }
       }
-    }
-
-
-
-
-
-
-
     }
     else {
       // Marker does not exist - Create it
@@ -1176,8 +1171,6 @@ function autoUpdate() {
         map: $scope.map,
         icon: image
       });
-
-
       //intentado circulo en el usuario
       cityCircle = new google.maps.Circle({
           strokeColor: '#FF0000',
@@ -1189,17 +1182,19 @@ function autoUpdate() {
           center: newPoint,
           radius: 200
         });
-
-
-
     }
 
     // Center the map on the new position
     $scope.map.setCenter(newPoint);
   });
   console.log('llamada');
+
+  console.log(alertaActiva);
   // Call the autoUpdate() function every 5 seconds
-  setTimeout(autoUpdate, 5000);
+  if(!alertaActiva){
+    setTimeout(autoUpdate, 5000);
+  }
+
 }
 
 autoUpdate();
