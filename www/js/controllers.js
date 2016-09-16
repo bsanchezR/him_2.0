@@ -641,7 +641,6 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.guardar =  function(){
-      console.log($scope.aut);
       if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
@@ -1132,6 +1131,10 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       var markerPrincipal = null;
       var cityCircle =  null;
+function cambioAlerta(){
+  alertaActiva =  false;
+}
+
 
 function autoUpdate() {
 
@@ -1150,16 +1153,18 @@ function autoUpdate() {
           var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
           if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
           {
-            alertaActiva = true;
-            var alertPopup = $ionicPopup.alert({
-               title: '¡Oh no!',
-               template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
-             });
-             alertPopup.then(function(res) {
-               console.log('Thank you for not eating my delicious ice cream cone');
-               alertaActiva =  false;
-               setTimeout(autoUpdate, 5000);
-             });
+            if(!alertaActiva)
+            {
+              alertaActiva = true;
+              var alertPopup = $ionicPopup.alert({
+                title: '¡Oh no!',
+                template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
+              });
+              alertPopup.then(function(res) {
+                console.log('Thank you for not eating my delicious ice cream cone');
+                setTimeout(cambioAlerta, 10000);
+              });
+            }
           }
         }
       }
@@ -1191,9 +1196,9 @@ function autoUpdate() {
 
   console.log(alertaActiva);
   // Call the autoUpdate() function every 5 seconds
-  if(!alertaActiva){
+
     setTimeout(autoUpdate, 5000);
-  }
+
 
 }
 
