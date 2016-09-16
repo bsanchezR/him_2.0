@@ -1037,12 +1037,13 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $scope.nuevaP.puntuacion = '';
           ParadasFact.post($scope.nuevaP);
 
-
+          var nueva_parada;
           var url  = 'http://www.birdev.mx/message_app/public/paradas';
-          $http.post(url, { titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+          $http.post(url, { id : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
              .then(function successCallback(response)
              {
                console.log("parada guardada");
+               console.log(response);
              },
              function errorCallback(response) {
                 console.log("error");
@@ -1152,7 +1153,7 @@ autoUpdate();
     });
 
 //controller de  el despliege de la ficha
-app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
 
@@ -1169,6 +1170,17 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.comentario.id_usuario    =  Auten.validar().telefono;
         ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        var url  = 'http://www.birdev.mx/message_app/public/paradas';
+        $http.post(url, { id : $scope.nuevaP.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios })
+           .then(function successCallback(response)
+           {
+             console.log("comentarios guardados");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
 
 
         //limpiamos la variable del comentario para que otro pueda comentar
