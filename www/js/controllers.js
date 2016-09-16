@@ -897,9 +897,8 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
   }
 });
 
-
 app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten,$state) {
-  if (typeof Auten.validar().telefono != 'undefined')
+    if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -1220,6 +1219,7 @@ autoUpdate();
 
 //controller de  el despliege de la ficha
 app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
+
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
       $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
