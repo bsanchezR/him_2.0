@@ -24,7 +24,7 @@
           <input type="text" placeholder="Descripción" ng-model="nuevaP.descripcion">
         </label>
       </div>
-      <div class="list">
+      <div class="list" ng-show="(( tipo_parada == 1 ) ? true :  false )">
         <ion-checkbox ng-model="nuevaP.isChecked1">Condón Masculino</ion-checkbox>
         <ion-checkbox ng-model="nuevaP.isChecked2">Condón Femenino</ion-checkbox>
         <ion-checkbox ng-model="nuevaP.isChecked3">DIU</ion-checkbox>

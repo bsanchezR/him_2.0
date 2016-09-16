@@ -893,7 +893,7 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact,Auten) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact,Auten,$state) {
 
   if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -957,13 +957,38 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           '<div id="siteNotice">'+
           '</div>'+
           '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
-          '<div id="bodyContent">'+
-          '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)+'</p>'+
-          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
-          '</div>'+
-        '</div>';
+          '<div id="bodyContent">';
+          if(parada.tipo != 3){
+            contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
+          }
+          contentString +=  '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+                            '</div>'+
+                          '</div>';
 
         return contentString;
+        }
+
+        function getTotal(parada)
+        {
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          //limpiara para despues
+          if(parada.puntuacion !=  ""){
+            for (var i = 0; i <   parada.puntuacion.length; i++) {
+              acumulador =  acumulador + parada.puntuacion[i].rate;
+              promedio++;
+            }
+            //sacamos el promedio simple
+            totalRate = acumulador /  promedio;
+            acumulador = 0;
+            promedio = 0;
+
+            return totalRate;
+          }else{
+            return '';
+          }
         }
 
       function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
@@ -1143,6 +1168,7 @@ autoUpdate();
 app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
 
       console.log(  $scope.parada );
 
@@ -1155,6 +1181,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
       $scope.guardarComentario =  function(){
         $scope.comentario.id_comentario =  '' + new Date().getTime();
         $scope.comentario.id_usuario    =  Auten.validar().telefono;
+
         ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
 
@@ -1167,5 +1194,38 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         console.log($scope.rating.rate);
         $scope.botonRate =  false;
         //poner un modal que de gracias por la calificación
+
+
+        $scope.puntuacion.id_puntuacion =  '' + new Date().getTime();
+        $scope.puntuacion.id_usuario    =  Auten.validar().telefono;
+        $scope.puntuacion.rate    =    $scope.rating.rate;
+        ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
+        $scope.parada = ParadasFact.get($stateParams.id_parada);
+      }
+
+      $scope.getTotal =  function(){
+        var totalRate = 0;
+        var acumulador =  0;
+        var promedio = 0 ;
+        console.log('numero de entradas');
+
+        //limpiara para despues
+        if($scope.parada.puntuacion !=  ""){
+          //console.log($scope.parada);
+          for (var i = 0; i <   $scope.parada.puntuacion.length; i++) {
+              acumulador =  acumulador + $scope.parada.puntuacion[i].rate;
+              promedio++;
+          }
+
+          totalRate = acumulador /  promedio;
+          acumulador = 0;
+          promedio = 0;
+
+          return totalRate;
+        }else{
+          return '';
+        }
+
+
       }
     });

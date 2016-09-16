@@ -239,6 +239,7 @@ app.factory('ParadasFact', function(){
 
     var paradas = angular.fromJson(window.localStorage['paradas'] || '[]');
     var comentarios  =  new Array();
+    var puntuacion  =  new Array();
     function persist(){
         window.localStorage['paradas'] = angular.toJson(paradas);
     }
@@ -274,7 +275,25 @@ app.factory('ParadasFact', function(){
                 }
             }
 
-          }
+          },
+          agregarPuntuacion : function(id_parada, rate){
+              for (var i = 0; i < paradas.length; i++) {
+                  if (paradas[i].id_parada === id_parada) {
+                      if(paradas[i].puntuacion ==   ''){
+                        puntuacion.push(rate);
+                        paradas[i].puntuacion = puntuacion;
+                      }
+                      else{
+                        paradas[i].puntuacion.push(rate);
+                      }
+                      console.log(paradas[i].puntuacion);
+                        persist();
+                  }
+              }
+
+            },
+
+
     };
 
 } );
