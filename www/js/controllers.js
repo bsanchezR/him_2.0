@@ -1039,7 +1039,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
           var nueva_parada;
           var url  = 'http://www.birdev.mx/message_app/public/paradas';
-          $http.post(url, { id_parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+          $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
              .then(function successCallback(response)
              {
                console.log("parada guardada");
@@ -1172,7 +1172,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.parada = ParadasFact.get($stateParams.id_parada);
 
         var url  = 'http://www.birdev.mx/message_app/public/paradas';
-        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios })
+        $http.post(url, { parada : $stateParams.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios })
            .then(function successCallback(response)
            {
              console.log("comentarios guardados");
