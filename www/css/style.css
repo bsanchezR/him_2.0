@@ -75,7 +75,7 @@ background-color: #ff9900;
 
 .uno
 {
-  background: url('../img/uno.png') no-repeat center center fixed;
+  background: url('../img/tutorial/Tutorial1.jpg') no-repeat center center fixed;
   /*background-size: cover;
   background-position: center center;*/
 
@@ -87,14 +87,14 @@ background-color: #ff9900;
 
 .dos
 {
-  background-image: url('../img/dos.png');
+  background-image: url('../img/tutorial/Tutorial2.jpg');
   background-size: cover;
   background-position: center center;
 }
 
 .tres
 {
-  background-image: url('../img/tres.png');
+  background-image: url('../img/tutorial/Tutorial3.jpg');
   background-size: cover;
   background-position: center center;
 }
@@ -102,7 +102,23 @@ background-color: #ff9900;
 .cuatro
 {
 
-  background-image: url('../img/cuatro.png');
+  background-image: url('../img/tutorial/Tutorial4.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+
+.cinco
+{
+
+  background-image: url('../img/tutorial/Tutorial5.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+
+.seis
+{
+
+  background-image: url('../img/tutorial/Tutorial6.jpg');
   background-size: cover;
   background-position: center center;
 }
@@ -385,7 +401,7 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 
 .respuesta
 {
-  background-color: #1787fb;
+  background-color: #00cfff;
   margin-bottom: 12px !important;
   border-radius: 10px 10px 0px 10px !important;
   padding: 3px !important;

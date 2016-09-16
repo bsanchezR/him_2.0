@@ -651,7 +651,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
       var url  = 'http://www.birdev.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
-        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid, mobile:2 })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.usuario, fecha :  $scope.aut.fecha, sexo : $scope.aut.sexo , plantel : $scope.aut.plantel, nuevo : 1, gcm_id : gcmid, mobile:1 })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -899,7 +899,8 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact,Auten,$state) {
+
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten,$state) {
 
   if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -1069,6 +1070,19 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $scope.nuevaP.puntuacion = '';
           ParadasFact.post($scope.nuevaP);
 
+          var nueva_parada;
+          var url  = 'http://www.birdev.mx/message_app/public/paradas';
+          $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+             .then(function successCallback(response)
+             {
+               console.log("parada guardada");
+               console.log(response);
+             },
+             function errorCallback(response) {
+                console.log("error");
+             });
+
+
           info = crearInfo($scope.nuevaP);
           agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
           //limpiamos la variable de la nueva pokeparada
@@ -1206,8 +1220,9 @@ autoUpdate();
 
     });
 
-//controller de  el despliege de la ficha
-app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
+
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
+
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
       $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
@@ -1226,6 +1241,17 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
 
         ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        var url  = 'http://www.birdev.mx/message_app/public/paradas';
+        $http.post(url, { parada : $stateParams.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios.toString() })
+           .then(function successCallback(response)
+           {
+             console.log("comentarios guardados");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
 
 
         //limpiamos la variable del comentario para que otro pueda comentar
