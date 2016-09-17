@@ -1206,8 +1206,8 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
 
-        var url  = 'http://www.birdev.mx/message_app/public/paradas';
-        $http.post(url, { parada : $stateParams.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios.toString() })
+        var url  = 'http://www.birdev.mx/message_app/public/comentarios';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , mensaje :  $scope.comentario.mensaje, id_user: Auten.validar().id})
            .then(function successCallback(response)
            {
              console.log("comentarios guardados");
@@ -1233,6 +1233,18 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.puntuacion.rate    =    $scope.rating.rate;
         ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+
+        var url  = 'http://www.birdev.mx/message_app/public/rates';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , rate :  $scope.puntuacion.rate, id_user: Auten.validar().id})
+           .then(function successCallback(response)
+           {
+             console.log("puntuacion guardada");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
 
         //modal que de gracias por la calificación
         var alertPopup = $ionicPopup.alert({
