@@ -315,7 +315,7 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;
-  background-image: url('../img/biblioteca.png');
+  background-image: url('../img/menu/biblioteca.png');
   background-size:contain;
 }
 
@@ -325,7 +325,7 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;
-  background-image: url('../img/calendario.png');
+  background-image: url('../img/menu/calendario.png');
   background-size:contain;
 }
 
@@ -335,7 +335,27 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
   background-repeat: no-repeat;
   background-position: 50%;
   height: 70%;
-  background-image: url('../img/chat.png');
+  background-image: url('../img/menu/chat.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.map
+{
+  margin-top: 5px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  background-image: url('../img/menu/mapa.png');
+  background-size:contain;
+}
+
+.tabs .tab-item .icon.person
+{
+  margin-top: 5px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  height: 70%;
+  background-image: url('../img/menu/persona.png');
   background-size:contain;
 }
 
