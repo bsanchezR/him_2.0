@@ -887,6 +887,31 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
      $scope.paradas =  ParadasFact.all();
+
+
+
+/*
+
+    http://www.birdev.mx/message_app/public/paradas  -> obtiene todas las paradas
+
+
+    http://www.birdev.mx/message_app/public/paradas/id   -> obtiene las paradas tipo 3 del usuario con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/comentarios/id -> obtiene los comentarios de la parada con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/rates/id -> obtiene los rates de la parada con el id especificado
+  
+*/
+
+
+
+
+
+
+
+
      if(Auten.validar().sexo == 'm')
       var image  = 'img/pines/hombre.png';
      if(Auten.validar().sexo == 'f')
