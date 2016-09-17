@@ -902,7 +902,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
     http://www.birdev.mx/message_app/public/rates/id -> obtiene los rates de la parada con el id especificado
-  
+
 */
 
 
