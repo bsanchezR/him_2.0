@@ -2,45 +2,53 @@
   </ion-header-bar>
 
   <ion-content class="trans marg">
-    <h3>Descripción</h3>
-    <p>{{parada.descripcion}}</p>
-    <div ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
-      <h3>Puntuacion</h3>
-      <p>{{(( parada.puntuacion == '') ? "Sin puntuar" :  getTotal() )}}</p>
+    <div class="row row-center">
+			<div class="col col-80 col-offset-10">
+            <h3>Descripción</h3>
+            <p>{{parada.descripcion}}</p>
+            <div ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
+              <h3>Puntuacion</h3>
+              <p>{{(( parada.puntuacion == '') ? "Sin puntuar" :  getTotal() )}}</p>
 
-      <h4>Califica esta parada</h4>
-      <rating ng-model="rating.rate" max="rating.max" class="linea"></rating>
-      <br>
-      <br>
-      <button class="button button-positive" ng-click="guardarPuntuacion()" ng-show="botonRate" ng-readonly="1">
-        Puntuar
-      </button>
-    </div>
-    <div class="list" ng-show="{{( parada.tipo == 1 ) ? 'true' :  'false' }}">
-    <h3>Metodos que puedes encontrar </h3>
+              <h4>Califica esta parada</h4>
+              <rating ng-model="rating.rate" max="rating.max" class="linea"></rating>
+              <br>
+              <br>
+              <div class="col col-90 col-offset-20">
+              <button class="button button-positive mod_log" ng-click="guardarPuntuacion()" ng-show="botonRate" ng-readonly="1">
+                Puntuar
+              </button>
+              </div>
+            </div>
+            <div class="list" ng-show="{{( parada.tipo == 1 ) ? 'true' :  'false' }}">
+            <h3>Metodos que puedes encontrar </h3>
 
-      <p ng-show="parada.isChecked1" disabled>Condón Masculino</p>
-      <p ng-show="parada.isChecked2" disabled>Pastilla del ayer</p>
-      <p ng-show="parada.isChecked3" disabled>DIU</p>
-      <p ng-show="parada.isChecked4" disabled>Otros</p>
-    </div>
+              <p ng-show="parada.isChecked1" disabled>Condón Masculino</p>
+              <p ng-show="parada.isChecked2" disabled>Pastilla del ayer</p>
+              <p ng-show="parada.isChecked3" disabled>DIU</p>
+              <p ng-show="parada.isChecked4" disabled>Otros</p>
+            </div>
 
-    <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
-      <div class="" ng-repeat="comentario in parada.comentarios">
-        {{comentario.mensaje}}
+            <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
+              <div class="" ng-repeat="comentario in parada.comentarios">
+                {{comentario.mensaje}}
+              </div>
+            </div>
+
+
+
+            <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
+              <label class="item-input item-floating-label">
+                <span class="input-label">Comentario</span>
+                <textarea class="trans" type="text" placeholder="Comentarios" name="name" rows="8" cols="10" ng-model="comentario.mensaje"></textarea>
+              </label>
+              <div class="col col-90 col-offset-20">
+              <button class="button button-positive mod_log" ng-click="guardarComentario()">
+                Comentar
+              </button>
+            </div>
+            </div>
       </div>
-    </div>
-
-
-
-    <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Comentario</span>
-        <textarea type="text" placeholder="Comentarios" name="name" rows="8" cols="40" ng-model="comentario.mensaje"></textarea>
-      </label>
-      <button class="button button-positive" ng-click="guardarComentario()">
-        Comentar
-      </button>
     </div>
   </ion-content>
 
