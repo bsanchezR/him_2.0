@@ -768,40 +768,6 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-//
-// <<<<<<< HEAD
-// =======
-// //activar en productivo
-//   console.log("Device Ready")
-//   var push = PushNotification.init({
-//     "android": {
-//       "senderID": "898342355996",
-//       "icon": 'iconName',  // Small icon file name without extension
-//       "iconColor": '#248BD0'
-//     },º
-//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-//
-//   push.on('registration', function(data) {
-//   console.log(data.registrationId);
-//   $("#gcm_id").html(data.registrationId);
-//   });
-//
-//   push.on('notification', function(data) {
-//   console.log(data.message);
-//   alert(data.title+" Message: " +data.message);
-//
-//   data.title,
-//   data.count,
-//   data.sound,
-//   data.image,
-//   data.additionalData
-//   });
-//
-//   push.on('error', function(e) {
-//   console.log(e.message);
-//   });
-//
-// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -897,8 +863,11 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
   }
 });
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten,$state) {
-    if (typeof Auten.validar().telefono != 'undefined')
+
+
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten) {
+
+  if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
     }
@@ -918,6 +887,31 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
      $scope.paradas =  ParadasFact.all();
+
+
+
+/*
+
+    http://www.birdev.mx/message_app/public/paradas  -> obtiene todas las paradas
+
+
+    http://www.birdev.mx/message_app/public/paradas/id   -> obtiene las paradas tipo 3 del usuario con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/comentarios/id -> obtiene los comentarios de la parada con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/rates/id -> obtiene los rates de la parada con el id especificado
+  
+*/
+
+
+
+
+
+
+
+
      if(Auten.validar().sexo == 'm')
       var image  = 'img/pines/hombre.png';
      if(Auten.validar().sexo == 'f')
@@ -1216,10 +1210,8 @@ autoUpdate();
 
     });
 
-
 //controller de  el despliege de la ficha
-app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
-
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
       $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
@@ -1239,8 +1231,8 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
 
-        var url  = 'http://www.birdev.mx/message_app/public/paradas';
-        $http.post(url, { parada : $stateParams.id_parada , metodo: 'UPDATE' , comentarios : ParadasFact.get($stateParams.id_parada).comentarios.toString() })
+        var url  = 'http://www.birdev.mx/message_app/public/comentarios';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , mensaje :  $scope.comentario.mensaje, id_user: Auten.validar().id})
            .then(function successCallback(response)
            {
              console.log("comentarios guardados");
@@ -1266,6 +1258,18 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.puntuacion.rate    =    $scope.rating.rate;
         ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
         $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+
+        var url  = 'http://www.birdev.mx/message_app/public/rates';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , rate :  $scope.puntuacion.rate, id_user: Auten.validar().id})
+           .then(function successCallback(response)
+           {
+             console.log("puntuacion guardada");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
 
         //modal que de gracias por la calificación
         var alertPopup = $ionicPopup.alert({
