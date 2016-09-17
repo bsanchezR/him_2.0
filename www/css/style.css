@@ -166,6 +166,27 @@ background-color: #ff9900;
   background-color: #192a3b;
 }
 
+.bar-calm .button.button-clear
+{
+  color: black !important;
+}
+
+.tabs
+{
+  background-image: none !important;
+}
+
+.bar.bar-calm
+{
+  border-color: transparent !important;
+  background-image: none !important;
+}
+
+.bar.bar-calm .title
+{
+    color: black !important;
+}
+
 .scroll
 {
   height: auto;

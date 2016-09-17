@@ -1,5 +1,5 @@
-<ion-modal-view>
-  <ion-header-bar class="bar-calm">
+<ion-view title="Nueva Parada" id="page70" class="login">
+  <ion-header-bar class="bar-calm trans">
 
     <h1 class="title">Nueva parada</h1>
 
@@ -9,46 +9,46 @@
 
   </ion-header-bar>
 
-  <ion-content class="padding">
+  <ion-content class="trans">
 
     <form name="locationForm" ng-submit="guardarParada()">
 
       <br>
       <br>
       <br>
-      <div class="list">
-        <label class="item item-input">
+      <div class="list trans">
+        <label class="item item-input trans">
           <input type="text" placeholder="Nombre" ng-model="nuevaP.nombre">
         </label>
-        <label class="item item-input">
+        <label class="item item-input trans">
           <input type="text" placeholder="Descripción" ng-model="nuevaP.descripcion">
         </label>
       </div>
-      <div class="list" ng-show="(( tipo_parada == 1 ) ? true :  false )">
-        <ion-checkbox ng-model="nuevaP.isChecked1">Condón Masculino</ion-checkbox>
-        <ion-checkbox ng-model="nuevaP.isChecked2">Condón Femenino</ion-checkbox>
-        <ion-checkbox ng-model="nuevaP.isChecked3">DIU</ion-checkbox>
-        <ion-checkbox ng-model="nuevaP.isChecked4">Parche</ion-checkbox>
+      <div class="list trans" ng-show="(( tipo_parada == 1 ) ? true :  false )">
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked1">Condón Masculino</ion-checkbox>
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked2">Condón Femenino</ion-checkbox>
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked3">DIU</ion-checkbox>
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked4">Parche</ion-checkbox>
       </div>
-      <div class="list">
-        <div class="item tabs tabs-secondary tabs-icon-left" style="background-color: #fff;">
+      <div class="list trans">
+        <div class="item tabs tabs-secondary tabs-icon-left trans" style="background-color: #fff;">
 
-          <label class="item item-input">
+          <label class="item item-input trans">
               LAT :
-            <input type="text" ng-model="nuevaP.lat">
+            <input type="text" ng-model="nuevaP.lat" clsas="trans">
           </label>
 
-          <label class="item item-input">
+          <label class="item item-input trans">
               LNG :
-            <input type="text"  ng-model="nuevaP.lng" >
+            <input type="text" clsas="trans" ng-model="nuevaP.lng" >
           </label>
           </a>
         </div>
       </div>
 
-      <div class="padding">
+      <div class="col col-90 col-offset-25">
 
-        <button class="button button-block button-balanced" ng-disabled="locationForm.$invalid">Guardar Parada</button>
+        <button class="button button-positive mod_log" ng-disabled="locationForm.$invalid" style="width:148px;">Guardar Parada</button>
 
       </div>
 
@@ -56,4 +56,4 @@
 
   </ion-content>
 
-</ion-modal-view>
+</ion-view>
