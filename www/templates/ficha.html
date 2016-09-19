@@ -8,7 +8,7 @@
             <p>{{parada.descripcion}}</p>
             <div ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
               <h3>Puntuacion</h3>
-              <p>{{(( parada.puntuacion == '') ? "Sin puntuar" :  getTotal() )}}</p>
+              <p>{{(( puntuacionSer == '') ? "Sin puntuar" :  getTotal() )}}</p>
 
               <h4>Califica esta parada</h4>
               <rating ng-model="rating.rate" max="rating.max" class="linea"></rating>
@@ -30,7 +30,7 @@
             </div>
 
             <div class="list" ng-hide="{{( parada.tipo == 3 ) ? 'true' :  'false' }}">
-              <div class="" ng-repeat="comentario in parada.comentarios">
+              <div class="" ng-repeat="comentario in comentarioSer">
                 {{comentario.mensaje}}
               </div>
             </div>

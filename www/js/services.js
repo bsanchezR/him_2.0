@@ -248,6 +248,10 @@ app.factory('ParadasFact', function(){
         all : function(){
             return paradas;
         },
+        putall : function(putParadas){
+          paradas = putParadas;
+          persist();
+        },
         get: function(id_parada){
             for (var i = 0; i < paradas.length; i++) {
                 if (paradas[i].id_parada === id_parada) {
@@ -292,6 +296,10 @@ app.factory('ParadasFact', function(){
               }
 
             },
+            delete : function(){
+                paradas = '[]';
+                persist();
+            }
 
 
     };
