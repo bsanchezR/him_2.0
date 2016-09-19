@@ -296,6 +296,10 @@ app.factory('ParadasFact', function(){
               }
 
             },
+            delete : function(){
+                paradas = '[]';
+                persist();
+            }
 
 
     };

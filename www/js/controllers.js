@@ -843,7 +843,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 });
 
 
-app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory) {
+app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
 
   $scope.cerrar =  function()
   {
@@ -851,6 +851,7 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
      Auten.cerrarSesion();
      Preguntas.delete();
+     ParadasFact.delete();
 
      $ionicHistory.clearCache().then(function()
      {
@@ -898,7 +899,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
      $http.get('http://www.birdev.mx/message_app/public/paradas')
      .success(function(paradas){
-       console.log('succese llamada');
+       console.log(paradas);
        angular.forEach(paradas.data,function(post){
                 //armar la parada local
                 nuevaParada.id_parada =  post.parada;
@@ -908,7 +909,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
                 nuevaParada.lng =  post.lng;
                 nuevaParada.id_usuario =  post.id_usuario;
                 nuevaParada.tipo =  post.tipo;
-                //sacar los comentarios y el rate jejeje
+
                 nuevasParadas.push(nuevaParada);
                 //limpiamos la parada
                 nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
@@ -926,7 +927,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
      $http.get('  http://www.birdev.mx/message_app/public/paradas/'+Auten.validar().id)
      .success(function(paradas){
-       console.log('succese llamada privadas');
+
        angular.forEach(paradas.data,function(post){
                 //armar la parada local
                 nuevaParada.id_parada =  post.parada;
@@ -949,11 +950,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
        $scope.paradas =  ParadasFact.all();
        recorrerParadas();
      });
-
-
-
-
-
 
 
 /*
@@ -1017,9 +1013,12 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           '</div>'+
           '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
           '<div id="bodyContent">';
-          if(parada.tipo != 3){
-            contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
-          }
+          // if(parada.tipo != 3){
+          //   contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
+          // }
+          // if(parada.tipo != 3){
+          //   contentString += '<p>'+ getTotal(parada)+'</p>';
+          // }
           contentString +=  '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
                             '</div>'+
                           '</div>';
@@ -1033,21 +1032,56 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           var acumulador  = 0;
           var promedio    = 0;
 
-          //limpiara para despues
-          if(parada.puntuacion !=  ""){
-            for (var i = 0; i <   parada.puntuacion.length; i++) {
-              acumulador =  acumulador + parada.puntuacion[i].rate;
-              promedio++;
-            }
-            //sacamos el promedio simple
-            totalRate = acumulador /  promedio;
-            acumulador = 0;
-            promedio = 0;
+          console.log('calculara rate');
 
-            return totalRate;
-          }else{
-            return '';
-          }
+          $http.get('http://www.birdev.mx/message_app/public/rates/1474064460846')
+          .success(function(rates){
+            console.log(rates);
+            if(rates.data > 0){
+              angular.forEach(rates.data,function(rate){
+                console.log('rate');
+                console.log(rate);
+                acumulador =  acumulador + rate.rate;
+                promedio++;
+               });
+               //sacamos el promedio simple
+                 totalRate = acumulador /  promedio;
+                 acumulador = 0;
+                 promedio = 0;
+                 return totalRate;
+            }else{
+              return 'Sin puntuar';
+            }
+
+
+          },
+          function errorCallback(response) {
+            console.log('Sin conexión');
+
+          });
+
+
+
+
+
+          //
+          // //limpiara para despues
+          // if(parada.puntuacion !=  ""){
+          //   for (var i = 0; i <   parada.puntuacion.length; i++) {
+          //     acumulador =  acumulador + parada.puntuacion[i].rate;
+          //     promedio++;
+          //   }
+          //   //sacamos el promedio simple
+          //   totalRate = acumulador /  promedio;
+          //   acumulador = 0;
+          //   promedio = 0;
+          //
+          //   return totalRate;
+          // }else{
+          //   return 'Sin puntuar';
+          // }
+
+
         }
 
       function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
@@ -1273,8 +1307,51 @@ autoUpdate();
     });
 
 //controller de  el despliege de la ficha
-app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+      $scope.comentarioSer = new Array();
+      getComentariosSer($stateParams.id_parada);
+
+      function getComentariosSer(id){
+        $http.get('  http://www.birdev.mx/message_app/public/comentarios/'+id)
+        .success(function(comentarios){
+          if(comentarios.data.length > 0){
+              $scope.comentarioSer = comentarios.data;
+          }
+        },
+        function errorCallback(response) {
+          console.log('Sin conexión');
+        });
+      }
+
+
+
+      $scope.puntuacionSer = new Array();
+      getPuntuacionSer($stateParams.id_parada);
+
+      function getPuntuacionSer(id){
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          console.log('calculara rate');
+
+          $http.get('http://www.birdev.mx/message_app/public/rates/'+id)
+          .success(function(rates){
+            console.log(rates);
+            if(rates.data.length > 0){
+              console.log(rates.data);
+              $scope.puntuacionSer = rates.data;
+            }
+          },
+          function errorCallback(response) {
+            console.log('Sin conexión');
+
+          });
+
+      }
+
       $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
       $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
 
@@ -1290,8 +1367,10 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.comentario.id_comentario =  '' + new Date().getTime();
         $scope.comentario.id_usuario    =  Auten.validar().telefono;
 
-        ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
-        $scope.parada = ParadasFact.get($stateParams.id_parada);
+        $scope.comentarioSer.push($scope.comentario);
+
+        // ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
+        // $scope.parada = ParadasFact.get($stateParams.id_parada);
 
         var url  = 'http://www.birdev.mx/message_app/public/comentarios';
         $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , mensaje :  $scope.comentario.mensaje, id_user: Auten.validar().id})
@@ -1318,8 +1397,14 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         $scope.puntuacion.id_puntuacion =  '' + new Date().getTime();
         $scope.puntuacion.id_usuario    =  Auten.validar().telefono;
         $scope.puntuacion.rate    =    $scope.rating.rate;
-        ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
-        $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        $scope.puntuacionSer.push($scope.puntuacion);
+
+
+
+
+        // ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
+        // $scope.parada = ParadasFact.get($stateParams.id_parada);
 
 
         var url  = 'http://www.birdev.mx/message_app/public/rates';
@@ -1348,17 +1433,18 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         console.log('numero de entradas');
 
         //limpiara para despues
-        if($scope.parada.puntuacion !=  ""){
+        if($scope.puntuacionSer !=  ""){
           //console.log($scope.parada);
-          for (var i = 0; i <   $scope.parada.puntuacion.length; i++) {
-              acumulador =  acumulador + $scope.parada.puntuacion[i].rate;
+          for (var i = 0; i <   $scope.puntuacionSer.length; i++) {
+              acumulador =  acumulador + $scope.puntuacionSer[i].rate;
               promedio++;
           }
 
           totalRate = acumulador /  promedio;
           acumulador = 0;
           promedio = 0;
-
+          console.log(totalRate);
+          console.log($scope.puntuacionSer.length);
           return totalRate;
         }else{
           return '';
