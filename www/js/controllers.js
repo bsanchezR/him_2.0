@@ -94,7 +94,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
   $scope.articulo = Articulos.get($stateParams.articuloId);
 
   $scope.shareAnywhere = function() {
-        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+       var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl);
    }
 
@@ -479,6 +479,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
       fertilePhaseStart = periodCycleDays - 20;
       fertilePhaseEnd = periodCycleDays - 13;
       ovulation = (fertilePhaseStart-1) + (fertilePhaseEnd - fertilePhaseStart)/2;
+      //ovulation = (parametros.duraP/2) + 1;
 
       periodStartDate = new Date(parametros.inicio);
 
@@ -843,11 +844,14 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 
 
 app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory) {
-  $scope.cerrar =  function(){
-    var ids=Auten.validar().id;
-    console.log(ids);
+
+  $scope.cerrar =  function()
+  {
+     var ids = Auten.validar().id;
+
      Auten.cerrarSesion();
      Preguntas.delete();
+
      $ionicHistory.clearCache().then(function()
      {
        var url  = 'http://www.birdev.mx/message_app/public/user';
@@ -857,7 +861,8 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
                 $state.go('login');
               },
               function errorCallback(response) {
-                 console.log("error");
+                 console.log("sin internet");
+                 $state.go('login');
               });
      });
   }
@@ -886,7 +891,68 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
-     $scope.paradas =  ParadasFact.all();
+
+     //variables para crear el arreglo de paradas
+     var nuevasParadas = [];
+     var nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+
+     $http.get('http://www.birdev.mx/message_app/public/paradas')
+     .success(function(paradas){
+       console.log('succese llamada');
+       angular.forEach(paradas.data,function(post){
+                //armar la parada local
+                nuevaParada.id_parada =  post.parada;
+                nuevaParada.nombre =  post.titulo;
+                nuevaParada.descripcion = post.descripcion;
+                nuevaParada.lat =  post.lat;
+                nuevaParada.lng =  post.lng;
+                nuevaParada.id_usuario =  post.id_usuario;
+                nuevaParada.tipo =  post.tipo;
+                //sacar los comentarios y el rate jejeje
+                nuevasParadas.push(nuevaParada);
+                //limpiamos la parada
+                nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+        });
+        console.log(nuevasParadas);
+        ParadasFact.putall(nuevasParadas);
+        $scope.paradas =  ParadasFact.all();
+
+     },
+     function errorCallback(response) {
+       console.log('Sin conexión');
+       $scope.paradas =  ParadasFact.all();
+
+     });
+
+     $http.get('  http://www.birdev.mx/message_app/public/paradas/'+Auten.validar().id)
+     .success(function(paradas){
+       console.log('succese llamada privadas');
+       angular.forEach(paradas.data,function(post){
+                //armar la parada local
+                nuevaParada.id_parada =  post.parada;
+                nuevaParada.nombre =  post.titulo;
+                nuevaParada.descripcion = post.descripcion;
+                nuevaParada.lat =  post.lat;
+                nuevaParada.lng =  post.lng;
+                nuevaParada.id_usuario =  post.id_usuario;
+                nuevaParada.tipo =  post.tipo;
+                //sacar los comentarios y el rate jejeje
+                ParadasFact.post(nuevaParada);
+                //limpiamos la parada
+                nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+        });
+        $scope.paradas =  ParadasFact.all();
+        recorrerParadas();
+     },
+     function errorCallback(response) {
+       console.log('Sin conexión');
+       $scope.paradas =  ParadasFact.all();
+       recorrerParadas();
+     });
+
+
+
+
 
 
 
@@ -907,18 +973,10 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
 
-
-
-
-
-
      if(Auten.validar().sexo == 'm')
-      var image  = 'img/pines/hombre.png';
+      var image  = 'img/pines/preB4.png';
      if(Auten.validar().sexo == 'f')
-      var image  = 'img/pines/mujer.png';
-
-
-
+      var image  = 'img/pines/preB3.png';
 
      console.log($scope.paradas);
      $scope.paradas =  ParadasFact.all();
@@ -936,16 +994,19 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
 
-      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-      //Wait until the map is loaded
-      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      function recorrerParadas(){
         //recorremos todos los puntos que tenesmos
         for (var i = 0; i < $scope.paradas.length; i++) {
           info = crearInfo($scope.paradas[i]);
           agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info,$scope.paradas[i].tipo);
         }
+      }
 
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      //Wait until the map is loaded
+      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+        recorrerParadas();
       });
 
       function crearInfo(parada){
@@ -992,13 +1053,13 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
       function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
         var icono = 'img/flag.png';
         if(tipo == 1){
-            icono = 'img/pines/condon.png';
+            icono = 'img/pines/preB2.png';
         }
         else if(tipo == 2){
-            icono = 'img/pines/cama.png';
+            icono = 'img/pines/preB1.png';
         }
         else if(tipo == 3){
-          icono = 'img/pines/sex.png';
+          icono = 'img/pines/preB5.png';
         }
 
         marker = new google.maps.Marker({
@@ -1159,15 +1220,16 @@ function autoUpdate() {
           {
             if(!alertaActiva)
             {
-              alertaActiva = true;
-              var alertPopup = $ionicPopup.alert({
-                title: '¡Oh no!',
-                template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
-              });
-              alertPopup.then(function(res) {
-                console.log('Thank you for not eating my delicious ice cream cone');
-                setTimeout(cambioAlerta, 10000);
-              });
+              //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
+              // alertaActiva = true;
+              // var alertPopup = $ionicPopup.alert({
+              //   title: '¡Oh no!',
+              //   template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
+              // });
+              // alertPopup.then(function(res) {
+              //   console.log('Thank you for not eating my delicious ice cream cone');
+              //   setTimeout(cambioAlerta, 10000);
+              // });
             }
           }
         }
