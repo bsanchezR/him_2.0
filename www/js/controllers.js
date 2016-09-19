@@ -596,34 +596,35 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   //activar en productivo
 
     var gcmid="";
-    // console.log("Device Ready")
-    // var push = PushNotification.init({
-    //   "android": {
-    //     "senderID": "898342355996",
-    //     "icon": 'iconName',  // Small icon file name without extension
-    //     "iconColor": '#248BD0'
-    //   },
-    //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    // push.on('registration', function(data) {
-    // console.log(data.registrationId);
-    // gcmid = data.registrationId;
-    // $("#gcm_id").html(data.registrationId);
-    // });
-    //
-    // push.on('notification', function(data) {
-    //   console.log(data.message);
-    //   alert(data.title+" Message: " +data.message);
-    //
-    //   data.title,
-    //   data.count,
-    //   data.sound,
-    //   data.image,
-    //   data.additionalData
-    // });
-    //
-    // push.on('error', function(e) {
-    // console.log(e.message);
-    //
+    console.log("Device Ready")
+    var push = PushNotification.init({
+      "android": {
+        "senderID": "898342355996",
+        "icon": 'iconName',  // Small icon file name without extension
+        "iconColor": '#248BD0'
+      },
+      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+    push.on('registration', function(data) {
+    console.log(data.registrationId);
+    gcmid = data.registrationId;
+    $("#gcm_id").html(data.registrationId);
+    });
+
+    push.on('notification', function(data) {
+      console.log(data.message);
+      alert(data.title+" Message: " +data.message);
+
+      data.title,
+      data.count,
+      data.sound,
+      data.image,
+      data.additionalData
+    });
+
+    push.on('error', function(e) {
+    console.log(e.message);
+  });
+
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -1238,8 +1239,11 @@ function cambioAlerta(){
 function autoUpdate() {
 
   navigator.geolocation.getCurrentPosition(function(position) {
+    $scope.lat =  position.coords.latitude;
+    $scope.lng = position.coords.longitude;
     var newPoint = new google.maps.LatLng(position.coords.latitude,
                                           position.coords.longitude);
+
 
     if (markerPrincipal) {
       // Marker already created - Move it
