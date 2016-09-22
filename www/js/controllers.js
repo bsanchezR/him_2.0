@@ -1146,6 +1146,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         $scope.guardarParada = function() {
            //LocationsService.savedLocations.push($scope.newLocation);
           $scope.modal.hide();
+          validarParada();
           //$scope.goTo(LocationsService.savedLocations.length - 1);
         //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
         //se deja al final
@@ -1227,14 +1228,34 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         }
       }
 
-
-
       var markerPrincipal = null;
       var cityCircle =  null;
 function cambioAlerta(){
   alertaActiva =  false;
 }
 
+
+function validarParada(){
+  for (var i = 0; i < $scope.paradas.length; i++) {
+    var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+    if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+    {
+      if(!alertaActiva)
+      {
+        //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
+        alertaActiva = true;
+        var alertPopup = $ionicPopup.alert({
+          title: '¡Oh no!',
+          template: 'Cuidado parece que estas cerca de una parada valida que no sea la misma.'
+        });
+        alertPopup.then(function(res) {
+          console.log('Thank you for not eating my delicious ice cream cone');
+          //setTimeout(cambioAlerta, 10000);
+        });
+      }
+    }
+  }
+}
 
 function autoUpdate() {
 

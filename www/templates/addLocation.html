@@ -4,7 +4,7 @@
     <h1 class="title">Nueva parada</h1>
 
     <div class="buttons">
-      <button class="button button-clear" ng-click="modal.hide()">Cancel</button>
+      <button class="button button-clear" ng-click="modal.hide()">Cancelar</button>
     </div>
 
   </ion-header-bar>
@@ -30,14 +30,12 @@
         <ion-checkbox class="trans" ng-model="nuevaP.isChecked3">DIU</ion-checkbox>
         <ion-checkbox class="trans" ng-model="nuevaP.isChecked4">Otros</ion-checkbox>
       </div>
-      <div class="list trans" ng-show="false">
+      <div class="list trans">
         <div class="item tabs tabs-secondary tabs-icon-left trans" style="background-color: #fff;">
-
           <label class="item item-input trans">
               LAT :
             <input type="text" ng-model="nuevaP.lat" clsas="trans">
           </label>
-
           <label class="item item-input trans">
               LNG :
             <input type="text" clsas="trans" ng-model="nuevaP.lng" >
