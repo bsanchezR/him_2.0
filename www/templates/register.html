@@ -40,8 +40,11 @@
             <input type="number" ng-model="aut.edad" placeholder="Edad">
           </label>
            -->
+
            <label class="item item-input item-floating-label" style="margin:-6px;">
-             <span class="input-label">Fecha Nacimiento</span>
+
+         </br>
+             <span class="">Fecha Nacimiento</span>
              <input type="date" name="fecha" ng-model="aut.fecha" placeholder="Fecha Nacimiento" required>
              <span class="warning" ng-show="!formulario.$pristine && formulario.fecha.$error.required">Fecha es requerido.</span>
            </label>
@@ -54,15 +57,34 @@
                <option value="Cuernavaca" selected>Cuernavaca</option>
                <option value="Jiutepec" >Jiutepec</option>
                <option value="Coacalco">Coacalco</option>
-               <option value="Coacalco">Coacalco</option>
                <option value="Cuautla">Cuautla</option>
                <option value="Amacuzac">Amacuzac</option>
                <option value="Tlaltizapan">Tlaltizapan</option>
                <option value="Atlatlahucan">Atlatlahucan</option>
                <option value="Tehuixtla">Tehuixtla</option>
                <option value="Tepalcingo">Tepalcingo</option>
+               <option value="Tepalcingo">Santa Rosa 30</option>
+               <option value="Tepalcingo">Jantetelco</option>
+               <option value="Tepalcingo">Xochitepec</option>
+
+
+
+
              </select>
            </label>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;">
             <div class="input-label trans">
@@ -74,7 +96,7 @@
             </select>
           </label>
           <div class="col col-90 col-offset-20">
-              <button ng-click="guardar()" id="login-button5" class="button button-positive mod_log">Resgistrar</button>
+              <button ng-click="guardar()" id="login-button5" class="button button-positive mod_log">Registrar</button>
 				</div>
       </form>
 			</div>

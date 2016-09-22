@@ -220,7 +220,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.$broadcast('scroll.refreshComplete');
            var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Aún no tenemos una respuesta para ti :('
            });
         });
     }
@@ -596,34 +596,34 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   //activar en productivo
 
     var gcmid="";
-    console.log("Device Ready")
-    var push = PushNotification.init({
-      "android": {
-        "senderID": "898342355996",
-        "icon": 'iconName',  // Small icon file name without extension
-        "iconColor": '#248BD0'
-      },
-      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    push.on('registration', function(data) {
-    console.log(data.registrationId);
-    gcmid = data.registrationId;
-    $("#gcm_id").html(data.registrationId);
-    });
-
-    push.on('notification', function(data) {
-      console.log(data.message);
-      alert(data.title+" Message: " +data.message);
-
-      data.title,
-      data.count,
-      data.sound,
-      data.image,
-      data.additionalData
-    });
-
-    push.on('error', function(e) {
-    console.log(e.message);
-  });
+  //   console.log("Device Ready")
+  //   var push = PushNotification.init({
+  //     "android": {
+  //       "senderID": "898342355996",
+  //       "icon": 'iconName',  // Small icon file name without extension
+  //       "iconColor": '#248BD0'
+  //     },
+  //     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+  //   push.on('registration', function(data) {
+  //   console.log(data.registrationId);
+  //   gcmid = data.registrationId;
+  //   $("#gcm_id").html(data.registrationId);
+  //   });
+  //
+  //   push.on('notification', function(data) {
+  //     console.log(data.message);
+  //     alert(data.title+" Message: " +data.message);
+  //
+  //     data.title,
+  //     data.count,
+  //     data.sound,
+  //     data.image,
+  //     data.additionalData
+  //   });
+  //
+  //   push.on('error', function(e) {
+  //   console.log(e.message);
+  // });
 
 
 
