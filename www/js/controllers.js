@@ -1004,6 +1004,21 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
       //Wait until the map is loaded
       google.maps.event.addListenerOnce($scope.map, 'idle', function(){
         recorrerParadas();
+
+        var direction = 1;
+        var rMin = 5, rMax = 30;
+        setInterval(function() {
+            var radius = cityCircle.getRadius();
+            if ((radius > rMax) || (radius < rMin)) {
+                //direction *= -1;
+                cityCircle.setRadius(5);
+            }else{
+              cityCircle.setRadius(radius + direction * 1);
+            }
+
+        }, 50);
+
+
       });
 
       function crearInfo(parada){
@@ -1305,12 +1320,12 @@ function autoUpdate() {
       cityCircle = new google.maps.Circle({
           strokeColor: '#FF0000',
           strokeOpacity: 0.8,
-          strokeWeight: 2,
+          strokeWeight: 1,
           fillColor: '#FF0000',
           fillOpacity: 0.35,
-          // map: $scope.map,
+          map: $scope.map,
           center: newPoint,
-          radius: 200
+          radius: 20
         });
     }
 
