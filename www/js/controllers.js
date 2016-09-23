@@ -1331,6 +1331,7 @@ function autoUpdate() {
 
     // Center the map on the new position
     $scope.map.setCenter(newPoint);
+    cityCircle.setCenter(newPoint);
   });
   console.log('llamada');
 
