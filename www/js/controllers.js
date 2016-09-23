@@ -684,7 +684,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
              console.log(response.data);
             if(response.data.mensaje == -1)
             {
-              accesoError();
+              mensajeError(response.data.message);
             }
             else if(response.data.mensaje == 0)
             {
@@ -707,7 +707,8 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
                 $state.go('tab',{},{reload:true});
             }
         },function errorCallback(response) {
-            accesoError();
+            console.log(response);
+            mensajeError(response.data.message);
         });
   }
 
@@ -720,7 +721,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   function mensajeError(mensaje){
     var alertPopup = $ionicPopup.alert({
-       title: 'Espera !!',
+       title: '¡ Espera !',
        template: mensaje
      });
   }
