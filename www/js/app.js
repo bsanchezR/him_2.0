@@ -1,5 +1,5 @@
 (function(){
-var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed','igTruncate'])
+var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed','igTruncate','ionic.rating'])
 
 app.run(function($ionicPlatform,Auten) {
   $ionicPlatform.ready(function() {

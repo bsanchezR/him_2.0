@@ -94,7 +94,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
   $scope.articulo = Articulos.get($stateParams.articuloId);
 
   $scope.shareAnywhere = function() {
-        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+       var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl);
    }
 
@@ -220,7 +220,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.$broadcast('scroll.refreshComplete');
            var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Aún no tenemos una respuesta para ti :('
            });
         });
     }
@@ -230,11 +230,20 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
         //creamos el ide unico
         $scope.nota.id =  new Date().getTime().toString();
 
-        $ionicLoading.show({
-            template: 'Enviando...'
-          }).then(function(){
-             console.log("The loading indicator is now displayed");
+
+        if($scope.nota.mensaje ==  ''){
+          var alertPopup = $ionicPopup.alert({
+            title: 'Oh no!!',
+            template: 'Intenta escribiendo un mensaje  :)'
           });
+        }
+        else{
+          $ionicLoading.show({
+              template: 'Enviando...'
+            }).then(function(){
+               console.log("The loading indicator is now displayed");
+            });
+
 
         $http.post(link, {telefono : Auten.validar().telefono, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
@@ -249,9 +258,6 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
               Preguntas.actualiza(data.data);
               $scope.mensajes = Preguntas.list();
             });
-
-
-
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
             });
@@ -262,12 +268,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
           });
             var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Tú mensaje no puede ser enviado por el momento intenta mas tarde :('
            });
           alertPopup.then(function(res) {
              console.log('Thank you for not eating my delicious ice cream cone');
            });
         });
+      }
     };
 });
 
@@ -472,6 +479,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
       fertilePhaseStart = periodCycleDays - 20;
       fertilePhaseEnd = periodCycleDays - 13;
       ovulation = (fertilePhaseStart-1) + (fertilePhaseEnd - fertilePhaseStart)/2;
+      //ovulation = (parametros.duraP/2) + 1;
 
       periodStartDate = new Date(parametros.inicio);
 
@@ -588,34 +596,35 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   //activar en productivo
 
     var gcmid="";
-    // console.log("Device Ready")
-    // var push = PushNotification.init({
-    //   "android": {
-    //     "senderID": "898342355996",
-    //     "icon": 'iconName',  // Small icon file name without extension
-    //     "iconColor": '#248BD0'
-    //   },
-    //   "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    // push.on('registration', function(data) {
-    // console.log(data.registrationId);
-    // gcmid = data.registrationId;
-    // $("#gcm_id").html(data.registrationId);
-    // });
-    //
-    // push.on('notification', function(data) {
-    //   console.log(data.message);
-    //   alert(data.title+" Message: " +data.message);
-    //
-    //   data.title,
-    //   data.count,
-    //   data.sound,
-    //   data.image,
-    //   data.additionalData
-    // });
-    //
-    // push.on('error', function(e) {
-    // console.log(e.message);
-    //
+  //   console.log("Device Ready")
+  //   var push = PushNotification.init({
+  //     "android": {
+  //       "senderID": "898342355996",
+  //       "icon": 'iconName',  // Small icon file name without extension
+  //       "iconColor": '#248BD0'
+  //     },
+  //     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+  //   push.on('registration', function(data) {
+  //   console.log(data.registrationId);
+  //   gcmid = data.registrationId;
+  //   $("#gcm_id").html(data.registrationId);
+  //   });
+  //
+  //   push.on('notification', function(data) {
+  //     console.log(data.message);
+  //     alert(data.title+" Message: " +data.message);
+  //
+  //     data.title,
+  //     data.count,
+  //     data.sound,
+  //     data.image,
+  //     data.additionalData
+  //   });
+  //
+  //   push.on('error', function(e) {
+  //   console.log(e.message);
+  // });
+
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -634,7 +643,6 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.guardar =  function(){
-      console.log($scope.aut);
       if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
@@ -645,7 +653,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
       var url  = 'http://www.birdev.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
-        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, usuario : $scope.aut.usuario, edad : edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid, mobile:2 })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.usuario, fecha :  $scope.aut.fecha, sexo : $scope.aut.sexo , plantel : $scope.aut.plantel, nuevo : 1, gcm_id : gcmid, mobile:1 })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -762,40 +770,6 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-//
-// <<<<<<< HEAD
-// =======
-// //activar en productivo
-//   console.log("Device Ready")
-//   var push = PushNotification.init({
-//     "android": {
-//       "senderID": "898342355996",
-//       "icon": 'iconName',  // Small icon file name without extension
-//       "iconColor": '#248BD0'
-//     },º
-//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-//
-//   push.on('registration', function(data) {
-//   console.log(data.registrationId);
-//   $("#gcm_id").html(data.registrationId);
-//   });
-//
-//   push.on('notification', function(data) {
-//   console.log(data.message);
-//   alert(data.title+" Message: " +data.message);
-//
-//   data.title,
-//   data.count,
-//   data.sound,
-//   data.image,
-//   data.additionalData
-//   });
-//
-//   push.on('error', function(e) {
-//   console.log(e.message);
-//   });
-//
-// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -870,12 +844,16 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
 });
 
 
-app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory) {
-  $scope.cerrar =  function(){
-    var ids=Auten.validar().id;
-    console.log(ids);
+app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+
+  $scope.cerrar =  function()
+  {
+     var ids = Auten.validar().id;
+
      Auten.cerrarSesion();
      Preguntas.delete();
+     ParadasFact.delete();
+
      $ionicHistory.clearCache().then(function()
      {
        var url  = 'http://www.birdev.mx/message_app/public/user';
@@ -885,7 +863,8 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
                 $state.go('login');
               },
               function errorCallback(response) {
-                 console.log("error");
+                 console.log("sin internet");
+                 $state.go('login');
               });
      });
   }
@@ -893,44 +872,152 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$ionicPopup,ParadasFact) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten) {
+
+  if (typeof Auten.validar().telefono != 'undefined')
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
 
      var control = true;
-     $scope.lat  =  19.046777;
-     $scope.lng  = -98.208727;
+     $scope.lat  =  19.058926;
+     $scope.lng  = -98.253135;
+
+
      var latLng = new google.maps.LatLng(19.046777, -98.208727);
 
-     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : ''  };
+     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
-     $scope.paradas =  ParadasFact.all();
+
+     //variables para crear el arreglo de paradas
+     var nuevasParadas = [];
+     var nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+
+     $http.get('http://www.birdev.mx/message_app/public/paradas')
+     .success(function(paradas){
+       console.log(paradas);
+       angular.forEach(paradas.data,function(post){
+                //armar la parada local
+                nuevaParada.id_parada =  post.parada;
+                nuevaParada.nombre =  post.titulo;
+                nuevaParada.descripcion = post.descripcion;
+                nuevaParada.lat =  post.lat;
+                nuevaParada.lng =  post.lng;
+                nuevaParada.id_usuario =  post.id_usuario;
+                nuevaParada.tipo =  post.tipo;
+
+                nuevasParadas.push(nuevaParada);
+                //limpiamos la parada
+                nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+        });
+        console.log(nuevasParadas);
+        ParadasFact.putall(nuevasParadas);
+        $scope.paradas =  ParadasFact.all();
+
+     },
+     function errorCallback(response) {
+       console.log('Sin conexión');
+       $scope.paradas =  ParadasFact.all();
+
+     });
+
+     $http.get('  http://www.birdev.mx/message_app/public/paradas/'+Auten.validar().id)
+     .success(function(paradas){
+
+       angular.forEach(paradas.data,function(post){
+                //armar la parada local
+                nuevaParada.id_parada =  post.parada;
+                nuevaParada.nombre =  post.titulo;
+                nuevaParada.descripcion = post.descripcion;
+                nuevaParada.lat =  post.lat;
+                nuevaParada.lng =  post.lng;
+                nuevaParada.id_usuario =  post.id_usuario;
+                nuevaParada.tipo =  post.tipo;
+                //sacar los comentarios y el rate jejeje
+                ParadasFact.post(nuevaParada);
+                //limpiamos la parada
+                nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+        });
+        $scope.paradas =  ParadasFact.all();
+        recorrerParadas();
+     },
+     function errorCallback(response) {
+       console.log('Sin conexión');
+       $scope.paradas =  ParadasFact.all();
+       recorrerParadas();
+     });
 
 
+/*
+
+    http://www.birdev.mx/message_app/public/paradas  -> obtiene todas las paradas
+
+
+    http://www.birdev.mx/message_app/public/paradas/id   -> obtiene las paradas tipo 3 del usuario con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/comentarios/id -> obtiene los comentarios de la parada con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/rates/id -> obtiene los rates de la parada con el id especificado
+
+*/
+
+
+
+     if(Auten.validar().sexo == 'm')
+      var image  = 'img/pines/preB4.png';
+     if(Auten.validar().sexo == 'f')
+      var image  = 'img/pines/preB3.png';
 
      console.log($scope.paradas);
      $scope.paradas =  ParadasFact.all();
      var marker,usuario;
      var infoWindow = new google.maps.InfoWindow();
      var info ;
+     var  alertaActiva =  false;
 
 
 
       var mapOptions = {
         center: latLng,
         disableDefaultUI: true,
-        zoom: 15,
+        zoom: 17,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
+
+      function recorrerParadas(){
+        //recorremos todos los puntos que tenesmos
+        for (var i = 0; i < $scope.paradas.length; i++) {
+          info = crearInfo($scope.paradas[i]);
+          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info,$scope.paradas[i].tipo);
+        }
+      }
 
       $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
       //Wait until the map is loaded
       google.maps.event.addListenerOnce($scope.map, 'idle', function(){
-        //recorremos todos los puntos que tenesmos
-        for (var i = 0; i < $scope.paradas.length; i++) {
-          info = crearInfo($scope.paradas[i]);
-          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info);
-        }
+        recorrerParadas();
+
+        var direction = 1;
+        var rMin = 5, rMax = 30;
+        setInterval(function() {
+            var radius = cityCircle.getRadius();
+            if ((radius > rMax) || (radius < rMin)) {
+                //direction *= -1;
+                cityCircle.setRadius(5);
+            }else{
+              cityCircle.setRadius(radius + direction * 1);
+            }
+
+        }, 50);
+
 
       });
 
@@ -941,19 +1028,94 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           '<div id="siteNotice">'+
           '</div>'+
           '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
-          '<div id="bodyContent">'+
-          '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : parada.puntuacion)+'</p>'+
-          '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
-          '</div>'+
-        '</div>';
+          '<div id="bodyContent">';
+          // if(parada.tipo != 3){
+          //   contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
+          // }
+          // if(parada.tipo != 3){
+          //   contentString += '<p>'+ getTotal(parada)+'</p>';
+          // }
+          contentString +=  '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+                            '</div>'+
+                          '</div>';
 
         return contentString;
         }
 
-      function agregarMarca(marker,lat,lng,infoWindow,info){
+        function getTotal(parada)
+        {
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          console.log('calculara rate');
+
+          $http.get('http://www.birdev.mx/message_app/public/rates/1474064460846')
+          .success(function(rates){
+            console.log(rates);
+            if(rates.data > 0){
+              angular.forEach(rates.data,function(rate){
+                console.log('rate');
+                console.log(rate);
+                acumulador =  acumulador + rate.rate;
+                promedio++;
+               });
+               //sacamos el promedio simple
+                 totalRate = acumulador /  promedio;
+                 acumulador = 0;
+                 promedio = 0;
+                 return totalRate;
+            }else{
+              return 'Sin puntuar';
+            }
+
+
+          },
+          function errorCallback(response) {
+            console.log('Sin conexión');
+
+          });
+
+
+
+
+
+          //
+          // //limpiara para despues
+          // if(parada.puntuacion !=  ""){
+          //   for (var i = 0; i <   parada.puntuacion.length; i++) {
+          //     acumulador =  acumulador + parada.puntuacion[i].rate;
+          //     promedio++;
+          //   }
+          //   //sacamos el promedio simple
+          //   totalRate = acumulador /  promedio;
+          //   acumulador = 0;
+          //   promedio = 0;
+          //
+          //   return totalRate;
+          // }else{
+          //   return 'Sin puntuar';
+          // }
+
+
+        }
+
+      function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
+        var icono = 'img/flag.png';
+        if(tipo == 1){
+            icono = 'img/pines/preB2.png';
+        }
+        else if(tipo == 2){
+            icono = 'img/pines/preB1.png';
+        }
+        else if(tipo == 3){
+          icono = 'img/pines/preB5.png';
+        }
+
         marker = new google.maps.Marker({
           position: new google.maps.LatLng(lat, lng),
           map: $scope.map,
+          icon: icono,
           animation: google.maps.Animation.DROP
         });
 
@@ -976,6 +1138,21 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 
         $scope.preb =  function(){
+           $scope.tipo_parada = 1;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.gim =  function(){
+           $scope.tipo_parada = 2;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.punto =  function(){
+           $scope.tipo_parada = 3;
            $scope.modal.show();
            $('.btn').removeClass('animacionVer');
            control = true;
@@ -984,63 +1161,37 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         $scope.guardarParada = function() {
            //LocationsService.savedLocations.push($scope.newLocation);
           $scope.modal.hide();
+          validarParada();
           //$scope.goTo(LocationsService.savedLocations.length - 1);
         //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
         //se deja al final
-          $scope.nuevaP.id_usuario =  1;
-          $scope.nuevaP.tipo =  1;
+          $scope.nuevaP.id_parada   =  '' + new Date().getTime();
+          $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
+          $scope.nuevaP.tipo = $scope.tipo_parada;
           $scope.nuevaP.color =  '#fff';
           $scope.nuevaP.puntuacion = '';
           ParadasFact.post($scope.nuevaP);
+
+          var nueva_parada;
+          var url  = 'http://www.birdev.mx/message_app/public/paradas';
+          $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+             .then(function successCallback(response)
+             {
+               console.log("parada guardada");
+               console.log(response);
+             },
+             function errorCallback(response) {
+                console.log("error");
+             });
+
+
+          info = crearInfo($scope.nuevaP);
+          agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
+          //limpiamos la variable de la nueva pokeparada
+           $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+           $scope.nuevaP.lat =  $scope.lat;
+           $scope.nuevaP.lng =  $scope.lng;
          };
-
-
-//    var map = L.map('map',{
-//      zoomControl : false,
-//    scrollZoom :  false }).setView([19.046777, -98.208727], 13);
-//
-//
-//
-//
-//      var map = L.map('map');
-// 		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-// 			maxZoom: 18,
-// 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-// 				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-// 				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-// 			id: 'mapbox.streets'
-// 		}).addTo(map);
-//
-//     var options = {timeout: 10000, enableHighAccuracy: true};
-//
-//       $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-//
-//         console.log(position.coords.latitude);
-//         console.log(position.coords.longitude);
-//
-//
-//         // var marker = L.marker([position.coords.latitude , position.coords.longitude]).addTo(map);
-//         // marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
-//
-//         //var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-//
-//         // var mapOptions = {
-//         //   center: latLng,
-//         //   zoom: 15,
-//         //   mapTypeId: google.maps.MapTypeId.ROADMAP
-//         // };
-//         //
-//         // $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-//
-//       }, function(error){
-//         console.log("Could not get location");
-//       });
-//
-//
-//
-// //fuciones declaradas para el boton desplegable
-
-
 
       /**
       * Center map on user's current position
@@ -1081,14 +1232,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
       };
 
-
-
-      $scope.alerta = function(){
-        alert('sas');
-        //funcion para quitar el marcador y poder repintarlo en un tiempo
-        usuario.setMap(null);
-      }
-
       $scope.animacion =  function(){
         if(control){
           $('.btn').addClass('animacionVer');
@@ -1098,49 +1241,256 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $('.btn').removeClass('animacionVer');
           control = true;
         }
-
-
       }
 
-
-
       var markerPrincipal = null;
+      var cityCircle =  null;
+function cambioAlerta(){
+  alertaActiva =  false;
+}
+
+
+function validarParada(){
+  for (var i = 0; i < $scope.paradas.length; i++) {
+    var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+    if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+    {
+      if(!alertaActiva)
+      {
+        //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
+        alertaActiva = true;
+        var alertPopup = $ionicPopup.alert({
+          title: '¡Oh no!',
+          template: 'Cuidado parece que estas cerca de una parada valida que no sea la misma.'
+        });
+        alertPopup.then(function(res) {
+          console.log('Thank you for not eating my delicious ice cream cone');
+          //setTimeout(cambioAlerta, 10000);
+        });
+      }
+    }
+  }
+}
 
 function autoUpdate() {
+
   navigator.geolocation.getCurrentPosition(function(position) {
+    $scope.lat =  position.coords.latitude;
+    $scope.lng = position.coords.longitude;
     var newPoint = new google.maps.LatLng(position.coords.latitude,
                                           position.coords.longitude);
+
 
     if (markerPrincipal) {
       // Marker already created - Move it
       markerPrincipal.setPosition(newPoint);
+
+      for (var i = 0; i < $scope.paradas.length; i++) {
+        if($scope.paradas[i].tipo == 3 )
+        {
+          console.log('entra ?');
+          var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+          if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+          {
+            if(!alertaActiva)
+            {
+              //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
+              // alertaActiva = true;
+              // var alertPopup = $ionicPopup.alert({
+              //   title: '¡Oh no!',
+              //   template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
+              // });
+              // alertPopup.then(function(res) {
+              //   console.log('Thank you for not eating my delicious ice cream cone');
+              //   setTimeout(cambioAlerta, 10000);
+              // });
+            }
+          }
+        }
+      }
     }
     else {
       // Marker does not exist - Create it
       markerPrincipal = new google.maps.Marker({
         position: newPoint,
-        map: $scope.map
+        map: $scope.map,
+        icon: image
       });
+      //intentado circulo en el usuario
+      cityCircle = new google.maps.Circle({
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 1,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          map: $scope.map,
+          center: newPoint,
+          radius: 20
+        });
     }
 
     // Center the map on the new position
     $scope.map.setCenter(newPoint);
+    cityCircle.setCenter(newPoint);
   });
   console.log('llamada');
+
+  console.log(alertaActiva);
   // Call the autoUpdate() function every 5 seconds
-  setTimeout(autoUpdate, 5000);
+
+    setTimeout(autoUpdate, 5000);
+
+
 }
 
 autoUpdate();
 
-
-
-
     });
 
-
-    app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+//controller de  el despliege de la ficha
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
       $scope.parada = ParadasFact.get($stateParams.id_parada);
 
+      $scope.comentarioSer = new Array();
+      getComentariosSer($stateParams.id_parada);
+
+      function getComentariosSer(id){
+        $http.get('  http://www.birdev.mx/message_app/public/comentarios/'+id)
+        .success(function(comentarios){
+          if(comentarios.data.length > 0){
+              $scope.comentarioSer = comentarios.data;
+          }
+        },
+        function errorCallback(response) {
+          console.log('Sin conexión');
+        });
+      }
+
+
+
+      $scope.puntuacionSer = new Array();
+      getPuntuacionSer($stateParams.id_parada);
+
+      function getPuntuacionSer(id){
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          console.log('calculara rate');
+
+          $http.get('http://www.birdev.mx/message_app/public/rates/'+id)
+          .success(function(rates){
+            console.log(rates);
+            if(rates.data.length > 0){
+              console.log(rates.data);
+              $scope.puntuacionSer = rates.data;
+            }
+          },
+          function errorCallback(response) {
+            console.log('Sin conexión');
+
+          });
+
+      }
+
+      $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
+
       console.log(  $scope.parada );
+
+      // set the rate and max variables
+      $scope.rating = {};
+      $scope.rating.rate = 3;
+      $scope.rating.max = 5;
+      $scope.botonRate =  true;
+
+      $scope.guardarComentario =  function(){
+        $scope.comentario.id_comentario =  '' + new Date().getTime();
+        $scope.comentario.id_usuario    =  Auten.validar().telefono;
+
+        $scope.comentarioSer.push($scope.comentario);
+
+        // ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
+        // $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        var url  = 'http://www.birdev.mx/message_app/public/comentarios';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , mensaje :  $scope.comentario.mensaje, id_user: Auten.validar().id})
+           .then(function successCallback(response)
+           {
+             console.log("comentarios guardados");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
+
+
+        //limpiamos la variable del comentario para que otro pueda comentar
+        $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      }
+
+      $scope.guardarPuntuacion = function(){
+        console.log($scope.rating.rate);
+        $scope.botonRate =  false;
+
+
+
+        $scope.puntuacion.id_puntuacion =  '' + new Date().getTime();
+        $scope.puntuacion.id_usuario    =  Auten.validar().telefono;
+        $scope.puntuacion.rate    =    $scope.rating.rate;
+
+        $scope.puntuacionSer.push($scope.puntuacion);
+
+
+
+
+        // ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
+        // $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+
+        var url  = 'http://www.birdev.mx/message_app/public/rates';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , rate :  $scope.puntuacion.rate, id_user: Auten.validar().id})
+           .then(function successCallback(response)
+           {
+             console.log("puntuacion guardada");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
+
+        //modal que de gracias por la calificación
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Gracias!',
+           template: 'Gracias por tu puntuación, esta es muy importante para poder dar un mejor servicio.'
+         });
+
+      }
+
+      $scope.getTotal =  function(){
+        var totalRate = 0;
+        var acumulador =  0;
+        var promedio = 0 ;
+        console.log('numero de entradas');
+
+        //limpiara para despues
+        if($scope.puntuacionSer !=  ""){
+          //console.log($scope.parada);
+          for (var i = 0; i <   $scope.puntuacionSer.length; i++) {
+              acumulador =  acumulador + $scope.puntuacionSer[i].rate;
+              promedio++;
+          }
+
+          totalRate = acumulador /  promedio;
+          acumulador = 0;
+          promedio = 0;
+          console.log(totalRate);
+          console.log($scope.puntuacionSer.length);
+          return totalRate;
+        }else{
+          return '';
+        }
+
+
+      }
     });
