@@ -17,6 +17,9 @@
       <br>
       <br>
       <div class="list trans">
+          <p style="padding: 0px 20px;">{{desc}}</p>
+      </div>
+      <div class="list trans">
         <label class="item item-input trans">
           <input type="text" placeholder="Nombre" ng-model="nuevaP.nombre">
         </label>
@@ -30,7 +33,7 @@
         <ion-checkbox class="trans" ng-model="nuevaP.isChecked3">DIU</ion-checkbox>
         <ion-checkbox class="trans" ng-model="nuevaP.isChecked4">Otros</ion-checkbox>
       </div>
-      <div class="list trans">
+      <div ng-show="false" class="list trans">
         <div class="item tabs tabs-secondary tabs-icon-left trans" style="background-color: #fff;">
           <label class="item item-input trans">
               LAT :
@@ -40,10 +43,14 @@
               LNG :
             <input type="text" clsas="trans" ng-model="nuevaP.lng" >
           </label>
-          </a>
         </div>
       </div>
-
+<!-- <p>
+  {{lat}}
+</p>
+<p>
+  {{lng}}
+</p> -->
       <div class="col col-90 col-offset-25">
 
         <button class="button button-positive mod_log" ng-disabled="locationForm.$invalid" style="width:148px;">Guardar Parada</button>

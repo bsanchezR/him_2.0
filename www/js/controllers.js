@@ -8,7 +8,7 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
 
     $scope.CargarNuevosPost =  function()
     {
-        var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+        var urlNuevosArticulos = 'http://www.preb.mx/message_app/public/articulos';
         $http.get(urlNuevosArticulos)
         .success(function(posts){
             var nuevosArticulos = [];
@@ -25,7 +25,7 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
 
     function cargarPost()
     {
-      var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+      var urlNuevosArticulos = 'http://www.preb.mx/message_app/public/articulos';
       $http.get(urlNuevosArticulos)
       .success(function(posts){
         var nuevosArticulos = [];
@@ -94,7 +94,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
   $scope.articulo = Articulos.get($stateParams.articuloId);
 
   $scope.shareAnywhere = function() {
-       var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+       var comUrl = "http://www.preb.mx/message_app/public/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl);
    }
 
@@ -117,7 +117,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
       }
 
       //vamos hacer pruebas de file con cordova
-      var url = "http://birdev.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
+      var url = "http://www.preb.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
       testFileDownload(url);
   }
 
@@ -170,11 +170,11 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     {
         var alertPopup = $ionicPopup.alert({
            title: '¡Oh no!',
-           template: 'El horario de atención es de 9 a 18 horas puedes mandarnos tu pregunta pero esta sera respuesta apartir de las 9 horas. Gracias'
+           template: 'El horario de atención es de 9:00 a 18:00 horas, puedes mandarnos tu pregunta pero esta será contestada a partir de las 9:00 horas. Gracias.'
          });
     }
 
-    var urlHist = 'http://www.birdev.mx/message_app/public/historial/';
+    var urlHist = 'http://www.preb.mx/message_app/public/historial/';
     console.log(Auten.validar());
     $http.get(urlHist+Auten.validar().telefono)
     .success(function(data){
@@ -188,9 +188,9 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
     //constantes y cosas que se tienen que inicializar para el modulo
     $scope.nota =  {id: '', mensaje:''};
     $scope.respuesta = {id:'' , mensaje: ''};
-    var link = 'http://www.birdev.mx/message_app/public/messages';
-    var linkRespuesta = 'http://www.birdev.mx/message_app/public/response';
-    var linkHist = 'http://www.birdev.mx/message_app/public/historial';
+    var link = 'http://www.preb.mx/message_app/public/messages';
+    var linkRespuesta = 'http://www.preb.mx/message_app/public/response';
+    var linkHist = 'http://www.preb.mx/message_app/public/historial';
 
     $scope.respuesta.id = Preguntas.list();
 
@@ -651,7 +651,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
       var edad =  calEdad($scope.aut.fecha);
 
-      var url  = 'http://www.birdev.mx/message_app/public/user';
+      var url  = 'http://www.preb.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
         $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.usuario, fecha :  $scope.aut.fecha, sexo : $scope.aut.sexo , plantel : $scope.aut.plantel, nuevo : 1, gcm_id : gcmid, mobile:1 })
            .then(function successCallback(response)
@@ -676,7 +676,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.validar =  function(){
-    var url  = 'http://www.birdev.mx/message_app/public/user';
+    var url  = 'http://www.preb.mx/message_app/public/user';
   //  console.log(gcmid);
       $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass , gcm_id : gcmid })
            .then(function successCallback(response)
@@ -839,7 +839,7 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
   // $scope.imgSrc =  cordova.file.dataDirectory +"him/"+ $scope.articulo.images[0].ruta.split('/').pop();
 
   $scope.shareAnywhere = function() {
-        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+        var comUrl = "http://www.preb.mx/dashboard/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl );
    }
 });
@@ -857,7 +857,7 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
      $ionicHistory.clearCache().then(function()
      {
-       var url  = 'http://www.birdev.mx/message_app/public/user';
+       var url  = 'http://www.preb.mx/message_app/public/user';
          $http.post(url, { mobile : 1, metodo: 'UPDATE' , id : ids })
               .then(function successCallback(response)
               {
@@ -873,7 +873,7 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
 
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,Auten) {
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,ParadasPrivadas,Auten) {
 
   if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -899,7 +899,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      var nuevasParadas = [];
      var nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
 
-     $http.get('http://www.birdev.mx/message_app/public/paradas')
+     $http.get('http://www.preb.mx/message_app/public/paradas')
      .success(function(paradas){
        console.log(paradas);
        angular.forEach(paradas.data,function(post){
@@ -927,24 +927,27 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
      });
 
-     $http.get('  http://www.birdev.mx/message_app/public/paradas/'+Auten.validar().id)
+
+     var nuevasParadasp = [];
+     var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+
+     $http.get('  http://www.preb.mx/message_app/public/paradas/'+Auten.validar().id)
      .success(function(paradas){
 
        angular.forEach(paradas.data,function(post){
                 //armar la parada local
-                nuevaParada.id_parada =  post.parada;
-                nuevaParada.nombre =  post.titulo;
-                nuevaParada.descripcion = post.descripcion;
-                nuevaParada.lat =  post.lat;
-                nuevaParada.lng =  post.lng;
-                nuevaParada.id_usuario =  post.id_usuario;
-                nuevaParada.tipo =  post.tipo;
-                //sacar los comentarios y el rate jejeje
-                ParadasFact.post(nuevaParada);
-                //limpiamos la parada
-                nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+                nuevaParadap.id_parada =  post.parada;
+                nuevaParadap.nombre =  post.titulo;
+                nuevaParadap.descripcion = post.descripcion;
+                nuevaParadap.lat =  post.lat;
+                nuevaParadap.lng =  post.lng;
+                nuevaParadap.id_usuario =  post.id_usuario;
+                nuevaParadap.tipo =  post.tipo;
+                nuevasParadasp.push(nuevaParadap);
+                nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
         });
-        $scope.paradas =  ParadasFact.all();
+        ParadasPrivadas.putall(nuevasParadasp);
+        $scope.paradasp =  ParadasPrivadas.all();
         recorrerParadas();
      },
      function errorCallback(response) {
@@ -998,6 +1001,11 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           info = crearInfo($scope.paradas[i]);
           agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info,$scope.paradas[i].tipo);
         }
+
+        for (var i = 0; i < $scope.paradasp.length; i++) {
+          info = crearInfo($scope.paradasp[i]);
+          agregarMarca(marker,$scope.paradasp[i].lat, $scope.paradasp[i].lng,infoWindow,info,$scope.paradasp[i].tipo);
+        }
       }
 
       $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -1028,15 +1036,15 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         '<div id="content">'+
           '<div id="siteNotice">'+
           '</div>'+
-          '<h1 id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
-          '<div id="bodyContent">';
+          '<h1 style="text-align:center;" id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
+          '<div id="bodyContent" style="text-align:center;">';
           // if(parada.tipo != 3){
           //   contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
           // }
           // if(parada.tipo != 3){
           //   contentString += '<p>'+ getTotal(parada)+'</p>';
           // }
-          contentString +=  '<a class="button icon-right ion-chevron-right button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+          contentString +=  '<a class="button button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
                             '</div>'+
                           '</div>';
 
@@ -1051,7 +1059,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
           console.log('calculara rate');
 
-          $http.get('http://www.birdev.mx/message_app/public/rates/1474064460846')
+          $http.get('http://www.preb.mx/message_app/public/rates/1474064460846')
           .success(function(rates){
             console.log(rates);
             if(rates.data > 0){
@@ -1137,8 +1145,8 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           $scope.modal = modal;
         });
 
-
         $scope.preb =  function(){
+           $scope.desc="Kondoparadas→ Son establecimientos en donde te proporcionan métodos anticonceptivos (condones, pastillas del día siguiente, DIU, etc.), ya sean centros de salud, consultorios o farmacias, públicas o privadas. Las Kondoparadas las puedes compartir, visitar, puntuarlos y comentar tus experiencias en ellos, es muy importante que si las visitas las “evalúes” ya que eso ayudará a la comunidad a acudir a las mejores.";
            $scope.tipo_parada = 1;
            $scope.modal.show();
            $('.btn').removeClass('animacionVer');
@@ -1146,6 +1154,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         }
 
         $scope.gim =  function(){
+          $scope.desc="Gym´s del autoestima→ Son lugares que te ayudan a sentirte bien. En donde puedes disfrutar el paisaje, pasar buenos momentos con tus amigos o familiares, comer algo delicioso, jugar, hacer deporte o lo que más te guste. Los Gym´s los puedes compartir, visitar, puntuarlos y comentar tus experiencias en ellos.";
            $scope.tipo_parada = 2;
            $scope.modal.show();
            $('.btn').removeClass('animacionVer');
@@ -1153,6 +1162,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         }
 
         $scope.punto =  function(){
+          $scope.desc="PuntosR→ Son lugares en donde has tenido (o tienes) relaciones sexuales. Los PuntosR no se comparten, pero te ayudará a encontrar más fácil las Kondoparadas y protegerte.";
            $scope.tipo_parada = 3;
            $scope.modal.show();
            $('.btn').removeClass('animacionVer');
@@ -1162,36 +1172,41 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         $scope.guardarParada = function() {
            //LocationsService.savedLocations.push($scope.newLocation);
           $scope.modal.hide();
-          validarParada();
+          if(validarParada())
+          {
+            $scope.nuevaP.id_parada   =  '' + new Date().getTime();
+            $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
+            $scope.nuevaP.tipo = $scope.tipo_parada;
+            $scope.nuevaP.color =  '#fff';
+            $scope.nuevaP.puntuacion = '';
+            $scope.nuevaP.lat=$scope.lat;
+            $scope.nuevaP.lng=$scope.lng;
+            ParadasFact.post($scope.nuevaP);
+
+            var nueva_parada;
+            var url  = 'http://www.preb.mx/message_app/public/paradas';
+            $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+               .then(function successCallback(response)
+               {
+                 console.log("parada guardada");
+                 console.log(response);
+               },
+               function errorCallback(response) {
+                  console.log("error");
+               });
+
+
+            info = crearInfo($scope.nuevaP);
+            agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
+            //limpiamos la variable de la nueva pokeparada
+             $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+             $scope.nuevaP.lat =  $scope.lat;
+             $scope.nuevaP.lng =  $scope.lng;
+          }
           //$scope.goTo(LocationsService.savedLocations.length - 1);
         //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
         //se deja al final
-          $scope.nuevaP.id_parada   =  '' + new Date().getTime();
-          $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
-          $scope.nuevaP.tipo = $scope.tipo_parada;
-          $scope.nuevaP.color =  '#fff';
-          $scope.nuevaP.puntuacion = '';
-          ParadasFact.post($scope.nuevaP);
 
-          var nueva_parada;
-          var url  = 'http://www.birdev.mx/message_app/public/paradas';
-          $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
-             .then(function successCallback(response)
-             {
-               console.log("parada guardada");
-               console.log(response);
-             },
-             function errorCallback(response) {
-                console.log("error");
-             });
-
-
-          info = crearInfo($scope.nuevaP);
-          agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
-          //limpiamos la variable de la nueva pokeparada
-           $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
-           $scope.nuevaP.lat =  $scope.lat;
-           $scope.nuevaP.lng =  $scope.lng;
          };
 
       /**
@@ -1252,10 +1267,12 @@ function cambioAlerta(){
 
 
 function validarParada(){
+  var flag=true;
   for (var i = 0; i < $scope.paradas.length; i++) {
     var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
     if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
     {
+      flag=false;
       if(!alertaActiva)
       {
         //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
@@ -1271,6 +1288,7 @@ function validarParada(){
       }
     }
   }
+  return flag;
 }
 
 function autoUpdate() {
@@ -1278,9 +1296,44 @@ function autoUpdate() {
   navigator.geolocation.getCurrentPosition(function(position) {
     $scope.lat =  position.coords.latitude;
     $scope.lng = position.coords.longitude;
-    var newPoint = new google.maps.LatLng(position.coords.latitude,
-                                          position.coords.longitude);
+    var newPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
+    $http.get('http://www.preb.mx/message_app/public/paradas')
+    .success(function(paradas){
+      console.log(paradas.count, ParadasFact.all().length);
+      if(paradas.count > ParadasFact.all().length)
+      {
+          console.log('entro');
+         angular.forEach(paradas.data,function(post)
+         {
+            if(ParadasFact.get(post.parada) == null)
+            {
+              var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+              nuevaParadap.id_parada =  post.parada;
+              nuevaParadap.nombre =  post.titulo;
+              nuevaParadap.descripcion = post.descripcion;
+              nuevaParadap.lat =  post.lat;
+              nuevaParadap.lng =  post.lng;
+              nuevaParadap.id_usuario =  post.id_usuario;
+              nuevaParadap.tipo =  post.tipo;
+              ParadasFact.post(nuevaParadap);
+              info = crearInfo(nuevaParadap);
+              console.log(ParadasFact.get(post.paradas),post);
+              agregarMarca(marker,post.lat,post.lng,infoWindow,info,post.tipo);
+            }
+          });
+      }
+
+      //  console.log(nuevasParadas);
+      //  ParadasFact.putall(nuevasParadas);
+      //  $scope.paradas =  ParadasFact.all();
+
+    },
+    function errorCallback(response) {
+      console.log('Sin conexión');
+      $scope.paradas =  ParadasFact.all();
+
+    });
 
     if (markerPrincipal) {
       // Marker already created - Move it
@@ -1356,7 +1409,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
       getComentariosSer($stateParams.id_parada);
 
       function getComentariosSer(id){
-        $http.get('  http://www.birdev.mx/message_app/public/comentarios/'+id)
+        $http.get('http://www.preb.mx/message_app/public/comentarios/'+id)
         .success(function(comentarios){
           if(comentarios.data.length > 0){
               $scope.comentarioSer = comentarios.data;
@@ -1379,7 +1432,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
 
           console.log('calculara rate');
 
-          $http.get('http://www.birdev.mx/message_app/public/rates/'+id)
+          $http.get('http://www.preb.mx/message_app/public/rates/'+id)
           .success(function(rates){
             console.log(rates);
             if(rates.data.length > 0){
@@ -1414,7 +1467,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         // ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
         // $scope.parada = ParadasFact.get($stateParams.id_parada);
 
-        var url  = 'http://www.birdev.mx/message_app/public/comentarios';
+        var url  = 'http://www.preb.mx/message_app/public/comentarios';
         $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , mensaje :  $scope.comentario.mensaje, id_user: Auten.validar().id})
            .then(function successCallback(response)
            {
@@ -1449,7 +1502,7 @@ app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuarda
         // $scope.parada = ParadasFact.get($stateParams.id_parada);
 
 
-        var url  = 'http://www.birdev.mx/message_app/public/rates';
+        var url  = 'http://www.preb.mx/message_app/public/rates';
         $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , rate :  $scope.puntuacion.rate, id_user: Auten.validar().id})
            .then(function successCallback(response)
            {

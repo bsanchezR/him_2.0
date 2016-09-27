@@ -240,6 +240,7 @@ app.factory('ParadasFact', function(){
     var paradas = angular.fromJson(window.localStorage['paradas'] || '[]');
     var comentarios  =  new Array();
     var puntuacion  =  new Array();
+    var conteo =0;
     function persist(){
         window.localStorage['paradas'] = angular.toJson(paradas);
     }
@@ -248,8 +249,13 @@ app.factory('ParadasFact', function(){
         all : function(){
             return paradas;
         },
+        cuantas: function()
+        {
+          return conteo;
+        },
         putall : function(putParadas){
           paradas = putParadas;
+          conteo= paradas.length;
           persist();
         },
         get: function(id_parada){
@@ -262,6 +268,7 @@ app.factory('ParadasFact', function(){
         },
         post : function(parada){
             paradas.push(parada);
+            conteo++;
             persist();
         },
         agregarCoemntario : function(id_parada, comentario){
@@ -298,6 +305,7 @@ app.factory('ParadasFact', function(){
             },
             delete : function(){
                 paradas = '[]';
+                conteo=0;
                 persist();
             }
 
@@ -307,6 +315,84 @@ app.factory('ParadasFact', function(){
 } );
 
 
+app.factory('ParadasPrivadas', function(){
+
+    var paradas = angular.fromJson(window.localStorage['privadas'] || '[]');
+    var comentarios  =  new Array();
+    var puntuacion  =  new Array();
+    var conteo =0;
+    function persist(){
+        window.localStorage['privadas'] = angular.toJson(paradas);
+    }
+
+    return {
+        all : function(){
+            return paradas;
+        },
+        cuantas: function()
+        {
+          return conteo;
+        },
+        putall : function(putParadas){
+          paradas = putParadas;
+          conteo= paradas.length;
+          persist();
+        },
+        get: function(id_parada){
+            for (var i = 0; i < paradas.length; i++) {
+                if (paradas[i].id_parada === id_parada) {
+                    return paradas[i];
+                }
+            }
+            return null;
+        },
+        post : function(parada){
+            paradas.push(parada);
+            conteo++;
+            persist();
+        },
+        agregarCoemntario : function(id_parada, comentario){
+            for (var i = 0; i < paradas.length; i++) {
+                if (paradas[i].id_parada === id_parada) {
+                    if(paradas[i].comentarios ==   ''){
+                      comentarios.push(comentario);
+                      paradas[i].comentarios = comentarios;
+                    }
+                    else{
+                      paradas[i].comentarios.push(comentario);
+                    }
+                    console.log(paradas[i].comentarios);
+                      persist();
+                }
+            }
+
+          },
+          agregarPuntuacion : function(id_parada, rate){
+              for (var i = 0; i < paradas.length; i++) {
+                  if (paradas[i].id_parada === id_parada) {
+                      if(paradas[i].puntuacion ==   ''){
+                        puntuacion.push(rate);
+                        paradas[i].puntuacion = puntuacion;
+                      }
+                      else{
+                        paradas[i].puntuacion.push(rate);
+                      }
+                      console.log(paradas[i].puntuacion);
+                        persist();
+                  }
+              }
+
+            },
+            delete : function(){
+                paradas = '[]';
+                conteo=0;
+                persist();
+            }
+
+
+    };
+
+} );
 
 
 
