@@ -1,0 +1,64 @@
+<ion-view title="Nueva Parada" id="page70" class="login">
+  <ion-header-bar class="bar-calm trans">
+
+    <h1 class="title">Nueva parada</h1>
+
+    <div class="buttons">
+      <button class="button button-clear" ng-click="modal.hide()">Cancelar</button>
+    </div>
+
+  </ion-header-bar>
+
+  <ion-content class="trans">
+
+    <form name="locationForm" ng-submit="guardarParada()">
+
+      <br>
+      <br>
+      <br>
+      <div class="list trans">
+          <p style="padding: 0px 20px;">{{desc}}</p>
+      </div>
+      <div class="list trans">
+        <label class="item item-input trans">
+          <input type="text" placeholder="Nombre" ng-model="nuevaP.nombre">
+        </label>
+        <label class="item item-input trans">
+          <input type="text" placeholder="Descripción" ng-model="nuevaP.descripcion">
+        </label>
+      </div>
+      <div class="list trans" ng-show="(( tipo_parada == 1 ) ? true :  false )">
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked1">Condón Masculino</ion-checkbox>
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked2">Pastilla del día siguiente </ion-checkbox>
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked3">DIU</ion-checkbox>
+        <ion-checkbox class="trans" ng-model="nuevaP.isChecked4">Otros</ion-checkbox>
+      </div>
+      <div ng-show="false" class="list trans">
+        <div class="item tabs tabs-secondary tabs-icon-left trans" style="background-color: #fff;">
+          <label class="item item-input trans">
+              LAT :
+            <input type="text" ng-model="nuevaP.lat" clsas="trans">
+          </label>
+          <label class="item item-input trans">
+              LNG :
+            <input type="text" clsas="trans" ng-model="nuevaP.lng" >
+          </label>
+        </div>
+      </div>
+<!-- <p>
+  {{lat}}
+</p>
+<p>
+  {{lng}}
+</p> -->
+      <div class="col col-90 col-offset-25">
+
+        <button class="button button-positive mod_log" ng-disabled="locationForm.$invalid" style="width:148px;">Guardar Parada</button>
+
+      </div>
+
+    </form>
+
+  </ion-content>
+
+</ion-view>

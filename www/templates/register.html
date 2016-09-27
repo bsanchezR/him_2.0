@@ -7,15 +7,23 @@
   		</div>
 		<div class="row row-center">
 			<div class="col col-80 col-offset-10">
+        <form name="formulario">
           <label class="item item-input item-floating-label" style="margin:-6px;">
             <span class="input-label">Tel&eacute;fono</span>
-            <input type="text" ng-model="aut.telefono" placeholder="Tel&eacute;fono">
+            <input type="text" name="telefono" ng-model="aut.telefono" placeholder="Tel&eacute;fono" required>
+             <span class="warning" ng-show="!formulario.$pristine && formulario.telefono.$error.required">Telefono es requerido.</span>
           </label>
 					<label class="item item-input item-floating-label" style="margin:-6px;">
 						<span class="input-label">Contraseña</span>
-						<input type="password" ng-model="aut.pass" placeholder="Contraseña">
+						<input type="password" name="contrasena" ng-model="aut.pass" placeholder="Contraseña" required>
+            <span class="warning" ng-show="!formulario.$pristine && formulario.contrasena.$error.required">Contraseña es requerido.</span>
 					</label>
           <label class="item item-input item-floating-label" style="margin:-6px;">
+						<span class="input-label">Usuario</span>
+						<input type="text" name="usuario" ng-model="aut.usuario" placeholder="usuario" required>
+            <span class="warning" ng-show="!formulario.$pristine && formulario.usuario.$error.required">Usuario es requerido.</span>
+					</label>
+          <!-- <label class="item item-input item-floating-label" style="margin:-6px;">
 						<span class="input-label">Nombre</span>
 						<input type="text" ng-model="aut.nombre" placeholder="Nombre">
 					</label>
@@ -31,18 +39,50 @@
             <span class="input-label">Edad</span>
             <input type="number" ng-model="aut.edad" placeholder="Edad">
           </label>
-          <label class="item item-input item-select trans" style="    border-bottom-style: hidden; margin-top:5px;">
+           -->
+
+           <label class="item item-input item-floating-label" style="margin:-6px;">
+
+         </br>
+             <span class="">Fecha Nacimiento</span>
+             <input type="date" name="fecha" ng-model="aut.fecha" placeholder="Fecha Nacimiento" required>
+             <span class="warning" ng-show="!formulario.$pristine && formulario.fecha.$error.required">Fecha es requerido.</span>
+           </label>
+
+           <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;">
+             <div class="input-label trans">
+               Plantel
+             </div>
+             <select class="trans" ng-model="aut.plantel">
+               <option value="Cuernavaca" selected>Cuernavaca</option>
+               <option value="Jiutepec" >Jiutepec</option>
+               <option value="Oacalco">Oacalco</option>
+               <option value="Cuautla">Cuautla</option>
+               <option value="Amacuzac">Amacuzac</option>
+               <option value="Tlaltizapan">Tlaltizapan</option>
+               <option value="Atlatlahucan">Atlatlahucan</option>
+               <option value="Tehuixtla">Tehuixtla</option>
+               <option value="Tepalcingo">Tepalcingo</option>
+               <option value="Tepalcingo">Santa Rosa 30</option>
+               <option value="Tepalcingo">Jantetelco</option>
+               <option value="Tepalcingo">Xochitepec</option>
+
+             </select>
+           </label>
+
+          <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;">
             <div class="input-label trans">
               Sexo
             </div>
             <select class="trans" ng-model="aut.sexo">
-              <option value="m">Hombre</option>
-              <option value="f" selected>Mujer</option>
+              <option value="m">Masculino</option>
+              <option value="f" selected>Femenino</option>
             </select>
           </label>
           <div class="col col-90 col-offset-20">
-              <button ng-click="guardar()" id="login-button5" class="button button-positive mod_log">Resgistrar</button>
+              <button ng-click="guardar()" id="login-button5" class="button button-positive mod_log">Registrar</button>
 				</div>
+      </form>
 			</div>
 		</div>
     </ion-content>

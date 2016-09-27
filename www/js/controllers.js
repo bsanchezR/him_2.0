@@ -8,7 +8,7 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
 
     $scope.CargarNuevosPost =  function()
     {
-        var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+        var urlNuevosArticulos = 'http://www.preb.mx/message_app/public/articulos';
         $http.get(urlNuevosArticulos)
         .success(function(posts){
             var nuevosArticulos = [];
@@ -25,7 +25,7 @@ app.controller('DashCtrl', function($ionicNavBarDelegate, $scope,$rootScope,$sta
 
     function cargarPost()
     {
-      var urlNuevosArticulos = 'http://www.birdev.mx/message_app/public/articulos';
+      var urlNuevosArticulos = 'http://www.preb.mx/message_app/public/articulos';
       $http.get(urlNuevosArticulos)
       .success(function(posts){
         var nuevosArticulos = [];
@@ -94,7 +94,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
   $scope.articulo = Articulos.get($stateParams.articuloId);
 
   $scope.shareAnywhere = function() {
-        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+       var comUrl = "http://www.preb.mx/message_app/public/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl);
    }
 
@@ -117,7 +117,7 @@ app.controller('articuloCompletoCtrl', function($scope,$sce,$ionicPopup,Auten,Ar
       }
 
       //vamos hacer pruebas de file con cordova
-      var url = "http://birdev.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
+      var url = "http://www.preb.mx/message_app/public/images/"+articulo.images[0].ruta.split('/').pop();
       testFileDownload(url);
   }
 
@@ -163,35 +163,34 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
        $state.go('login');
     }
 
-
     var fechaActual = new Date();
     var hora = fechaActual.getHours();
-
 
     if(hora >= 18 || hora < 9)
     {
         var alertPopup = $ionicPopup.alert({
            title: '¡Oh no!',
-           template: 'El horario de atención es de 9 a 18 horas puedes mandarnos tu pregunta pero esta sera respuesta apartir de las 9 horas. Gracias'
+           template: 'El horario de atención es de 9:00 a 18:00 horas, puedes mandarnos tu pregunta pero esta será contestada a partir de las 9:00 horas. Gracias.'
          });
     }
 
-
-
-    var urlHist = 'http://www.birdev.mx/message_app/public/historial/'+Auten.validar().telefono;
-    $http.get(urlHist)
+    var urlHist = 'http://www.preb.mx/message_app/public/historial/';
+    console.log(Auten.validar());
+    $http.get(urlHist+Auten.validar().telefono)
     .success(function(data){
-        $scope.mensajes=data.data;
-        console.log($scope.mensajes);
+        Preguntas.actualiza(data.data);
+        $scope.mensajes = Preguntas.list();
     });
+
+    $scope.mensajes = Preguntas.list();
 
 
     //constantes y cosas que se tienen que inicializar para el modulo
     $scope.nota =  {id: '', mensaje:''};
     $scope.respuesta = {id:'' , mensaje: ''};
-    var link = 'http://www.birdev.mx/message_app/public/messages';
-    var linkRespuesta = 'http://www.birdev.mx/message_app/public/response';
-    var linkHist = 'http://www.birdev.mx/message_app/public/historial';
+    var link = 'http://www.preb.mx/message_app/public/messages';
+    var linkRespuesta = 'http://www.preb.mx/message_app/public/response';
+    var linkHist = 'http://www.preb.mx/message_app/public/historial';
 
     $scope.respuesta.id = Preguntas.list();
 
@@ -207,15 +206,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
                   $scope.response.push(response.data);
                 });
 
-            //tenemos que elimiara el id o ponerlo vacio
-           $scope.respuesta.id = '';
-           Preguntas.actualiza( $scope.respuesta);
-
-           $http.get(urlHist)
+           $http.get(urlHist+Auten.validar().telefono)
            .success(function(data){
-               $scope.mensajes=data.data;
-               console.log($scope.mensajes);
+               Preguntas.actualiza(data.data);
+               $scope.mensajes = Preguntas.list();
            });
+
+
 
            $scope.$broadcast('scroll.refreshComplete');
 
@@ -223,7 +220,7 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
            $scope.$broadcast('scroll.refreshComplete');
            var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Aún no tenemos una respuesta para ti :('
            });
         });
     }
@@ -233,11 +230,20 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
         //creamos el ide unico
         $scope.nota.id =  new Date().getTime().toString();
 
-        $ionicLoading.show({
-            template: 'Enviando...'
-          }).then(function(){
-             console.log("The loading indicator is now displayed");
+
+        if($scope.nota.mensaje ==  ''){
+          var alertPopup = $ionicPopup.alert({
+            title: 'Oh no!!',
+            template: 'Intenta escribiendo un mensaje  :)'
           });
+        }
+        else{
+          $ionicLoading.show({
+              template: 'Enviando...'
+            }).then(function(){
+               console.log("The loading indicator is now displayed");
+            });
+
 
         $http.post(link, {telefono : Auten.validar().telefono, mensaje : $scope.nota.mensaje, identificador: $scope.nota.id, metodo : 'POST' }).then(function successCallback(res){
             $scope.response = res.data;
@@ -246,19 +252,12 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
             $scope.nota.id = '';
             $scope.nota.mensaje = '';
 
-            console.log("primer consol : " + $scope.respuesta.id);
 
-            Preguntas.actualiza($scope.respuesta);
-            var temp = Preguntas.list();
-            //console.log('lista : '+Preguntas.list());
-            console.log(temp);
-
-            $http.get(urlHist)
+            $http.get(urlHist+Auten.validar().telefono)
             .success(function(data){
-                $scope.mensajes=data.data;
-                console.log($scope.mensajes);
+              Preguntas.actualiza(data.data);
+              $scope.mensajes = Preguntas.list();
             });
-
             $ionicLoading.hide().then(function(){
               console.log("The loading indicator is now hidden");
             });
@@ -269,12 +268,13 @@ app.controller('ChatsCtrl', function($scope, $state, Preguntas ,Auten,$http,$sce
           });
             var alertPopup = $ionicPopup.alert({
              title: 'Oh no!!',
-             template: 'Ahun no tenemos una respuesta para ti :('
+             template: 'Tú mensaje no puede ser enviado por el momento intenta mas tarde :('
            });
           alertPopup.then(function(res) {
              console.log('Thank you for not eating my delicious ice cream cone');
            });
         });
+      }
     };
 });
 
@@ -479,6 +479,7 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
       fertilePhaseStart = periodCycleDays - 20;
       fertilePhaseEnd = periodCycleDays - 13;
       ovulation = (fertilePhaseStart-1) + (fertilePhaseEnd - fertilePhaseStart)/2;
+      //ovulation = (parametros.duraP/2) + 1;
 
       periodStartDate = new Date(parametros.inicio);
 
@@ -576,50 +577,54 @@ var dias = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'];
 app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPopup,$state)
 {
     //console.log("log", Auten.validar());
-    if(Auten.validar().sexo == 'm')
-    {
-        $scope.rels=false;
-    }
-    else
-    {
-        $scope.rels=true;
-      //  console.log("articulo",$scope.rels);
-    }
+    // if(Auten.validar().sexo == 'm')
+    // {
+    //     $scope.rels=false;
+    // }
+    // else
+    // {
+    //     $scope.rels=true;
+    //   //  console.log("articulo",$scope.rels);
+    // }
+    console.log("Calendario");
+    $scope.rels=Auten.validar().show;
+    console.log($scope.rels);
 });
 
 app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
 
   //activar en productivo
 
-    var gcmid;
-    console.log("Device Ready")
-    var push = PushNotification.init({
-      "android": {
-        "senderID": "898342355996",
-        "icon": 'iconName',  // Small icon file name without extension
-        "iconColor": '#248BD0'
-      },
-      "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-    push.on('registration', function(data) {
-    console.log(data.registrationId);
-    gcmid = data.registrationId;
-    $("#gcm_id").html(data.registrationId);
-    });
+    var gcmid="";
+  //   console.log("Device Ready")
+  //   var push = PushNotification.init({
+  //     "android": {
+  //       "senderID": "898342355996",
+  //       "icon": 'iconName',  // Small icon file name without extension
+  //       "iconColor": '#248BD0'
+  //     },
+  //     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+  //   push.on('registration', function(data) {
+  //   console.log(data.registrationId);
+  //   gcmid = data.registrationId;
+  //   $("#gcm_id").html(data.registrationId);
+  //   });
+  //
+  //   push.on('notification', function(data) {
+  //     console.log(data.message);
+  //     alert(data.title+" Message: " +data.message);
+  //
+  //     data.title,
+  //     data.count,
+  //     data.sound,
+  //     data.image,
+  //     data.additionalData
+  //   });
+  //
+  //   push.on('error', function(e) {
+  //   console.log(e.message);
+  // });
 
-    push.on('notification', function(data) {
-      console.log(data.message);
-      alert(data.title+" Message: " +data.message);
-
-      data.title,
-      data.count,
-      data.sound,
-      data.image,
-      data.additionalData
-    });
-
-    push.on('error', function(e) {
-    console.log(e.message);
-    });
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -638,14 +643,17 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.guardar =  function(){
-      console.log($scope.aut);
-      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.nombre == 'undefined')
+      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
-         exit();
+         return;
       }
-      var url  = 'http://www.birdev.mx/message_app/public/user';
-      $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+
+      var edad =  calEdad($scope.aut.fecha);
+
+      var url  = 'http://www.preb.mx/message_app/public/user';
+      // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })
+        $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.usuario, fecha :  $scope.aut.fecha, sexo : $scope.aut.sexo , plantel : $scope.aut.plantel, nuevo : 1, gcm_id : gcmid, mobile:1 })
            .then(function successCallback(response)
            {
               console.log("Ya guardo");
@@ -668,7 +676,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.validar =  function(){
-    var url  = 'http://www.birdev.mx/message_app/public/user';
+    var url  = 'http://www.preb.mx/message_app/public/user';
   //  console.log(gcmid);
       $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass , gcm_id : gcmid })
            .then(function successCallback(response)
@@ -676,7 +684,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
              console.log(response.data);
             if(response.data.mensaje == -1)
             {
-              accesoError();
+              mensajeError(response.data.message);
             }
             else if(response.data.mensaje == 0)
             {
@@ -685,21 +693,22 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             else
             {
                 $scope.aut.sexo= response.data.data.sexo;
-                // if($scope.aut.sexo == 'm')
-                // {
-                //     $scope.variable=false;
-                //     $scope.rels=false;
-                // }
-                // if($scope.aut.sexo == 'f')
-                // {
-                //     $scope.rels=true;
-                //     $scope.variable=true;
-                // }
+                $scope.aut.id= response.data.data.id;
+                if($scope.aut.sexo == 'm')
+                {
+                    $scope.aut.show = false;
+                }
+                if($scope.aut.sexo == 'f')
+                {
+                    $scope.aut.show = true;
+                }
                 Auten.crearSesion($scope.aut);
-                $state.go('tab.articulos');
+                console.log(Auten.validar());
+                $state.go('tab',{},{reload:true});
             }
         },function errorCallback(response) {
-            accesoError();
+            console.log(response);
+            mensajeError(response.data.message);
         });
   }
 
@@ -712,9 +721,41 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
 
   function mensajeError(mensaje){
     var alertPopup = $ionicPopup.alert({
-       title: 'Espera !!',
+       title: '¡ Espera !',
        template: mensaje
      });
+  }
+
+  function calEdad(fecha){
+    console.log(fecha);
+
+
+
+var dia = fecha.getDate();
+var mes = fecha.getMonth();
+var ano = fecha.getYear();
+
+fecha_hoy = new Date();
+ahora_ano = fecha_hoy.getYear();
+ahora_mes = fecha_hoy.getMonth();
+ahora_dia = fecha_hoy.getDate();
+
+edad = (ahora_ano + 1900) - ano;
+
+	if ( ahora_mes < (mes - 1)){
+	  edad--;
+	}
+	if (((mes - 1) == ahora_mes) && (ahora_dia < dia)){
+	  edad--;
+	}
+	if (edad > 1900){
+		edad -= 1900;
+	}
+
+	alert("¡Tienes " + edad + " años!");
+
+return edad;
+
   }
 
 });
@@ -730,40 +771,6 @@ app.controller('inicioCtrl', function($ionicNavBarDelegate, $scope, Auten ,$http
   $scope.login =  function(){
       $state.go('login');
   }
-//
-// <<<<<<< HEAD
-// =======
-// //activar en productivo
-//   console.log("Device Ready")
-//   var push = PushNotification.init({
-//     "android": {
-//       "senderID": "898342355996",
-//       "icon": 'iconName',  // Small icon file name without extension
-//       "iconColor": '#248BD0'
-//     },º
-//     "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
-//
-//   push.on('registration', function(data) {
-//   console.log(data.registrationId);
-//   $("#gcm_id").html(data.registrationId);
-//   });
-//
-//   push.on('notification', function(data) {
-//   console.log(data.message);
-//   alert(data.title+" Message: " +data.message);
-//
-//   data.title,
-//   data.count,
-//   data.sound,
-//   data.image,
-//   data.additionalData
-//   });
-//
-//   push.on('error', function(e) {
-//   console.log(e.message);
-//   });
-//
-// >>>>>>> qa
   });
 
 app.controller('slideCtrl', function($scope, Auten ,$http, $state, $ionicPopup,$state) {
@@ -832,79 +839,712 @@ app.controller('articuloCompletoGuardado', function($scope,$sce,Auten,ArticulosG
   // $scope.imgSrc =  cordova.file.dataDirectory +"him/"+ $scope.articulo.images[0].ruta.split('/').pop();
 
   $scope.shareAnywhere = function() {
-        var comUrl = "http://www.birdev.mx/message_app/articulo.html?id=" +   $scope.articulo.id ;
+        var comUrl = "http://www.preb.mx/dashboard/articulo.html?id=" +   $scope.articulo.id ;
        $cordovaSocialSharing.share("Te recomiendo este articulo", "Es muy bueno y te va a gustar", comUrl, comUrl );
    }
 });
 
 
-app.controller('ConfigCtrl', function($scope,$sce,Auten,ArticulosGuardados, $state,$stateParams, Articulos, $cordovaSocialSharing) {
-  $scope.cerrar =  function(){
+app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos, $http, $cordovaSocialSharing,$ionicHistory,ParadasFact) {
+
+  $scope.cerrar =  function()
+  {
+     var ids = Auten.validar().id;
+
      Auten.cerrarSesion();
-     $state.go('login');
+     Preguntas.delete();
+     ParadasFact.delete();
+
+     $ionicHistory.clearCache().then(function()
+     {
+       var url  = 'http://www.preb.mx/message_app/public/user';
+         $http.post(url, { mobile : 1, metodo: 'UPDATE' , id : ids })
+              .then(function successCallback(response)
+              {
+                $state.go('login');
+              },
+              function errorCallback(response) {
+                 console.log("sin internet");
+                 $state.go('login');
+              });
+     });
   }
 });
 
 
-//
-// <?php
-// $to="ebbjjHzXzvo:APA91bHavOf29c5vFh5gSgn7E_qOg_9PXfLKX-Gz36rrgPkLeNh-uH7h6_1HA4S-LnzvnVeu17UfYdwno-byNXsCI3sQvGFBidtncflSSqvmA-MKU7E3OPZfIhlZHctpCkljihcIdbrV";
-// $title="Hola yo 2";
-// $message="Este es un mensaje para yo";
-//
-// $to2 = "crrAOfDofEk:APA91bHNWcRQNu_VOY9VBXK3D1velsew-mCeFlWMYzKEoigZctkvOLAMrhA4Z4d5zsvIGpWsRCrOS8NkleKpiKljirkprIH1zLrzLSLSEYUbh-j4WwdBWrM47mct28D0GxEi5SGE0zVz";
-// $title2="Hola maria";
-// $message2="si jala esa maria la del barrio";
-//
-// $to3 = "e8pLfJ5QfkI:APA91bHbybrs582yq6MWU60KD-5rTzL6a7U1MzWAZ7v-qGE65dVmK-YKv-pAd-Eqm8xj2YGV4J-fFFaEffizW2Qb78kf8DaOr0OI39DFto51VKtqmrxb9sD8y3uulm0BRbQ33f1xF2H1";
-// $title3="a huevo puto duy";
-// $message3="Este es un mensaje para duy";
-//
-//
-//
-// sendPush($to,$title,$message);
-// sendPush($to2,$title2,$message2);
-// sendPush($to3,$title3,$message3);
-//
-// function sendPush($to,$title,$message)
-// {
-// // API access key from Google API's Console
-// // replace API
-// define( 'API_ACCESS_KEY', 'AIzaSyCXWLGR0Pg1jGk52C7kVRjPOnkwRCCcMs4');
-// $registrationIds = array($to);
-// $msg = array
-// (
-// 'message' => $message,
-// 'title' => $title,
-// 'vibrate' => 1,
-// 'sound' => 1
-// // you can also add images, additionalData
-// );
-// $fields = array
-// (
-// 'registration_ids' => $registrationIds,
-// 'data' => $msg
-// );
-// $headers = array
-// (
-// 'Authorization: key=' . API_ACCESS_KEY,
-// 'Content-Type: application/json'
-// );
-// $ch = curl_init();
-// curl_setopt( $ch,CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
-// curl_setopt( $ch,CURLOPT_POST, true );
-// curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-// curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-// curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-// curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-// $result = curl_exec($ch );
-// curl_close( $ch );
-// echo $result;
-// }
-// ?>
-//
-// <?php
-//
-// //phpinfo()
-//
-//  ?>
+
+app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,ParadasPrivadas,Auten) {
+
+  if (typeof Auten.validar().telefono != 'undefined')
+    {
+      console.log(Auten.validar());
+    }
+    else{
+       $state.go('login');
+    }
+
+
+     var control = true;
+     $scope.lat  =  19.058926;
+     $scope.lng  = -98.253135;
+
+
+     var latLng = new google.maps.LatLng(19.046777, -98.208727);
+
+     $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+     $scope.nuevaP.lat =  $scope.lat;
+     $scope.nuevaP.lng =  $scope.lng;
+
+     //variables para crear el arreglo de paradas
+     var nuevasParadas = [];
+     var nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+
+     $http.get('http://www.preb.mx/message_app/public/paradas')
+     .success(function(paradas){
+       console.log(paradas);
+       angular.forEach(paradas.data,function(post){
+                //armar la parada local
+                nuevaParada.id_parada =  post.parada;
+                nuevaParada.nombre =  post.titulo;
+                nuevaParada.descripcion = post.descripcion;
+                nuevaParada.lat =  post.lat;
+                nuevaParada.lng =  post.lng;
+                nuevaParada.id_usuario =  post.id_usuario;
+                nuevaParada.tipo =  post.tipo;
+
+                nuevasParadas.push(nuevaParada);
+                //limpiamos la parada
+                nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+        });
+        console.log(nuevasParadas);
+        ParadasFact.putall(nuevasParadas);
+        $scope.paradas =  ParadasFact.all();
+
+     },
+     function errorCallback(response) {
+       console.log('Sin conexión');
+       $scope.paradas =  ParadasFact.all();
+
+     });
+
+
+     var nuevasParadasp = [];
+     var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+
+     $http.get('  http://www.preb.mx/message_app/public/paradas/'+Auten.validar().id)
+     .success(function(paradas){
+
+       angular.forEach(paradas.data,function(post){
+                //armar la parada local
+                nuevaParadap.id_parada =  post.parada;
+                nuevaParadap.nombre =  post.titulo;
+                nuevaParadap.descripcion = post.descripcion;
+                nuevaParadap.lat =  post.lat;
+                nuevaParadap.lng =  post.lng;
+                nuevaParadap.id_usuario =  post.id_usuario;
+                nuevaParadap.tipo =  post.tipo;
+                nuevasParadasp.push(nuevaParadap);
+                nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+        });
+        ParadasPrivadas.putall(nuevasParadasp);
+        $scope.paradasp =  ParadasPrivadas.all();
+        recorrerParadas();
+     },
+     function errorCallback(response) {
+       console.log('Sin conexión');
+       $scope.paradas =  ParadasFact.all();
+       recorrerParadas();
+     });
+
+
+/*
+
+    http://www.birdev.mx/message_app/public/paradas  -> obtiene todas las paradas
+
+
+    http://www.birdev.mx/message_app/public/paradas/id   -> obtiene las paradas tipo 3 del usuario con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/comentarios/id -> obtiene los comentarios de la parada con el id especificado
+
+
+    http://www.birdev.mx/message_app/public/rates/id -> obtiene los rates de la parada con el id especificado
+
+*/
+
+
+
+     if(Auten.validar().sexo == 'm')
+      var image  = 'img/pines/preB4.png';
+     if(Auten.validar().sexo == 'f')
+      var image  = 'img/pines/preB3.png';
+
+     console.log($scope.paradas);
+     $scope.paradas =  ParadasFact.all();
+     var marker,usuario;
+     var infoWindow = new google.maps.InfoWindow();
+     var info ;
+     var  alertaActiva =  false;
+
+
+
+      var mapOptions = {
+        center: latLng,
+        disableDefaultUI: true,
+        zoom: 17,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      function recorrerParadas(){
+        //recorremos todos los puntos que tenesmos
+        for (var i = 0; i < $scope.paradas.length; i++) {
+          info = crearInfo($scope.paradas[i]);
+          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info,$scope.paradas[i].tipo);
+        }
+
+        for (var i = 0; i < $scope.paradasp.length; i++) {
+          info = crearInfo($scope.paradasp[i]);
+          agregarMarca(marker,$scope.paradasp[i].lat, $scope.paradasp[i].lng,infoWindow,info,$scope.paradasp[i].tipo);
+        }
+      }
+
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      //Wait until the map is loaded
+      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+        recorrerParadas();
+
+        var direction = 1;
+        var rMin = 5, rMax = 30;
+        setInterval(function() {
+            var radius = cityCircle.getRadius();
+            if ((radius > rMax) || (radius < rMin)) {
+                //direction *= -1;
+                cityCircle.setRadius(5);
+            }else{
+              cityCircle.setRadius(radius + direction * 1);
+            }
+
+        }, 50);
+
+
+      });
+
+      function crearInfo(parada){
+
+        var contentString =
+        '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h1 style="text-align:center;" id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
+          '<div id="bodyContent" style="text-align:center;">';
+          // if(parada.tipo != 3){
+          //   contentString += '<p>'+((parada.puntuacion == '') ? " Sin puntuar" : getTotal(parada))+'</p>';
+          // }
+          // if(parada.tipo != 3){
+          //   contentString += '<p>'+ getTotal(parada)+'</p>';
+          // }
+          contentString +=  '<a class="button button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+                            '</div>'+
+                          '</div>';
+
+        return contentString;
+        }
+
+        function getTotal(parada)
+        {
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          console.log('calculara rate');
+
+          $http.get('http://www.preb.mx/message_app/public/rates/1474064460846')
+          .success(function(rates){
+            console.log(rates);
+            if(rates.data > 0){
+              angular.forEach(rates.data,function(rate){
+                console.log('rate');
+                console.log(rate);
+                acumulador =  acumulador + rate.rate;
+                promedio++;
+               });
+               //sacamos el promedio simple
+                 totalRate = acumulador /  promedio;
+                 acumulador = 0;
+                 promedio = 0;
+                 return totalRate;
+            }else{
+              return 'Sin puntuar';
+            }
+
+
+          },
+          function errorCallback(response) {
+            console.log('Sin conexión');
+
+          });
+
+
+
+
+
+          //
+          // //limpiara para despues
+          // if(parada.puntuacion !=  ""){
+          //   for (var i = 0; i <   parada.puntuacion.length; i++) {
+          //     acumulador =  acumulador + parada.puntuacion[i].rate;
+          //     promedio++;
+          //   }
+          //   //sacamos el promedio simple
+          //   totalRate = acumulador /  promedio;
+          //   acumulador = 0;
+          //   promedio = 0;
+          //
+          //   return totalRate;
+          // }else{
+          //   return 'Sin puntuar';
+          // }
+
+
+        }
+
+      function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
+        var icono = 'img/flag.png';
+        if(tipo == 1){
+            icono = 'img/pines/preB2.png';
+        }
+        else if(tipo == 2){
+            icono = 'img/pines/preB1.png';
+        }
+        else if(tipo == 3){
+          icono = 'img/pines/preB5.png';
+        }
+
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng),
+          map: $scope.map,
+          icon: icono,
+          animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(marker, 'click', (function() {
+          return function() {
+            infoWindow.setContent(info);
+            infoWindow.open($scope.map, marker);
+          }
+        })(marker));
+      }
+
+
+      //instancia de la ventana modal para  presentar el formulario de nueva parada
+      $ionicModal.fromTemplateUrl('templates/addLocation.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+          $scope.modal = modal;
+        });
+
+        $scope.preb =  function(){
+           $scope.desc="Kondoparadas→ Son establecimientos en donde te proporcionan métodos anticonceptivos (condones, pastillas del día siguiente, DIU, etc.), ya sean centros de salud, consultorios o farmacias, públicas o privadas. Las Kondoparadas las puedes compartir, visitar, puntuarlos y comentar tus experiencias en ellos, es muy importante que si las visitas las “evalúes” ya que eso ayudará a la comunidad a acudir a las mejores.";
+           $scope.tipo_parada = 1;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.gim =  function(){
+          $scope.desc="Gym´s del autoestima→ Son lugares que te ayudan a sentirte bien. En donde puedes disfrutar el paisaje, pasar buenos momentos con tus amigos o familiares, comer algo delicioso, jugar, hacer deporte o lo que más te guste. Los Gym´s los puedes compartir, visitar, puntuarlos y comentar tus experiencias en ellos.";
+           $scope.tipo_parada = 2;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.punto =  function(){
+          $scope.desc="PuntosR→ Son lugares en donde has tenido (o tienes) relaciones sexuales. Los PuntosR no se comparten, pero te ayudará a encontrar más fácil las Kondoparadas y protegerte.";
+           $scope.tipo_parada = 3;
+           $scope.modal.show();
+           $('.btn').removeClass('animacionVer');
+           control = true;
+        }
+
+        $scope.guardarParada = function() {
+           //LocationsService.savedLocations.push($scope.newLocation);
+          $scope.modal.hide();
+          if(validarParada())
+          {
+            $scope.nuevaP.id_parada   =  '' + new Date().getTime();
+            $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
+            $scope.nuevaP.tipo = $scope.tipo_parada;
+            $scope.nuevaP.color =  '#fff';
+            $scope.nuevaP.puntuacion = '';
+            $scope.nuevaP.lat=$scope.lat;
+            $scope.nuevaP.lng=$scope.lng;
+            ParadasFact.post($scope.nuevaP);
+
+            var nueva_parada;
+            var url  = 'http://www.preb.mx/message_app/public/paradas';
+            $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+               .then(function successCallback(response)
+               {
+                 console.log("parada guardada");
+                 console.log(response);
+               },
+               function errorCallback(response) {
+                  console.log("error");
+               });
+
+
+            info = crearInfo($scope.nuevaP);
+            agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
+            //limpiamos la variable de la nueva pokeparada
+             $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+             $scope.nuevaP.lat =  $scope.lat;
+             $scope.nuevaP.lng =  $scope.lng;
+          }
+          //$scope.goTo(LocationsService.savedLocations.length - 1);
+        //en esta parte tiene que sacar las cordenadas del usuario por movilidad y ejemplificacion
+        //se deja al final
+
+         };
+
+      /**
+      * Center map on user's current position
+      */
+      $scope.locate = function(){
+
+       $cordovaGeolocation
+         .getCurrentPosition()
+         .then(function (position) {
+           $scope.map.center.lat  = position.coords.latitude;
+           $scope.map.center.lng = position.coords.longitude;
+           $scope.map.center.zoom = 15;
+
+
+
+           usuario = new google.maps.Marker({
+             position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+             map: $scope.map,
+             animation: google.maps.Animation.DROP,
+             focus: true,
+             draggable: false
+           });
+
+
+          //  $scope.map.markers.now = {
+          //    lat:position.coords.latitude,
+          //    lng:position.coords.longitude,
+          //    message: "You Are Here",
+          //    focus: true,
+          //    draggable: false
+          //  };
+
+         }, function(err) {
+           // error
+           console.log("Location error!");
+           console.log(err);
+         });
+
+      };
+
+      $scope.animacion =  function(){
+        if(control){
+          $('.btn').addClass('animacionVer');
+          control = false;
+        }
+        else {
+          $('.btn').removeClass('animacionVer');
+          control = true;
+        }
+      }
+
+      var markerPrincipal = null;
+      var cityCircle =  null;
+function cambioAlerta(){
+  alertaActiva =  false;
+}
+
+
+function validarParada(){
+  var flag=true;
+  for (var i = 0; i < $scope.paradas.length; i++) {
+    var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+    if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+    {
+      flag=false;
+      if(!alertaActiva)
+      {
+        //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
+        alertaActiva = true;
+        var alertPopup = $ionicPopup.alert({
+          title: '¡Oh no!',
+          template: 'Cuidado parece que estas cerca de una parada valida que no sea la misma.'
+        });
+        alertPopup.then(function(res) {
+          console.log('Thank you for not eating my delicious ice cream cone');
+          //setTimeout(cambioAlerta, 10000);
+        });
+      }
+    }
+  }
+  return flag;
+}
+
+function autoUpdate() {
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+    $scope.lat =  position.coords.latitude;
+    $scope.lng = position.coords.longitude;
+    var newPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    $http.get('http://www.preb.mx/message_app/public/paradas')
+    .success(function(paradas){
+      console.log(paradas.count, ParadasFact.all().length);
+      if(paradas.count > ParadasFact.all().length)
+      {
+          console.log('entro');
+         angular.forEach(paradas.data,function(post)
+         {
+            if(ParadasFact.get(post.parada) == null)
+            {
+              var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+              nuevaParadap.id_parada =  post.parada;
+              nuevaParadap.nombre =  post.titulo;
+              nuevaParadap.descripcion = post.descripcion;
+              nuevaParadap.lat =  post.lat;
+              nuevaParadap.lng =  post.lng;
+              nuevaParadap.id_usuario =  post.id_usuario;
+              nuevaParadap.tipo =  post.tipo;
+              ParadasFact.post(nuevaParadap);
+              info = crearInfo(nuevaParadap);
+              console.log(ParadasFact.get(post.paradas),post);
+              agregarMarca(marker,post.lat,post.lng,infoWindow,info,post.tipo);
+            }
+          });
+      }
+
+      //  console.log(nuevasParadas);
+      //  ParadasFact.putall(nuevasParadas);
+      //  $scope.paradas =  ParadasFact.all();
+
+    },
+    function errorCallback(response) {
+      console.log('Sin conexión');
+      $scope.paradas =  ParadasFact.all();
+
+    });
+
+    if (markerPrincipal) {
+      // Marker already created - Move it
+      markerPrincipal.setPosition(newPoint);
+
+      for (var i = 0; i < $scope.paradas.length; i++) {
+        if($scope.paradas[i].tipo == 3 )
+        {
+          console.log('entra ?');
+          var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+          if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+          {
+            if(!alertaActiva)
+            {
+              //++++++++++++++++++++++++++++   validacion de los puntos rojos cercanos  ++++++++++++++++
+              // alertaActiva = true;
+              // var alertPopup = $ionicPopup.alert({
+              //   title: '¡Oh no!',
+              //   template: 'Cuidado esta cerca de un punto rojo, busca una CondonParada y protégete.'
+              // });
+              // alertPopup.then(function(res) {
+              //   console.log('Thank you for not eating my delicious ice cream cone');
+              //   setTimeout(cambioAlerta, 10000);
+              // });
+            }
+          }
+        }
+      }
+    }
+    else {
+      // Marker does not exist - Create it
+      markerPrincipal = new google.maps.Marker({
+        position: newPoint,
+        map: $scope.map,
+        icon: image
+      });
+      //intentado circulo en el usuario
+      cityCircle = new google.maps.Circle({
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 1,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          map: $scope.map,
+          center: newPoint,
+          radius: 20
+        });
+    }
+
+    // Center the map on the new position
+    $scope.map.setCenter(newPoint);
+    cityCircle.setCenter(newPoint);
+  });
+  console.log('llamada');
+
+  console.log(alertaActiva);
+  // Call the autoUpdate() function every 5 seconds
+
+    setTimeout(autoUpdate, 5000);
+
+
+}
+
+autoUpdate();
+
+    });
+
+//controller de  el despliege de la ficha
+app.controller('fichaCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuardados, $state,$stateParams, Articulos,$http, $cordovaSocialSharing,$ionicHistory,ParadasFact,$ionicPopup) {
+      $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+      $scope.comentarioSer = new Array();
+      getComentariosSer($stateParams.id_parada);
+
+      function getComentariosSer(id){
+        $http.get('http://www.preb.mx/message_app/public/comentarios/'+id)
+        .success(function(comentarios){
+          if(comentarios.data.length > 0){
+              $scope.comentarioSer = comentarios.data;
+          }
+        },
+        function errorCallback(response) {
+          console.log('Sin conexión');
+        });
+      }
+
+
+
+      $scope.puntuacionSer = new Array();
+      getPuntuacionSer($stateParams.id_parada);
+
+      function getPuntuacionSer(id){
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+
+          console.log('calculara rate');
+
+          $http.get('http://www.preb.mx/message_app/public/rates/'+id)
+          .success(function(rates){
+            console.log(rates);
+            if(rates.data.length > 0){
+              console.log(rates.data);
+              $scope.puntuacionSer = rates.data;
+            }
+          },
+          function errorCallback(response) {
+            console.log('Sin conexión');
+
+          });
+
+      }
+
+      $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      $scope.puntuacion = {id_puntuacion:'', rate: '', id_usuario: ''};
+
+      console.log(  $scope.parada );
+
+      // set the rate and max variables
+      $scope.rating = {};
+      $scope.rating.rate = 3;
+      $scope.rating.max = 5;
+      $scope.botonRate =  true;
+
+      $scope.guardarComentario =  function(){
+        $scope.comentario.id_comentario =  '' + new Date().getTime();
+        $scope.comentario.id_usuario    =  Auten.validar().telefono;
+
+        $scope.comentarioSer.push($scope.comentario);
+
+        // ParadasFact.agregarCoemntario($stateParams.id_parada, $scope.comentario);
+        // $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+        var url  = 'http://www.preb.mx/message_app/public/comentarios';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , mensaje :  $scope.comentario.mensaje, id_user: Auten.validar().id})
+           .then(function successCallback(response)
+           {
+             console.log("comentarios guardados");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
+
+
+        //limpiamos la variable del comentario para que otro pueda comentar
+        $scope.comentario = {id_comentario:'', mensaje: '', id_usuario: ''};
+      }
+
+      $scope.guardarPuntuacion = function(){
+        console.log($scope.rating.rate);
+        $scope.botonRate =  false;
+
+
+
+        $scope.puntuacion.id_puntuacion =  '' + new Date().getTime();
+        $scope.puntuacion.id_usuario    =  Auten.validar().telefono;
+        $scope.puntuacion.rate    =    $scope.rating.rate;
+
+        $scope.puntuacionSer.push($scope.puntuacion);
+
+
+
+
+        // ParadasFact.agregarPuntuacion($stateParams.id_parada, $scope.puntuacion);
+        // $scope.parada = ParadasFact.get($stateParams.id_parada);
+
+
+        var url  = 'http://www.preb.mx/message_app/public/rates';
+        $http.post(url, { id_parada : $stateParams.id_parada , metodo: 'POST' , rate :  $scope.puntuacion.rate, id_user: Auten.validar().id})
+           .then(function successCallback(response)
+           {
+             console.log("puntuacion guardada");
+             console.log(response);
+           },
+           function errorCallback(response) {
+              console.log("error");
+           });
+
+        //modal que de gracias por la calificación
+        var alertPopup = $ionicPopup.alert({
+           title: '¡Gracias!',
+           template: 'Gracias por tu puntuación, esta es muy importante para poder dar un mejor servicio.'
+         });
+
+      }
+
+      $scope.getTotal =  function(){
+        var totalRate = 0;
+        var acumulador =  0;
+        var promedio = 0 ;
+        console.log('numero de entradas');
+
+        //limpiara para despues
+        if($scope.puntuacionSer !=  ""){
+          //console.log($scope.parada);
+          for (var i = 0; i <   $scope.puntuacionSer.length; i++) {
+              acumulador =  acumulador + $scope.puntuacionSer[i].rate;
+              promedio++;
+          }
+
+          totalRate = acumulador /  promedio;
+          acumulador = 0;
+          promedio = 0;
+          console.log(totalRate);
+          console.log($scope.puntuacionSer.length);
+          return totalRate;
+        }else{
+          return '';
+        }
+
+
+      }
+    });
