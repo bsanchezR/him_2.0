@@ -22,21 +22,27 @@
                 <span class="input-label inp">Primer día de tu última menstruación</span>
             </label>
             <label class="item item-input trans bord">
-                <input ng-model="configuracionDatos.inicio" type="date">
+                <input ng-model="configuracionDatos.inicio"  ng-focus="openDatePicker()" type="text">
             </label>
-            <!-- <script>
-             $( function() {
-               $( "#datepicker" ).datepicker();
-             } );
-             </script> -->
-             <label class="item item-input trans bord" id="configuraciN-input19">
-                <input type="number" min="3" max="35" step="1" placeholder="Días entre menstruaciones" ng-model="configuracionDatos.duraP">
+
+
+            <label class="item item-input trans out_bord">
+                 <span class="input-label inp">Días entre menstruaciones</span>
+            </label>
+            <label class="item item-input trans bord" id="configuraciN-input19">
+                <input type="number" min="3" max="35" step="1" placeholder="" ng-model="configuracionDatos.duraP">
                 <span class="input-label">Días</span>
+            </label>
+
+            <label class="item item-input trans out_bord">
+                <span class="input-label inp">Duración del sangrado</span>
             </label>
             <label class="item item-input trans bord" id="configuraciN-input20">
-                <input type="number" min="3" max="15" step="1" placeholder="Duración del sangrado" ng-model="configuracionDatos.duraS">
+                <input type="number" min="3" max="15" step="1" placeholder="" ng-model="configuracionDatos.duraS">
                 <span class="input-label">Días</span>
             </label>
+
+
             <!-- <label class="item item-input " id="configuraciN-input17">
                 <span class="input-label">Peso</span>
                 <input type="number" min="30" max="200" step="1" placeholder="Peso" ng-model="configuracionDatos.peso">

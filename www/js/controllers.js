@@ -328,7 +328,7 @@ app.controller('DiaCtrl', function($scope,$state,Auten,DiasFact,$stateParams,$st
 
 });
 
-app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact) {
+app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$location,ConfiguracionFact,ionicDatePicker) {
     if (typeof Auten.validar().telefono != 'undefined')
     {
       console.log(Auten.validar());
@@ -351,7 +351,31 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$locati
       $state.go('tab.account');
     }
 
-    console.log($state.nuevoColor);
+      function fechaCorta(fecha){
+          return (fecha.getMonth() + 1) +
+          "/" +  fecha.getDate() +
+          "/" +  fecha.getFullYear();
+      }
+
+
+    var ipObj1 = {
+          callback: function (val) {  //Mandatory
+            console.log('Return value from the datepicker popup is : ' + val, new Date(val));
+            $scope.configuracionDatos.inicio = fechaCorta(new Date(val)) ;
+          },
+          from: new Date(1980, 1, 1), //Optional
+          to: new Date(2018, 10, 30), //Optional
+          inputDate: new Date(),      //Optional
+          dateFormat: 'dd MMMM yyyy',
+          mondayFirst: true,          //Optional
+          closeOnSelect: false,       //Optional
+          templateType: 'popup'       //Optional
+        };
+
+        $scope.openDatePicker = function(){
+          console.log("aca");
+          ionicDatePicker.openDatePicker(ipObj1);
+        };
 
       // $scope.configuracionDatos = ConfiguracionFact.gett();
       // $scope.onezoneDatepicker.highlights = calcularDias($scope.configuracionDatos);
@@ -629,7 +653,8 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   var ipObj1 = {
         callback: function (val) {  //Mandatory
           console.log('Return value from the datepicker popup is : ' + val, new Date(val));
-          $scope.fecha = new Date(val);
+          $scope.aut.fecha = fechaCorta(new Date(val))
+          console.log(fechaCorta(new Date(val)));
         },
         from: new Date(1980, 1, 1), //Optional
         to: new Date(2018, 10, 30), //Optional
@@ -646,6 +671,12 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
       };
 
 
+
+      function fechaCorta(fecha){
+          return (fecha.getMonth() + 1) +
+          "/" +  fecha.getDate() +
+          "/" +  fecha.getFullYear();
+      }
 
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
@@ -670,7 +701,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
          return;
       }
 
-      var edad =  calEdad($scope.fecha);
+      var edad =  calEdad($scope.aut.fecha);
 
 
 
