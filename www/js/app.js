@@ -1,5 +1,5 @@
 (function(){
-var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed','igTruncate','ionic.rating'])
+var app =  angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services','onezone-datepicker','youtube-embed','igTruncate','ionic.rating','ionic-datepicker'])
 
 app.run(function($ionicPlatform,Auten) {
   $ionicPlatform.ready(function() {
@@ -17,7 +17,52 @@ app.run(function($ionicPlatform,Auten) {
   });
 })
 
-app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider) {
+// app.config(function (ionicDatePickerProvider) {
+//     var datePickerObj = {
+//       inputDate: new Date(),
+//       titleLabel: 'Select a Date',
+//       setLabel: 'Set',
+//       todayLabel: 'Today',
+//       closeLabel: 'Close',
+//       mondayFirst: false,
+//       weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+//       monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+//       templateType: 'popup',
+//       from: new Date(1980, 8, 1),
+//       to: new Date(2018, 8, 1),
+//       showTodayButton: true,
+//       dateFormat: 'dd MMMM yyyy',
+//       closeOnSelect: false,
+//       disableWeekdays: []
+//     };
+//     ionicDatePickerProvider.configDatePicker(datePickerObj);
+//   });
+
+app.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, ionicDatePickerProvider) {
+
+  var datePickerObj = {
+        inputDate: new Date(),
+        titleLabel: 'Selecciona una fecha',
+        setLabel: 'Listo',
+        todayLabel: 'Hoy',
+        closeLabel: 'Cerrar',
+        mondayFirst: false,
+        weeksList: ["D", "L", "M", "M", "J", "V", "S"],
+        monthsList: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sept", "Oct", "Nov", "Dic"],
+        templateType: 'popup',
+        from: new Date(1980, 1, 1),
+        to: new Date(2018, 8, 1),
+        showTodayButton: true,
+        dateFormat: 'dd MMMM yyyy',
+        closeOnSelect: false,
+        disableWeekdays: []
+      };
+      ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+   $ionicConfigProvider.tabs.position('bottom');
+
+
+
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.backButton.previousTitleText(false);
   // Ionic uses AngularUI Router which uses the concept of states

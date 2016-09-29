@@ -101,14 +101,9 @@ background-color: #ff9900;
 
 .uno
 {
-  background: url('../img/tutorial/Tutorial1.jpg') no-repeat center center fixed;
-  /*background-size: cover;
-  background-position: center center;*/
-
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
+  background: url('../img/tutorial/Tutorial1.jpg');
   background-size: cover;
+  background-position: center center;
 }
 
 .dos
@@ -174,7 +169,7 @@ background-color: #ff9900;
 .card_mod
 {
   width: 100%;
-  height: 100%;
+  height: auto;
   margin: 0;
   background-image: url('../img/back_low.png') !important;
   background-size: cover;
@@ -434,6 +429,11 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
     top: 30px;
 }
 
+.date_selection select
+{
+    top: 0 !important;
+}
+
 .bord
 {
   color:black;
@@ -647,7 +647,7 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 
 .tamano
 {
-  font-size: 55px;
+  font-size: 40px;
   line-height: 65px;
 }
 
