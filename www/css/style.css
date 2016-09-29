@@ -169,7 +169,7 @@ background-color: #ff9900;
 .card_mod
 {
   width: 100%;
-  height: 100%;
+  height: auto;
   margin: 0;
   background-image: url('../img/back_low.png') !important;
   background-size: cover;

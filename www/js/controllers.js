@@ -344,7 +344,7 @@ app.controller('AccountCtrl', function($scope,$state,Auten, $ionicPopup ,$locati
     }else{
 
       $scope.configuracionDatos = ConfiguracionFact.gett();
-      $scope.configuracionDatos.inicio = new Date($scope.configuracionDatos.inicio);
+      $scope.configuracionDatos.inicio = fechaCorta(new Date($scope.configuracionDatos.inicio));
       var alrevez = calcularDias($scope.configuracionDatos);
       $scope.calculo = alrevez;
 
