@@ -775,7 +775,7 @@ edad = (ahora_ano + 1900) - ano;
 		edad -= 1900;
 	}
 
-	alert("¡Tienes " + edad + " años!");
+	//alert("¡Tienes " + edad + " años!");
 
 return edad;
 
