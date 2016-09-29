@@ -701,7 +701,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
          return;
       }
 
-      var edad =  calEdad($scope.aut.fecha);
+      //var edad =  calEdad($scope.aut.fecha);
 
 
 
@@ -713,11 +713,11 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
               console.log("Ya guardo");
               if(response.data.mensaje == -1)
               {
-                accesoError();
+                mensajeError(response.data.message);
               }
               else if(response.data.mensaje == 0)
               {
-                accesoError();
+                mensajeError(response.data.message);
               }
               else if(response.data.mensaje == 1)
               {
@@ -725,7 +725,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
                   $state.go('login');
               }
         },function errorCallback(response) {
-            accesoError();
+            mensajeError(response.data.message);
         });
   }
 
@@ -742,7 +742,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
             }
             else if(response.data.mensaje == 0)
             {
-              accesoError();
+              mensajeError(response.data.message);
             }
             else
             {
