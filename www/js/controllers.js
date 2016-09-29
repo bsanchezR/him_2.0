@@ -591,7 +591,7 @@ app.controller('tabController' ,function($scope, Auten ,$http, $state, $ionicPop
     console.log($scope.rels);
 });
 
-app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state){
+app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http, $state, $ionicPopup,$state, ionicDatePicker){
 
   //activar en productivo
 
@@ -626,6 +626,27 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   // });
 
 
+  var ipObj1 = {
+        callback: function (val) {  //Mandatory
+          console.log('Return value from the datepicker popup is : ' + val, new Date(val));
+          $scope.fecha = new Date(val);
+        },
+        from: new Date(1980, 1, 1), //Optional
+        to: new Date(2018, 10, 30), //Optional
+        inputDate: new Date(),      //Optional
+        dateFormat: 'dd MMMM yyyy',
+        mondayFirst: true,          //Optional
+        closeOnSelect: false,       //Optional
+        templateType: 'popup'       //Optional
+      };
+
+      $scope.openDatePicker = function(){
+        console.log("aca");
+        ionicDatePicker.openDatePicker(ipObj1);
+      };
+
+
+
 
   document.getElementsByTagName("ion-header-bar")[0].style.display = "block";
     $ionicNavBarDelegate.showBackButton(true);
@@ -649,7 +670,9 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
          return;
       }
 
-      var edad =  calEdad($scope.aut.fecha);
+      var edad =  calEdad($scope.fecha);
+
+
 
       var url  = 'http://www.preb.mx/message_app/public/user';
       // $http.post(url, { telefono : $scope.aut.telefono, password: $scope.aut.pass, name : $scope.aut.nombre, apeP : $scope.aut.apeP, apeM : $scope.aut.apeM, edad : $scope.aut.edad, sexo : $scope.aut.sexo, nuevo : 1, gcm_id : gcmid })

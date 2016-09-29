@@ -8,19 +8,22 @@
 		<div class="row row-center">
 			<div class="col col-80 col-offset-10">
         <form name="formulario">
+
+          <span class="input-label">Tel&eacute;fono</span>
           <label class="item item-input item-floating-label" style="margin:-6px;">
-            <span class="input-label">Tel&eacute;fono</span>
-            <input type="text" name="telefono" ng-model="aut.telefono" placeholder="Tel&eacute;fono" required>
+            <input type="text" name="telefono" ng-model="aut.telefono" required>
              <span class="warning" ng-show="!formulario.$pristine && formulario.telefono.$error.required">Telefono es requerido.</span>
           </label>
+
+          <span class="input-label">Contraseña</span>
 					<label class="item item-input item-floating-label" style="margin:-6px;">
-						<span class="input-label">Contraseña</span>
-						<input type="password" name="contrasena" ng-model="aut.pass" placeholder="Contraseña" required>
+						<input type="password" name="contrasena" ng-model="aut.pass" required>
             <span class="warning" ng-show="!formulario.$pristine && formulario.contrasena.$error.required">Contraseña es requerido.</span>
 					</label>
+
+          <span class="input-label">Usuario</span>
           <label class="item item-input item-floating-label" style="margin:-6px;">
-						<span class="input-label">Usuario</span>
-						<input type="text" name="usuario" ng-model="aut.usuario" placeholder="usuario" required>
+						<input type="text" name="usuario" ng-model="aut.usuario" required>
             <span class="warning" ng-show="!formulario.$pristine && formulario.usuario.$error.required">Usuario es requerido.</span>
 					</label>
           <!-- <label class="item item-input item-floating-label" style="margin:-6px;">
@@ -45,8 +48,11 @@
 
          </br>
              <span class="">Fecha Nacimiento</span>
-             <input type="date" name="fecha" ng-model="aut.fecha" placeholder="Fecha Nacimiento" required>
-             <span class="warning" ng-show="!formulario.$pristine && formulario.fecha.$error.required">Fecha es requerido.</span>
+             <input type="text" id="fecha" name="fecha" ng-model="aut.fecha" ng-focus="openDatePicker()" value="{{fecha | date:'shortDate'}}">
+             <span ng-if="fecha">{{fecha | date:'shortDate'}}</span>
+
+             <!-- <span class="warning" ng-show="!formulario.$pristine && formulario.fecha.$error.required">Fecha es requerido.</span> -->
+
            </label>
 
            <label class="item item-input item-select trans" style="border-bottom-style: hidden; margin-top:5px;">
