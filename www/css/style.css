@@ -144,10 +144,45 @@ background-color: #ff9900;
   background-position: center center;
 }
 
+/*.inicio
+{
+
+  background-image: url('../img/1.jpg');
+  background-size: cover;
+  background-position: bottom;
+}*/
+
 .inicio
 {
 
   background-image: url('../img/back.png');
+  background-size: cover;
+  background-position: bottom;
+}
+
+#COLE, #FEDE, #INSTI
+{
+  width: 100px;
+  height: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+#COLE
+{
+  background-image: url('../img/COLE.png');
+  background-size: cover;
+  background-position: center center;
+}
+#FEDE
+{
+  background-image: url('../img/FEDE.png');
+  background-size: cover;
+  background-position: center center;
+}
+#INSTI
+{
+  background-image: url('../img/INSTI.png');
   background-size: cover;
   background-position: center center;
 }
