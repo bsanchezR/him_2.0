@@ -695,7 +695,7 @@ app.controller('loginCtrl' ,function($ionicNavBarDelegate, $scope, Auten ,$http,
   }
 
   $scope.guardar =  function(){
-      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined')
+      if (typeof  $scope.aut.telefono == 'undefined' || typeof  $scope.aut.usuario == 'undefined' || typeof  $scope.aut.plantel == 'undefined' || typeof  $scope.aut.semestre == 'undefined' || typeof  $scope.aut.sexo == 'undefined')
       {
          mensajeError("Faltan campos por llenar");
          return;
