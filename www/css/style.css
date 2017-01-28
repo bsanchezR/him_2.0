@@ -160,31 +160,43 @@ background-color: #ff9900;
   background-position: bottom;
 }
 
-#COLE, #FEDE, #INSTI
+#COLE, #FEDE, #INSTI, #ARRO
 {
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 80px;
   margin-left: auto;
   margin-right: auto;
   display: block;
+  background-color: white;
 }
 #COLE
 {
   background-image: url('../img/COLE.png');
-  background-size: cover;
+  background-size: contain;;
   background-position: center center;
+  background-repeat: no-repeat;
 }
 #FEDE
 {
   background-image: url('../img/FEDE.png');
-  background-size: cover;
+  background-size: contain;
   background-position: center center;
+  background-repeat: no-repeat;
 }
 #INSTI
 {
   background-image: url('../img/INSTI.png');
-  background-size: cover;
+  background-size: contain;
   background-position: center center;
+  background-repeat: no-repeat;
+}
+
+#ARRO
+{
+  background-image: url('../img/ARRO.png');
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 .login
@@ -639,7 +651,7 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 
 .logo_pos
 {
-  width: 18%;
+  width: 14%;
   height: auto;
 }
 
@@ -682,13 +694,15 @@ ion-tabs.tabs-color-active-royal .tab-item.tab-item-active
 
 .tamano
 {
-  font-size: 40px;
-  line-height: 65px;
+  /*font-size: 40px;
+  line-height: 65px;*/
+  font-size: 30px;
+  line-height: 50px;
 }
 
 .tamano2
 {
-  font-size: 35px;
+  font-size: 25px;
 }
 
 .ita

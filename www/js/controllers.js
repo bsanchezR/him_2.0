@@ -937,6 +937,8 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
        $state.go('login');
     }
 
+    prendido_gps();
+
 
      var control = true;
      $scope.lat  =  19.058926;
@@ -1138,11 +1140,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
             console.log('Sin conexión');
 
           });
-
-
-
-
-
           //
           // //limpiara para despues
           // if(parada.puntuacion !=  ""){
@@ -1159,8 +1156,106 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           // }else{
           //   return 'Sin puntuar';
           // }
+        }
 
+        function prendido_gps()
+        {
+          var bandera_p=false;
+          cordova.plugins.diagnostic.isLocationEnabled(function(enabled)
+          {
+            if(enabled)
+            {
+              console.log("GSP activado");
+              bandera_p=true;
+            }
+            else
+            {
+              var alertPopup = $ionicPopup.alert({
+               title: 'GPS deactivado!',
+               template: 'El gps esta deactivado, para poder usar la aplicación debes encenderlo'
+             });
+             bandera_p=false;
+            }
+          }, function(error){
+              console.error("The following error occurred: "+error);
+          });
+          return bandera_p;
+        }
 
+        function gps_prendido()
+        {
+          var bandera_p=false;
+          cordova.plugins.diagnostic.isLocationEnabled(function(enabled)
+          {
+            if(enabled)
+            {
+              bandera_p=true;
+            }
+            else
+            {
+             bandera_p=false;
+            }
+          }, function(error){
+              console.error("The following error occurred: "+error);
+          });
+          return bandera_p;
+        }
+
+        function permiso_localizacion()
+        {
+          cordova.plugins.diagnostic.requestLocationAuthorization( function(status)
+          {
+              switch(status)
+              {
+                  case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                      console.log("Permission not requested");
+                      var alertPopup = $ionicPopup.alert({
+                       title: 'Oh no!!',
+                       template: 'No hay permisos para la localización'
+                     });
+                      break;
+                  case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                      console.log("Permission granted");
+                      // var alertPopup = $ionicPopup.alert({
+                      //  title: 'Oh no!!',
+                      //  template: 'Permiso concedido'
+                      // });
+                      // $cordovaGeolocation
+                      //   .getCurrentPosition()
+                      //   .then(function (position) {
+                      //     $scope.map.center.lat  = position.coords.latitude;
+                      //     $scope.map.center.lng = position.coords.longitude;
+                      //     $scope.map.center.zoom = 15;
+                      //     usuario = new google.maps.Marker({
+                      //       position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                      //       map: $scope.map,
+                      //       animation: google.maps.Animation.DROP,
+                      //       focus: true,
+                      //       draggable: false
+                      //     });
+                      //   }, function(err) {
+                      //     console.log("Location error!");
+                      //     console.log(err);
+                      //   });
+                      break;
+                  case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                      console.log("Permission denied");
+                      var alertPopup = $ionicPopup.alert({
+                       title: 'Oh no!!',
+                       template: 'El permiso para la localización fue denegado'
+                     });
+                      break;
+                  case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                      console.log("Permission permanently denied");
+                      var alertPopup = $ionicPopup.alert({
+                       title: 'Oh no!!',
+                       template: 'El permiso para la localización fue desactivado permanentemente'
+                     });
+                      break;
+              }
+          }, function(error){
+              console.error(error);
+          });
         }
 
       function agregarMarca(marker,lat,lng,infoWindow,info,tipo){
@@ -1267,7 +1362,6 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
       * Center map on user's current position
       */
       $scope.locate = function(){
-
        $cordovaGeolocation
          .getCurrentPosition()
          .then(function (position) {
@@ -1333,7 +1427,7 @@ function validarParada(){
         alertaActiva = true;
         var alertPopup = $ionicPopup.alert({
           title: '¡Oh no!',
-          template: 'Cuidado parece que estas cerca de una parada valida que no sea la misma.'
+          template: 'Cuidado parece que estas cerca de una parada, valída que no sea la misma.'
         });
         alertPopup.then(function(res) {
           console.log('Thank you for not eating my delicious ice cream cone');
@@ -1344,9 +1438,24 @@ function validarParada(){
   }
   return flag;
 }
-
+var al_inicio=true;
 function autoUpdate() {
 
+  console.log('al_inicio',al_inicio);
+  if(!gps_prendido())
+  {
+    al_inicio=false;
+    console.log('al_inicio-adentro',al_inicio);
+  }
+  else
+  {
+    if(!al_inicio)
+    {
+      al_inicio=true;
+      console.log('al_inicio-refresh',al_inicio);
+      $state.go($state.current, {}, {reload: true});
+    }
+  }
   navigator.geolocation.getCurrentPosition(function(position) {
     $scope.lat =  position.coords.latitude;
     $scope.lng = position.coords.longitude;
