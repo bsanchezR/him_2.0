@@ -28,6 +28,18 @@
         "phonegap-plugin-push": {
             "SENDER_ID": "898342355996",
             "PACKAGE_NAME": "com.ionicframework.him2886392"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.him2886392"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.him2886392"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "com.ionicframework.him2886392"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ionicframework.him2886392"
         }
     },
     "dependent_plugins": {
