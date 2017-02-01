@@ -925,9 +925,433 @@ app.controller('ConfigCtrl', function($scope,$sce,Auten,Preguntas,ArticulosGuard
   }
 });
 
+app.controller('MapaCtrl',function($scope,$state,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,ParadasPrivadas,Auten) {
+
+    gps();
+    function gps()
+    {
+      cordova.plugins.diagnostic.isLocationEnabled(function(enabled)
+      {
+        if(enabled)
+        {
+          console.log("GSP activado");
+          carga_mapa();
+        }
+        else
+        {
+          pregunta();
+        }
+      },
+      function(error)
+      {
+          console.error("The following error occurred: "+error);
+      });
+    }
+    function pregunta()
+    {
+        var confirmPopup = $ionicPopup.confirm(
+        {
+          title: 'Oh no !!',
+          template: 'El GPS no esta activado, activalo y da click en Ok para actualizar el mapa'
+        });
+       confirmPopup.then(function(res)
+       {
+         if(res)
+         {
+           gps();
+         }
+        else
+        {
+           pregunta();
+        }
+      });
+    }
+    function carga_mapa()
+    {
+      var latLng = new google.maps.LatLng(19.046777, -98.208727);
+      $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+      $scope.nuevaP.lat =  $scope.lat;
+      $scope.nuevaP.lng =  $scope.lng;
+      var nuevasParadas = [];
+      var nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+      $http.get('http://www.preb.mx/message_app/public/paradas')
+      .success(function(paradas)
+      {
+        console.log(paradas);
+        angular.forEach(paradas.data,function(post)
+        {
+                 nuevaParada.id_parada =  post.parada;
+                 nuevaParada.nombre =  post.titulo;
+                 nuevaParada.descripcion = post.descripcion;
+                 nuevaParada.lat =  post.lat;
+                 nuevaParada.lng =  post.lng;
+                 nuevaParada.id_usuario =  post.id_usuario;
+                 nuevaParada.tipo =  post.tipo;
+                 nuevasParadas.push(nuevaParada);
+                 nuevaParada =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+         });
+         console.log(nuevasParadas);
+         ParadasFact.putall(nuevasParadas);
+         $scope.paradas =  ParadasFact.all();
+      },
+      function errorCallback(response)
+      {
+        console.log('Sin conexión');
+        $scope.paradas =  ParadasFact.all();
+      });
+      var nuevasParadasp = [];
+      var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+      $http.get('  http://www.preb.mx/message_app/public/paradas/'+Auten.validar().id)
+      .success(function(paradas)
+      {
+             angular.forEach(paradas.data,function(post){
+             nuevaParadap.id_parada =  post.parada;
+             nuevaParadap.nombre =  post.titulo;
+             nuevaParadap.descripcion = post.descripcion;
+             nuevaParadap.lat =  post.lat;
+             nuevaParadap.lng =  post.lng;
+             nuevaParadap.id_usuario =  post.id_usuario;
+             nuevaParadap.tipo =  post.tipo;
+             nuevasParadasp.push(nuevaParadap);
+             nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+         });
+         ParadasPrivadas.putall(nuevasParadasp);
+         $scope.paradasp =  ParadasPrivadas.all();
+         recorrerParadas();
+      },
+      function errorCallback(response) {
+        console.log('Sin conexión');
+        $scope.paradas =  ParadasFact.all();
+        recorrerParadas();
+      });
+      if(Auten.validar().sexo == 'm')
+       var image  = 'img/pines/preB4.png';
+      if(Auten.validar().sexo == 'f')
+       var image  = 'img/pines/preB3.png';
+      $scope.paradas =  ParadasFact.all();
+      var marker,usuario;
+      var infoWindow = new google.maps.InfoWindow();
+      var info ;
+      var  alertaActiva =  false;
+      var mapOptions =
+      {
+        center: latLng,
+        disableDefaultUI: true,
+        zoom: 17,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      function recorrerParadas()
+      {
+        for (var i = 0; i < $scope.paradas.length; i++)
+        {
+          info = crearInfo($scope.paradas[i]);
+          agregarMarca(marker,$scope.paradas[i].lat, $scope.paradas[i].lng,infoWindow,info,$scope.paradas[i].tipo);
+        }
+        for (var i = 0; i < $scope.paradasp.length; i++)
+        {
+          info = crearInfo($scope.paradasp[i]);
+          agregarMarca(marker,$scope.paradasp[i].lat, $scope.paradasp[i].lng,infoWindow,info,$scope.paradasp[i].tipo);
+        }
+      }
+      google.maps.event.addListenerOnce($scope.map, 'idle', function()
+      {
+        recorrerParadas();
+        var direction = 1;
+        var rMin = 5, rMax = 30;
+      });
+      function crearInfo(parada)
+      {
+        var contentString =
+        '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h1 style="text-align:center;" id="firstHeading" class="firstHeading">'+ parada.nombre +'</h1>'+
+          '<div id="bodyContent" style="text-align:center;">';
+          contentString +=  '<a class="button button-calm" href="#/tab/mapa/'+parada.id_parada+'">Ver ficha completa</a>'
+                            '</div>'+
+                          '</div>';
+        return contentString;
+      }
+      function getTotal(parada)
+      {
+          var totalRate   = 0;
+          var acumulador  = 0;
+          var promedio    = 0;
+          $http.get('http://www.preb.mx/message_app/public/rates/1474064460846')
+          .success(function(rates)
+          {
+            if(rates.data > 0)
+            {
+              angular.forEach(rates.data,function(rate){
+                console.log('rate');
+                console.log(rate);
+                acumulador =  acumulador + rate.rate;
+                promedio++;
+               });
+               //sacamos el promedio simple
+                 totalRate = acumulador /  promedio;
+                 acumulador = 0;
+                 promedio = 0;
+                 return totalRate;
+            }
+            else
+            {
+              return 'Sin puntuar';
+            }
+          },
+          function errorCallback(response)
+          {
+            console.log('Sin conexión');
+          });
+        }
+        function agregarMarca(marker,lat,lng,infoWindow,info,tipo)
+        {
+          var icono = 'img/flag.png';
+          if(tipo == 1)
+          {
+              icono = 'img/pines/preB2.png';
+          }
+          else if(tipo == 2)
+          {
+              icono = 'img/pines/preB1.png';
+          }
+          else if(tipo == 3)
+          {
+            icono = 'img/pines/preB5.png';
+          }
+          marker = new google.maps.Marker(
+            {
+              position: new google.maps.LatLng(lat, lng),
+              map: $scope.map,
+              icon: icono,
+              animation: google.maps.Animation.DROP
+            });
+          google.maps.event.addListener(marker, 'click', (function()
+          {
+            return function()
+            {
+              infoWindow.setContent(info);
+              infoWindow.open($scope.map, marker);
+            }
+          })(marker));
+        }
+        $ionicModal.fromTemplateUrl('templates/addLocation.html',
+        {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function(modal)
+        {
+            $scope.modal = modal;
+        });
+          $scope.preb =  function()
+          {
+             $scope.desc="Kondoparadas→ Son establecimientos en donde te proporcionan métodos anticonceptivos (condones, pastillas del día siguiente, DIU, etc.), ya sean centros de salud, consultorios o farmacias, públicas o privadas. Las Kondoparadas las puedes compartir, visitar, puntuarlos y comentar tus experiencias en ellos, es muy importante que si las visitas las “evalúes” ya que eso ayudará a la comunidad a acudir a las mejores.";
+             $scope.tipo_parada = 1;
+             $scope.modal.show();
+             $('.btn').removeClass('animacionVer');
+             control = true;
+          }
+          $scope.gim =  function()
+          {
+            $scope.desc="Gym´s del autoestima→ Son lugares que te ayudan a sentirte bien. En donde puedes disfrutar el paisaje, pasar buenos momentos con tus amigos o familiares, comer algo delicioso, jugar, hacer deporte o lo que más te guste. Los Gym´s los puedes compartir, visitar, puntuarlos y comentar tus experiencias en ellos.";
+             $scope.tipo_parada = 2;
+             $scope.modal.show();
+             $('.btn').removeClass('animacionVer');
+             control = true;
+          }
+          $scope.punto =  function()
+          {
+            $scope.desc="PuntosR→ Son lugares en donde has tenido (o tienes) relaciones sexuales. Los PuntosR no se comparten, pero te ayudará a encontrar más fácil las Kondoparadas y protegerte.";
+             $scope.tipo_parada = 3;
+             $scope.modal.show();
+             $('.btn').removeClass('animacionVer');
+             control = true;
+          }
+          $scope.guardarParada = function()
+          {
+            $scope.modal.hide();
+            if(validarParada())
+            {
+              $scope.nuevaP.id_parada   =  '' + new Date().getTime();
+              $scope.nuevaP.id_usuario  =  Auten.validar().telefono;
+              $scope.nuevaP.tipo = $scope.tipo_parada;
+              $scope.nuevaP.color =  '#fff';
+              $scope.nuevaP.puntuacion = '';
+              $scope.nuevaP.lat=$scope.lat;
+              $scope.nuevaP.lng=$scope.lng;
+              ParadasFact.post($scope.nuevaP);
+              var nueva_parada;
+              var url  = 'http://www.preb.mx/message_app/public/paradas';
+              $http.post(url, { parada : $scope.nuevaP.id_parada, titulo : $scope.nuevaP.nombre , metodo: 'POST' , tipo : $scope.nuevaP.tipo, color : $scope.nuevaP.color, descripcion : $scope.nuevaP.descripcion, lat : $scope.nuevaP.lat, lng: $scope.nuevaP.lng, id_usuario : Auten.validar().id })
+                 .then(function successCallback(response)
+                 {
+                   console.log("parada guardada");
+                   console.log(response);
+                 },
+                 function errorCallback(response) {
+                    console.log("error");
+                 });
+              info = crearInfo($scope.nuevaP);
+              agregarMarca(marker,$scope.nuevaP.lat,$scope.nuevaP.lng,infoWindow,info,$scope.nuevaP.tipo);
+               $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+               $scope.nuevaP.lat =  $scope.lat;
+               $scope.nuevaP.lng =  $scope.lng;
+            }
+           };
+           $scope.locate = function()
+           {
+            $cordovaGeolocation
+              .getCurrentPosition()
+              .then(function (position) {
+                $scope.map.center.lat  = position.coords.latitude;
+                $scope.map.center.lng = position.coords.longitude;
+                $scope.map.center.zoom = 15;
+                usuario = new google.maps.Marker(
+                {
+                  position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                  map: $scope.map,
+                  animation: google.maps.Animation.DROP,
+                  focus: true,
+                  draggable: false
+                });
+              }, function(err)
+              {
+                console.log("Location error!");
+                console.log(err);
+              });
+           };
+           $scope.animacion =  function()
+           {
+             if(control){
+               $('.btn').addClass('animacionVer');
+               control = false;
+             }
+             else {
+               $('.btn').removeClass('animacionVer');
+               control = true;
+             }
+           }
+           var markerPrincipal = null;
+           var cityCircle =  null;
+           function cambioAlerta()
+           {
+             alertaActiva =  false;
+           }
+           function validarParada()
+           {
+             var flag=true;
+             for (var i = 0; i < $scope.paradas.length; i++)
+             {
+               var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+               if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+               {
+                 flag=false;
+                 if(!alertaActiva)
+                 {
+                   alertaActiva = true;
+                   var alertPopup = $ionicPopup.alert({
+                     title: '¡Oh no!',
+                     template: 'Cuidado parece que estas cerca de una parada, valída que no sea la misma.'
+                   });
+                   alertPopup.then(function(res) {
+                     console.log('Thank you for not eating my delicious ice cream cone');
+                   });
+                 }
+               }
+             }
+             return flag;
+           }
+           var al_inicio=true;
+           function autoUpdate()
+           {
+             navigator.geolocation.getCurrentPosition(function(position)
+             {
+               $scope.lat =  position.coords.latitude;
+               $scope.lng = position.coords.longitude;
+               var newPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+               $http.get('http://www.preb.mx/message_app/public/paradas')
+               .success(function(paradas){
+                 console.log(paradas.count, ParadasFact.all().length);
+                 if(paradas.count > ParadasFact.all().length)
+                 {
+                     console.log('entro');
+                    angular.forEach(paradas.data,function(post)
+                    {
+                       if(ParadasFact.get(post.parada) == null)
+                       {
+                         var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
+                         nuevaParadap.id_parada =  post.parada;
+                         nuevaParadap.nombre =  post.titulo;
+                         nuevaParadap.descripcion = post.descripcion;
+                         nuevaParadap.lat =  post.lat;
+                         nuevaParadap.lng =  post.lng;
+                         nuevaParadap.id_usuario =  post.id_usuario;
+                         nuevaParadap.tipo =  post.tipo;
+                         ParadasFact.post(nuevaParadap);
+                         info = crearInfo(nuevaParadap);
+                         console.log(ParadasFact.get(post.paradas),post);
+                         agregarMarca(marker,post.lat,post.lng,infoWindow,info,post.tipo);
+                       }
+                     });
+                 }
+               },
+               function errorCallback(response) {
+                 console.log('Sin conexión');
+                 $scope.paradas =  ParadasFact.all();
+
+               });
+
+               if (markerPrincipal)
+               {
+                 markerPrincipal.setPosition(newPoint);
+                 for (var i = 0; i < $scope.paradas.length; i++)
+                 {
+                   if($scope.paradas[i].tipo == 3 )
+                   {
+                     console.log('entra ?');
+                     var puntoCompara = new google.maps.LatLng($scope.paradas[i].lat,$scope.paradas[i].lng)
+                     if (google.maps.geometry.spherical.computeDistanceBetween( puntoCompara , cityCircle.getCenter()) <= cityCircle.getRadius())
+                     {
+                       if(!alertaActiva)
+                       {
+                       }
+                     }
+                   }
+                 }
+               }
+               else
+               {
+                 markerPrincipal = new google.maps.Marker({
+                   position: newPoint,
+                   map: $scope.map,
+                   icon: image
+                 });
+                 cityCircle = new google.maps.Circle({
+                     strokeColor: '#FF0000',
+                     strokeOpacity: 0.8,
+                     strokeWeight: 1,
+                     fillColor: '#FF0000',
+                     fillOpacity: 0.35,
+                     map: $scope.map,
+                     center: newPoint,
+                     radius: 20
+                   });
+               }
+               $scope.map.setCenter(newPoint);
+               cityCircle.setCenter(newPoint);
+             });
+             console.log('llamada');
+             console.log(alertaActiva);
+               setTimeout(autoUpdate, 5000);
+           }
+           autoUpdate();
+    }
+});
 
 
-app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,ParadasPrivadas,Auten) {
+app.controller('Mapa2Ctrl',function($scope,$state,$cordovaGeolocation,$stateParams,$ionicModal,$http,$ionicPopup,ParadasFact,ParadasPrivadas,Auten) {
 
   if (typeof Auten.validar().telefono != 'undefined')
     {
@@ -938,6 +1362,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
     }
 
     prendido_gps();
+    console.log('primer');
 
 
      var control = true;
@@ -945,11 +1370,28 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
      $scope.lng  = -98.253135;
 
 
+    //  $scope.$on( "$ionicView.afterEnter", function( scopes, states ) {
+    //             // google.maps.event.trigger( $scope.map, 'resize' );
+    //             //var latLng = new google.maps.LatLng(19.046777, -98.208727);
+    //             console.log('mapa resize');
+    //             var mapOptions = {
+    //               center: {lat: 19.046777, lng: -98.208727},
+    //               disableDefaultUI: true,
+    //               zoom: 17,
+    //               mapTypeId: google.maps.MapTypeId.ROADMAP
+    //             };
+     //
+    //             $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    //             google.maps.event.trigger( $scope.map, 'resize' );
+    //          });
+
      var latLng = new google.maps.LatLng(19.046777, -98.208727);
 
      $scope.nuevaP =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
      $scope.nuevaP.lat =  $scope.lat;
      $scope.nuevaP.lng =  $scope.lng;
+
+     console.log('segundo');
 
      //variables para crear el arreglo de paradas
      var nuevasParadas = [];
@@ -983,7 +1425,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
      });
 
-
+     console.log('tercer');
      var nuevasParadasp = [];
      var nuevaParadap =  {id_parada: '', nombre:'', descripcion : '', lat : '' , lng : '', puntuacion : '', id_usuario : '', tipo : '', color : '', comentarios : ''  };
 
@@ -1028,7 +1470,7 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
 */
 
-
+      console.log('cuarto');
 
      if(Auten.validar().sexo == 'm')
       var image  = 'img/pines/preB4.png';
@@ -1063,8 +1505,8 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
           agregarMarca(marker,$scope.paradasp[i].lat, $scope.paradasp[i].lng,infoWindow,info,$scope.paradasp[i].tipo);
         }
       }
+      console.log('quinto');
 
-      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
       //Wait until the map is loaded
       google.maps.event.addListenerOnce($scope.map, 'idle', function(){
@@ -1072,16 +1514,16 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
 
         var direction = 1;
         var rMin = 5, rMax = 30;
-        setInterval(function() {
-            var radius = cityCircle.getRadius();
-            if ((radius > rMax) || (radius < rMin)) {
-                //direction *= -1;
-                cityCircle.setRadius(5);
-            }else{
-              cityCircle.setRadius(radius + direction * 1);
-            }
-
-        }, 50);
+        // setInterval(function() {
+        //     var radius = cityCircle.getRadius();
+        //     if ((radius > rMax) || (radius < rMin)) {
+        //         //direction *= -1;
+        //         cityCircle.setRadius(5);
+        //     }else{
+        //       cityCircle.setRadius(radius + direction * 1);
+        //     }
+        //
+        // }, 50);
 
 
       });
@@ -1167,13 +1609,44 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
             {
               console.log("GSP activado");
               bandera_p=true;
+              $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
             }
             else
             {
-              var alertPopup = $ionicPopup.alert({
-               title: 'GPS deactivado!',
-               template: 'El gps esta deactivado, para poder usar la aplicación debes encenderlo'
+            //   var alertPopup = $ionicPopup.alert({
+            //    title: 'GPS deactivado!',
+            //    template: 'El gps esta deactivado, para poder usar la aplicación debes encenderlo'
+            //  });
+
+
+             var confirmPopup = $ionicPopup.confirm({
+               title: 'Oh no !!',
+               template: 'El GPS no esta activado, activalo y da click en Ok para actualizar el mapa'
              });
+            confirmPopup.then(function(res) {
+              if(res) {
+                console.log('You are sure');
+                // $scope.locate();
+                $state.reload();
+                //$state.go($state.current, $scope, $state, $cordovaGeolocation, $stateParams, $ionicModal, $http, $ionicPopup, ParadasFact, ParadasPrivadas, Auten, {reload: true, inherit: false });
+                // $state.go('tab.mapa');
+                // $state.transitionTo($state.current, $stateParams, {
+                //     reload: true,
+                //     inherit: false,
+                //     notify: true
+                // });
+
+                // $scope.restartApp=function(){
+                //     navigator.app.exitApp();
+                //     navigator.app.loadUrl("file:///android_asset/www/index.html", {wait:2000, loadingDialog:"Wait,Loading App", loadUrlTimeoutValue: 60000});
+                //   }
+
+
+              } else {
+                console.log('You are not sure');
+              }
+            });
+
              bandera_p=false;
             }
           }, function(error){
@@ -1185,20 +1658,26 @@ app.controller('MapaCtrl',function($scope,$cordovaGeolocation,$stateParams,$ioni
         function gps_prendido()
         {
           var bandera_p=false;
-          cordova.plugins.diagnostic.isLocationEnabled(function(enabled)
+          var regreso = cordova.plugins.diagnostic.isLocationEnabled(function(enabled)
           {
             if(enabled)
             {
-              bandera_p=true;
+              bandera_p= true;
+              console.log('prendido');
             }
             else
             {
-             bandera_p=false;
-            }
+             bandera_p= false;
+             console.log('apagado');
+
+           }
           }, function(error){
               console.error("The following error occurred: "+error);
+              return false;
           });
-          return bandera_p;
+          return regreso;
+          // console.log(bandera_p,'antes de return');
+          // return bandera_p;
         }
 
         function permiso_localizacion()
@@ -1440,22 +1919,6 @@ function validarParada(){
 }
 var al_inicio=true;
 function autoUpdate() {
-
-  console.log('al_inicio',al_inicio);
-  if(!gps_prendido())
-  {
-    al_inicio=false;
-    console.log('al_inicio-adentro',al_inicio);
-  }
-  else
-  {
-    if(!al_inicio)
-    {
-      al_inicio=true;
-      console.log('al_inicio-refresh',al_inicio);
-      $state.go($state.current, {}, {reload: true});
-    }
-  }
   navigator.geolocation.getCurrentPosition(function(position) {
     $scope.lat =  position.coords.latitude;
     $scope.lng = position.coords.longitude;
